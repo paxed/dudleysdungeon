@@ -1,0 +1,273 @@
+.dudley_strip {
+}
+
+
+
+.infotools { display:table; width:100%; }
+.infotools ul { width:100%; display:table-row; }
+.infotools ul li {
+  font-size:x-small;
+  display:table-cell;
+  list-style-type:none;
+}
+.infotools ul li.num_viewed {
+  color:lightgray;
+  text-align:left;
+}
+.infotools ul li.printlink { text-align:right; }
+.infotools ul li.printlink a:hover { background-color:#d0d0d0; }
+
+
+#statspage table caption { padding-top:1em; }
+#statspage table { border:1px solid lightgray; }
+#statspage td { padding:0 .5em; }
+#statspage table tr td:first-child { text-align:right; }
+
+
+
+.columnwrapper{
+  float: left;
+  width: 100%;
+}
+
+.maincolumn{
+  margin-right: 50%;
+}
+
+.rightcolumn{
+  float: left;
+  width: 50%;
+  margin-left: -50%;
+}
+
+#ratingdiv h2 { margin-top:0; padding-top:0;}
+.maincolumn #ratingdiv { float:right; padding:1em; margin-right:2em; }
+.rightcolumn .monthtable { float:left; padding:1em; margin-left:2em;}
+
+
+
+
+/* ratings bar, original idea apples-to-oranges.com */
+.vertgraph {
+    width: 11em;
+    height: 140px;
+    position: relative;
+    border: 1px solid black;
+}
+.vertgraph ul {
+    width: 10em;
+    height: 140px;
+    margin: 0;
+    padding: 0;
+}
+.vertgraph ul li {
+    position: absolute;
+    width: 2em;
+    height: 100px;
+    bottom: 1.5em;
+    padding: 0 0 .5em 0;
+    margin: 0 !important;
+    text-align: center;
+    font-weight: bold;
+    color: black;
+    line-height: 2.5em;
+    list-style-type:none;
+}
+.vertgraph li.poor      { left: 0.5em; background-color: #cc0000; }
+.vertgraph li.mediocre  { left: 2.5em; background-color: #cc6600; }
+.vertgraph li.fair      { left: 4.5em; background-color: #ffcc00; }
+.vertgraph li.good      { left: 6.5em; background-color: #ccff00; }
+.vertgraph li.excellent { left: 8.5em; background-color: #00cc00; }
+
+.vertgraph .voteurl a:hover .desc {margin-left:0; left:0; top:0.2em;}
+.vertgraph .voteurl a .desc { margin-left:0; left:0; top:0.2em;}
+
+
+
+
+.menu { text-align:center; }
+.menu ul { padding:0; margin:1em 0 0 0; }
+.menu ul li {
+	   text-align:center;
+	   list-style-type:none;
+	   display:inline;
+	   padding:0 0.5em;
+}
+.menu a { padding:0 0.5em; }
+.menu a:hover { background-color:#d0d0d0; }
+
+
+.pagecontrol { text-align:center; padding:0; margin:0; }
+.pagecontrol ul { padding:0; margin:0.5em 0 0 0; }
+.pagecontrol ul li {
+	   text-align:center;
+	   list-style-type:none;
+	   display:inline;
+	   padding:0 0.5em;
+	   margin:0;
+}
+.pagecontrol a { padding:0 0.5em; }
+
+.delvoteurl a:hover,
+.pagecontrol a:hover { background-color:#d0d0d0; }
+
+
+
+
+.comments table {
+	  border:1px solid black;
+	  width:90%;
+	  min-width:40em;
+	  border-collapse:collapse;
+}
+.comments .new_commenthead {
+	  background-color:#d0d0e0;
+}
+.comments .commenthead {
+	  background-color:#e0e0e0;
+}
+.comments .commentnum {
+	  text-align:left;
+	  width:2em;
+	  padding-left:0.5em;
+}
+.comments .editcomment,
+.comments .username {
+	 text-align:left;
+	 padding-left:0.5em;
+}
+.comments .posteddate {
+	 text-align:right;
+	 font-weight:normal;
+}
+.comments .commenttext {
+	  min-height:2em;
+	  height:2em;
+	  padding:0.25em;
+	  text-align:left;
+}
+.comments .lastedittime {
+	  font-size:small;
+	  font-style:italic;
+}
+.commenttext pre {
+	  background-color:black;
+	  color:#aaaaaa;
+}
+
+
+
+
+.errorstr {
+	  padding:0.5em;
+	  margin:1em auto;
+	  width:80%;
+	  border:5px solid red;
+	  background:yellow;
+	  color:black;
+	  font-weight:bold;
+}
+
+
+table.userinfo {
+  width:40%;
+  border:1px solid black;
+}
+table.userinfo tr td:first-child {
+  text-align:right;
+  font-weight:bold;
+  padding-right:1em;
+}
+table.userstrips {
+  border:1px solid black;
+  width:50%;
+  text-align:center;
+}
+
+table.usersettings {
+  width:80%;
+  border:1px solid black;
+}
+table.usersettings td.nam {
+  text-align:right;
+  font-weight:bold;
+  padding-right:1em;
+}
+table.usersettings td.explain {
+  font-size:small;
+}
+table.usersettings td.submit {
+  text-align:center;
+}
+
+/*.dudley_strip .monthtable { position:absolute; left:1em; top:3em; background-color:white;}*/
+.monthtable table { text-align:center; border:1px solid black; }
+/*.monthtable table:hover { border:1px solid black; }*/
+.monthtable a { display:block; text-decoration:none; color:black; }
+.monthtable a:hover { background-color:#f7ff64; color:black; }
+.monthtable .current a:hover { background-color:#f7ff64; color:black; }
+.monthtable .current { font-weight:bold; border:1px solid black; min-width:2em; }
+.monthtable .day { border:1px solid #e0e0e0; min-width:2em; color:#c0c0c0; }
+.monthtable .today { color:#c0c0c0; border:1px solid green; min-width:2em; }
+.monthtable .today a { display:block; text-decoration:none; color:black; border:1px solid green; }
+.monthtable .today a:hover { background-color:#f7ff64; color:black; border:1px solid green; }
+.monthtable .newday a { color:#903030; }
+
+.monthtable .nextmstrip a,
+.monthtable .prevmstrip a {
+ font-weight:bold;
+ color:green;
+ text-decoration:none;
+ line-height:1.5em;
+}
+
+/*
+.monthtable td { display:none; }
+.monthtable th { display:none; }
+.monthtable tr { display:none; }
+.monthtable tr.year { display:table-row; }
+.monthtable tr.year td { display:table-cell; }
+.monthtable table:hover td { display:table-cell; }
+.monthtable table:hover th { display:table-cell; }
+.monthtable table:hover tr { display:table-row; }
+*/
+
+
+.newstext {
+	  width:60%;
+	  text-align:left;
+	  border:1px solid #c0c0c0;
+	  padding:1em;
+	  margin:1em;
+}
+.newstext h3 { text-align:center; padding-top:0.25em; }
+
+
+span.desc {
+     display: none;
+}
+li:hover .desc,
+td:hover .desc {
+	display: block;
+	position: absolute;
+	margin-left: 30px;
+	border: 1px solid black;
+	padding: 5px;
+	background-color: white;
+	z-index:1;
+}
+
+tr.odd {
+}
+
+tr.even {
+	background-color: #f0f0f0;
+}
+
+tr.even:hover {
+	background-color: #e0e0e0;
+}
+
+tr.odd:hover {
+	background-color: #e0e0e0;
+}

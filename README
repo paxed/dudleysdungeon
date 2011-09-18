@@ -1,0 +1,16 @@
+Dudley's (New, Improved) Dungeon - A Roguelike Webcomic System
+
+This is the code that http://alt.org/nethack/dudley/ uses.
+
+
+
+Requires: PHP 5, postgres
+
+
+Remember to edit config.php and utils.php!
+
+To generate the RSS feed, run cronjob.sh, eg. via cron.
+
+-- 
+Pasi Kallinen
+paxed@alt.org

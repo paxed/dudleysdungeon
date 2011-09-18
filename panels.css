@@ -1,0 +1,121 @@
+.f_cur { text-decoration: underline; }
+
+.f_ul { text-decoration: underline; }
+.f_bl { text-decoration: blink; }
+
+.f_black         { color: #000000; }
+.f_red           { color: #aa0000; }
+.f_green         { color: #00aa00; }
+.f_brown         { color: #aa5500; }
+.f_blue          { color: #2222ee; }
+.f_magenta       { color: #aa00aa; }
+.f_cyan          { color: #00aaaa; }
+.f_gray          { color: #aaaaaa; }
+.f_darkgray      { color: #555555; }
+.f_orange        { color: #ff5555; }
+.f_brightgreen   { color: #55ff55; }
+.f_yellow        { color: #ffff55; }
+.f_brightblue    { color: #6666ff; }
+.f_brightmagenta { color: #ff55ff; }
+.f_brightcyan    { color: #55ffff; }
+.f_white         { color: #ffffff; }
+
+.b_black         { background-color: #000000; }
+.b_red           { background-color: #aa0000; }
+.b_green         { background-color: #00aa00; }
+.b_brown         { background-color: #aa5500; }
+.b_blue          { background-color: #0000aa; }
+.b_magenta       { background-color: #aa00aa; }
+.b_cyan          { background-color: #00aaaa; }
+.b_gray          { background-color: #aaaaaa; }
+.b_darkgray      { background-color: #555555; }
+.b_orange        { background-color: #ff5555; }
+.b_brightgreen   { background-color: #55ff55; }
+.b_yellow        { background-color: #ffff55; }
+.b_brightblue    { background-color: #5555ff; }
+.b_brightmagenta { background-color: #ff55ff; }
+.b_brightcyan    { background-color: #55ffff; }
+.b_white         { background-color: #ffffff; }
+
+
+td {
+   padding:0;
+}
+
+
+td.conttl {
+  text-align:left;
+}
+
+td.conttl .nextstrip a,
+td.conttl .prevstrip a {
+ font-weight:bold;
+ color:green;
+ text-decoration:none;
+ line-height:1.5em;
+}
+
+td.conttl .nextstrip a { padding-right:.5em; }
+td.conttl .prevstrip a { padding-left:.5em; }
+
+
+td.conttl .nextstrip a:hover,
+td.conttl .prevstrip a:hover {
+ font-weight:bold;
+ color:black;
+ background-color:yellow;
+ text-decoration:none;
+}
+
+td.contpic {
+ border:1px solid black;
+}
+
+table {
+      border:none;
+      margin:0;
+}
+
+table.comic {
+  background-color:white;
+  padding:0.25em;
+  border-width:0.25em;
+  border-color:transparent;
+}
+
+td.comic {
+  border:0.5em solid white;
+  margin:0;
+  padding:0;
+}
+
+td.comic div.panelcontainer {
+  margin:0;
+  padding:0;
+  border:1px solid black;
+}
+
+td.comic div.panelcontainer pre {
+  background-color:black;
+  color:#aaaaaa; /* f_gray from above! */
+  margin: 0;
+  padding:0;
+}
+
+div.txt {
+  background-color:white;
+  color:black;
+  padding:1em;
+  text-align:center;
+}
+
+td.copyright { /* need to add content! */
+  font-size:1.2ex;
+  line-height:1.4ex;
+  text-align:right;
+}
+
+td.footnote {
+  font-size:smaller;
+  text-align:left;
+}

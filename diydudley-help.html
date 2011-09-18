@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" media="screen" href="diydudley.css">
+<title>Dudley D-I-Y Help</title>
+</head>
+<body style="background-color:#dddddd;">
+
+<a class="button" href="#quickhelp">Quick Help</a>
+
+<p>Welcome to the NAO comic DIY page. This page contains a powerful interactive editor to help you write comics.
+The following document attempts to explain the controls present on this page in the order in which they appear.
+
+<h3>THE EDIT PANE</h3>
+
+At the upper left of the editor is the edit pane, where you'll do most of the work of writing the comic.
+The currently selected panel is displayed here. Above the pane you'll see the panel number,
+and a pair of buttons you can use to select the previous or next comic panel.
+To the right of the edit pane is a monochrome text-edit pane where you can edit the panel contents directly as a text field,
+by typing characters, as opposed to "drawing" with the mouse.
+Beneath the panes is a text box in which you can enter the caption for the current panel.
+<p>
+Editing the comic is as simple as clicking in the edit pane. As you hover your mouse over the pane,
+you'll notice a red cursor following your mouse pointer, highlighting the map tile that will be affected.
+When you click on this tile, it will be replaced with the current contents of the "drawing pen".
+The drawing pen is simply a glyph comprised of character and color that can be placed on the map.
+You can see the symbol that the pen is currently set to in a display beneath the text box;
+by default it's set to "<span style="font-family:monospace" class="f_gray b_black">.</span>" (period).
+By holding the 'ctrl' key while clicking, you can instead fill a tile
+with an alternate pen &mdash; by default "<span style="font-family:monospace" class="f_gray b_black"> </span>"
+<small>(a blank space &mdash; solid rock or an unseen area)</small> &mdash; handy for an erase function,
+but you can use it for any purpose you wish. To switch the normal and alternate pens, press the 'x' key.
+<p>
+To edit the panel's caption text, click in the text box below the edit pane and type. There is no limit
+to the amount of text you can enter; the panel layout will adjust to accomodate it. HTML is allowed,
+including links and images. Unusual characters can be pasted in or alt-coded.
+When you're done editing, click anywhere outside the text box to update the editor;
+you can then scroll down to the <a href="#preview_pane">preview pane</a> (below) to see the effects of your changes.
+<p>
+The <span class='button'>insert pen</span> will insert the current pen character
+into the panel's caption text box.
+
+<h3>CONTROLS</h3>
+
+Beneath the edit pane are a series of buttons that you can use to perform operations on the comic panel,
+change the drawing pen, or select the input mode.
+<p>
+<h4>Input modes</h4>
+
+This section allows you to change the effect of clicking on the edit pane.
+<ul>
+
+<li><b>Draw mode</b>: This is the default mode, in which clicking on a map tile replaces it
+with the current contents of the drawing pen. To switch to this mode, click the <span class="button">draw</span> button
+or press the 'd' key.
+
+<li><b>Color picker</b>: This mode allows you to set the pen to a symbol already present on the map.
+To use it, press the 'c' key or click the <span class="button">colorpicker</span> button,
+then click anywhere in the map window. The pen will change to the symbol in that tile,
+and you will be returned to draw mode. You can also press 'z' key while hovering the mouse over
+the map pane to instantly get the symbol under cursor into the current pen.
+
+<li><b>Flood fill</b>: This mode allows you to replace a continuous region of the panel (all one symbol) with
+another symbol (the drawing pen). To use it, press the 'f' key or click the <span class="button">floodfill</span> button.
+As you hover the mouse over the edit pane, the region that will be filled will be highlighted in red. Click on the panel to fill it.
+
+<li><b>Line drawing</b>: This mode allows you to create a line of a particular symbol. To use it, press the 'g' key or
+click the <span class="button">lines</span> button. As you hover the mouse over the edit pane,
+the tiles that will be filled will be highlighted in red; the line will start at the last tile edited
+and end at the tile you click on. To change the line's starting position, hover the mouse over the new starting
+position and press the 's' key. (This will work in any input mode.)
+
+<li><b>Rectangle drawing</b>: This mode allows you to create an unfilled rectangle of a particular symbol;
+the tiles within the rectangle will be unchanged. To use it, click the <span class="button">rect</span> button;
+you can also use the 'v' key to cycle between draw, unfilled rectangle, and filled rectangle modes.
+As you hover the mouse over the edit pane, the tiles that will be filled will be highlighted in red;
+the rectangle will have one corner at the last tile edited, and the opposite corner at the tile you click on.
+To change the anchored corner, hover the mouse over the new corner position and press the 's' key.
+(This will work in any input mode.)
+
+<li><b>Filled rectangle drawing</b>: This mode is identical to unfilled rectangle drawing,
+except the tiles within the rectangle will be filled with the chosen character as well.
+To use it, click the <span class="button">fillrect</span> button or cycle to it with the 'v' key.
+
+<li><b>Room rectangle drawing</b>: This mode is similar to rectangle drawing, but it uses
+<span style="font-family:monospace" class="f_gray b_black">|</span> for vertical and
+<span style="font-family:monospace" class="f_gray b_black">-</span> for horizontal parts
+of the rectangle. To use it, click the <span class="button">roomrect</span> button.
+
+</ul>
+
+<h4>Panel actions</h4>
+
+This section allows you to perform operations on the panel as a whole.
+<ul>
+<li><span class="button">Generate</span>: This places a random (believable) NetHack map in the chosen panel.
+Hovering over this will reveal several buttons, which allows you to define what kind of map to generate:
+<ul>
+<li><span class="button">Random</span>: Randomly chooses one of the available generators.
+<li><span class="button">Dungeon room</span>: A room in the Dungeons.
+<li><span class="button">Field</span>: A field with no vision obstacles, possibly with a building on it.
+<li><span class="button">Splatterfield</span>: Mostly walkable field, with some interesting terrain feature in the middle.
+<li><span class="button">Reverse Splatterfield</span>: Like Splatterfield, but reversed terrains.
+<li><span class="button">Dug Randwalk</span>: As if a drunk dwarf dug in the walls.
+<li><span class="button">Mines</span>: Gnomish Mines-style.
+<li><span class="button">Maze</span>: A Maze.
+</ul>
+
+<li><span class="button">Remove colors</span>: This removes all color tags from the panel; every tile becomes gray.
+
+<li><span class="button">Fill</span>: This fills the entire panel with the contents of the drawing pen.
+
+<li><span class="button">Clear</span>: This fills the entire panel with
+"<span style="font-family:monospace" class="f_gray b_black"> </span>"
+(the glyph for solid rock or an unseen region &mdash; blank space.)
+
+<li><span class="button">Replace</span>: This replaces all symbols matching the contents of the drawing pen with those matching
+the contents of the alternate pen &mdash; replacing "<span style="font-family:monospace" class="f_gray b_black">.</span>" (period)
+with "<span style="font-family:monospace" class="f_gray b_black"> </span>" (blank space) by default, for instance.
+
+<li><span class="button">Scatter</span>: This places five glyphs matching the contents of the drawing pen randomly on the map.
+Useful for adding random monsters.
+
+<li><span class="button">Shift</span>: Hovering over this will reveal four buttons: <span class="button">up</span>,
+<span class="button">left</span>, <span class="button">right</span> and <span class="button">down</span>. Those buttons
+will shift the contents of the current pane to the direction, wrapping contents around the border, so no information is lost.
+
+<li><span class="button">Move syms</span>: Hovering over this will reveal 6 buttons: <span class="button">to cursor</span>,
+<span class="button">randomly</span>, <span class="button">up</span>, <span class="button">left</span>,
+<span class="button">right</span> and <span class="button">down</span>. Those buttons will move all symbols that match the current
+pen like monsters trying to reach the designated place. The ctrl-pen is considered as the floor-symbol,
+and the "monsters" will walk on those only. Does not consider symbol color, only the character.
+
+<li><span class="button">Maze</span>: This creates a maze layout using the current contents of the drawing pen
+(usually '<span style="font-family:monospace" class="f_gray b_black">.</span>').
+This is overlaid on the panel; if you don't clear it first, it can result in some strange effects.
+
+<li><span class="button">Wallify</span>: This automatically replaces all empty tiles
+('<span style="font-family:monospace" class="f_gray b_black"> </span>') bordering floor tiles
+('<span style="font-family:monospace" class="f_gray b_black">.</span>') with wall tiles
+('<span style="font-family:monospace" class="f_gray b_black">-</span>' and
+'<span style="font-family:monospace" class="f_gray b_black">|</span>') &mdash; use with
+the 'maze' button to create a wallified maze.
+
+<li><span class="button">Gravestone</span>: This replaces the contents of the current panel with a tombstone image
+suitable for the 'game over' screen, including Dudley's name &mdash; all it lacks is his killer's.
+
+<li><span class="button">Copy</span>: This copies the contents of the current panel (but not its caption text)
+into a temporary buffer, for use with the 'paste' button.
+
+<li><span class="button">Paste</span>: This pastes the contents of the temporary buffer into the current panel,
+allowing you to replicate panels.
+Note that the resulting panel's size is that of the copied panel.
+
+<li><span class="button">Add</span>: This adds a new panel to the comic, copying the current panel's contents
+to fill it (including caption text). Note that it does not copy into the same buffer as the copy command &mdash; you
+can't paste what you just added.
+
+<li><span class="button">Del</span>: This deletes the current panel from the comic. The previous panel becomes the new current panel.
+
+<li><span class="button">Undo</span>: This will undo most changes done to the panel, including resizing. Does not undo
+changes to the panel text. Each panel has a separate undo stack.
+
+</ul>
+
+<h4>The Pen</h4>
+
+The next few sections control the contents of the drawing pen.
+<p>
+The first line is mostly devoted to saved pens. By default eleven symbols are saved here for quick access &mdash;
+the floor tile, solid rock, walls, closed and open doors, corridor, human, cat, and dog (. |-+|-#@fd respectively).
+Clicking one one of these will place it in the drawing pen for immediate use; the first ten can also be selected by
+use of the number keys. To change the alternate pen, hold 'ctrl' while clicking. Hovering the mouse over one of
+the saved pens will show a dialog allowing you to move it around in the list, remove it, or change its access key.
+(Note that moving a pen resets its access key to the default &mdash; its own default, not the one for its current position.)
+Click the 'save' button to save the current drawing pen for quick access.
+The saved pens are stored in a cookie, and will persist across multiple editing sessions.
+<p>
+The one button on that line that has nothing to do with saved pens is 'random'.
+This button will place a random glyph in the drawing pen &mdash; not necessarily one that has any meaning in NetHack.
+<p>
+The next line is devoted to colors. Here you will see the character currently in the drawing pen,
+repeated in every color the editor supports. Click on one of these to change the color appropriately.
+(The alternate pen cannot be changed with this control.) You can also click the "no color" button to
+remove the color tag from the current character (it will become gray),
+or the "random" button to have the drawing color selected at random when you draw on the panel.
+<p>
+The next line shows all the characters the editor recognizes, in the currently selected color.
+Click on one of these to place it in the drawing pen; or ctrl-click to place it in the alternate pen.
+(Note that you *can* use characters not listed here in the comic, but you must edit the code directly to do so.)
+
+<h3>TABLE OF SYMBOLS</h3>
+
+This section takes the guesswork out of finding the correct character and color combination
+for a particular monster, object, or dungeon feature. You can select the appropriate entity
+from the drop-down box; or you can hover the mouse over a given symbol in the chart to see
+what thing(s) it could represent, and then (ctrl-)click on it to place it in the (alternate) drawing pen.
+You can also click on the <span class="button">random monster</span> button to place a random, valid monster glyph in the drawing pen;
+the monster will be identified in the drop-down box.
+Using the checkboxes, you can choose if you wish to see NetHack and/or Angband specific symbols.
+
+<h3>STRIP DATA</h3>
+
+This section, too, can be shown or hidden with a check box labeled "Strip data".
+Here you can enter various parameters for the comic strip as a whole.
+<ul>
+<li><b>Author</b>: This box sets the author name that will be displayed in the upper right corner of the comic.
+There is no limit on the name length, although a very long name will cause the comic to stretch horizontally.
+Spaces are allowed; line breaks are not, unless you use the &lt;br&gt; tag. HTML is allowed, including links and images;
+the author name is bold by default, but this can be overridden with &lt;/b&gt;. When you're done,
+press enter or click anywhere outside the box to update the editor,
+then scroll down to the preview pane to see the effects of your changes.
+The author name defaults to "Unknown" if you're not logged in; otherwise it will default to
+your login name.
+
+<li><b>Footnote</b>: If you want to display a footnote under the comic, you can enter it in this box.
+There is no limit on the length of the footnote, although a long one will cause the comic to stretch horizontally.
+HTML is allowed, including links and images;
+again, line breaks can be accomplished with the &lt;br&gt; tag.
+When you're done, press enter or click anywhere outside the box to update the editor,
+then scroll down to the preview pane to see the effects of your changes.
+
+<li><b>Strip panel size</b>: This allows you to control the dimensions of the panels.
+The dimensions are expressed as (width, height), in map tiles, and default to 20 tiles wide by 9 tiles high.
+To resize a panel, select the panel, then click the change button; enter the new dimensions in the boxes,
+and then click OK (or cancel to discard the changes).
+You can check the "Resize all panels" box to apply the new dimensions to the entire comic,
+including any panels subsequently added.
+Shrinking the panel will simply truncate any part of the map that doesn't fit; the editor will warn you whenever you do so.
+
+<li><b>Strip width</b>: This allows you to control the number of panels per row.
+To change this, click "change", enter a number in the box, and then click "OK";
+or click "cancel" to discard the changes. The default setting, 'automatic',
+causes the editor to choose dimensions such that there are an equal number of panels on each row (no blank spaces).
+Setting this to '0' returns it to 'automatic'.
+Attempting to set it to a number higher than the number of panels in the strip,
+or something that is not a number, results in no change.
+</ul>
+
+<h3 id="preview_pane">PREVIEW PANE</h3>
+
+This section can be shown or hidden with the "preview" check box.
+You can use this section to see how the changes you make affect your comic's layout and appearance &mdash;
+it shows the comic as it would appear were it to be published in its current form.
+Every panel is displayed with its caption text, in the size and configuration you've chosen,
+with the author's name and the footnote, if any.
+The panels are updated as changes are made (although the text boxes aren't updated until you've clicked out of them).
+The current comic panel is highlighted in a light green box;
+you can select another panel from the preview pane simply by clicking on it.
+<p>
+Clicking the "popup preview" check box will cause a preview to pop up in a separate window,
+allowing you to look at it without the clutter of the editor; leaving this box checked will
+cause a preview window to pop up every time a change to the comic is made.
+
+<h3>CODE PANE</h3>
+
+This section can be shown or hidden with the "Code" check box.
+It shows the raw, parseable code from which the comic is generated.
+If you want to edit the code directly (perhaps to perform a function that the editor does not support),
+click the 'code edit' check box, then click in the code box and make your changes.
+When you're done, click the <span class="button">parse</span> button to commit your changes and update the editor to reflect them.
+(If you uncheck the "code edit" box without clicking "parse", it will discard and revert all the changes you've made.)
+<p>
+When you're finished editing the comic strip, you can press the <span class="button">download</span> button to
+download the comic code to your computer, or you can press the <span class="button">submit</span> button to
+submit the strip directly for publication. If you have logged in, you will see text that says so,
+otherwise you will need to input your username and password into the fields next to the submit-button.
+<p>
+The submitted strip will show up after the admins have approved it.
+<p>&nbsp;
+<p>
+Best of luck in your efforts!
+<p>
+
+
+
+<div style="line-height:2em;">
+<h3 id="quickhelp">Keys</h3>
+<ul>
+ <li>mouseclick on the edit panel while <span class="kbd">ctrl</span> is pressed uses the other pen.
+ <li><span class="kbd">x</span> swaps pen and ctrlpen.
+ <li><span class="kbd">d</span> changes to normal drawing mode. Equal to clicking on <span class='button'>draw</span>.
+ <li><span class="kbd">c</span> toggles on &quot;colorpicker&quot;, allowing you to pick a symbol from the editing panel.
+Equal to clicking on <span class='button'>colorpicker</span>.
+ <li><span class="kbd">z</span> similar to &quot;colorpicker&quot;, but picks the symbol immediately from under the cursor.
+ <li><span class="kbd">f</span> toggles drawing mode to floodfill. Equal to clicking on <span class='button'>floodfill</span>.
+ <li><span class="kbd">g</span> toggles drawing mode to lines. Equal to clicking on <span class='button'>lines</span>.
+ <li><span class="kbd">v</span> toggles between rectangles, filled rectangles and normal drawing mode.
+Equal to clicking on <span class='button'>rect</span> or <span class='button'>fillrect</span>.
+ <li><span class="kbd">s</span> saves the current cursor position as the other end position for lines and rectangles.
+ <li><span class="kbd">m</span> saves the current cursor position as the position of panel "cursor",
+which will show up as an underline for that one position.
+ <li>By default, numbers select one of the saved pens.
+</ul>
+
+<h3>Buttons</h3>
+  <h4>Edit Panel</h4>
+   <ul>
+    <li><span class='button'>&lt;-prev</span> selects the previous panel in the comic strip.
+    <li><span class='button'>next-&gt;</span> selects the next panel in the comic strip.
+    <li><span class='button'>insert pen</span> inserts the current pen symbol into the panel's caption text box.
+   </ul>
+  <h4>Panel</h4>
+   <ul>
+    <li><span class='button'>random</span> randomly generates the current edit panel image.
+    <li><span class='button'>remove colors</span> makes the edit panel black and white.
+    <li><span class='button'>fill</span> fills the edit panel with current pen.
+    <li><span class='button'>clear</span> fills the edit panel with solid rock (or unseen) glyph.
+    <li><span class='button'>wallify</span> adds walls between <span class='panel'>.</span> and <span class='panel'> </span>.
+    <li><span class='button'>replace</span> replaces all pen-symbols with ctrl-pen symbols in the edit panel.
+    <li><span class='button'>scatter</span> uses pen, puts down 5 randomly placed symbols on the edit panel.
+    <li><span class='button'>gravestone</span> puts a large gravestone into the edit panel.
+    <li><span class='button'>copy</span> copies current edit panel into temp buffer.
+    <li><span class='button'>paste</span> overwrites the current edit panel from temp buffer.
+    <li><span class='button'>add</span> adds a panel to the comic by copying current one.
+    <li><span class='button'>del</span> deletes the current panel from the comic.
+   </ul>
+  <h4>Pen</h4>
+   <ul>
+    <li><span class='button'>save</span> adds current pen to the end of saved pens list.
+    <li><span class='button'>random</span> randomly chooses the character and color of the pen.
+   </ul>
+</div>
+
+
+
+<p style="font-size:small;font-style:italic">Dudley D-I-Y by paxed. Last update on 2009.03.31.
+<br>Thanks to Antheridium for writing this doc.
+
+</body>
+</html>

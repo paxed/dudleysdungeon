@@ -1,0 +1,75 @@
+
+-use PDO instead of pg_foo
+
+-Add user's voting "history" to duduser.php
+
+-Move all the stuff into a git repo.
+
+-month table should have links for previous & next month, and
+ years. (drop-down options for both, too?)
+
+ < January >  [ 2009 ] <-- dropdown box of years
+ ^         ^
+ links to prev/next month
+
+
+-allow users to leave notes for admin and vice versa for each strip
+ the user submitted.
+
+
+-BUG: duduser.php considers user's comments from strips with approved=false
+
+
+
+-diydudley: a new method of doing written text into the panel:
+  WRITE:(x,y),"text"
+  -might need a way to set the text color.
+  -wordwrapped?
+
+
+
+
+-config options for users
+   -when user returns, show newest comic, or the next from the
+    newest that was current when he last visited? (save visit
+    time into a cookie)
+   -alternate stylesheets (style with black background)
+   -disable color is comic strips
+-users should be able to mark their own queued comics as deleted.
+-DIY dudley should allow for strip upload from user's computer into the
+ editor itself.
+-statistics page:
+   -top N comics sorted by avg rating
+   -top N comics with most comments
+   -# of comments alltogether
+   -# of comic strips
+   -top N people who submitted comics
+   -top N commenters
+   -top N viewed strips
+-searching comics & comments
+-list all comments by user 'foo'
+-page for listing links to a year's worth of comics (12 month tables)
+-paginate comments, if there's lots of them.
+
+-paginate comments, if there's lots of them.
+-< Dentarthur> paxed: Also when changing the text of one panel
+ and trying to switch to another, it jumps back to the panel you were
+ just editing.
+-improve the color encoding, so that if there's lots of green # and one grey #,
+ don't list all of the green #'s separately...
+-crawl/angband specific stuff: glyphs and generators
+-some more OOP would be nice.
+-settings: remove cookies, verify panel changes, default author, scatter #, ...
+-fix the random level generator #6 ("corridors")
+-reverse colors (hilite_pet)
+-lock characters, lock colors -checkboxes, if checked, cannot change
+ char/color...
+ (or maybe []use char, []use color) checkboxes, next to the pen?)
+-allow defining the default panel background and foreground colors.
+-rotate panel
+-move panel left or right in the strip
+-save more stuff into cookies
+-allow toggling the textentry editpanel off/on.
+-maybe move all those green buttons into <li> css menu structure.
+-maybe allow user to define keys for commands.
+

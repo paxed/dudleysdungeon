@@ -1,0 +1,313 @@
+
+body {
+  color: black;
+  background-color: #f0f0f0;
+}
+
+.panel {
+  color:#aaaaaa;
+  background:#000000;
+  white-space:pre;
+  display:inline;
+  font-family:monospace;
+  font-size:xx-large;
+}
+
+#editdiv {
+  padding:1em;
+  float:left;
+}
+
+#editpanel_textarea_div {
+  padding:1em;
+}
+
+#editpanel_textarea {
+  font-size:xx-large;
+  background-color: #000000;
+  color: #aaaaaa;
+  overflow:auto;
+}
+
+.f_cur { text-decoration: underline; }
+
+.f_ul { text-decoration: underline; }
+.f_bl { text-decoration: blink; }
+
+.f_black         { color: #000000; }
+.f_red           { color: #aa0000; }
+.f_green         { color: #00aa00; }
+.f_brown         { color: #aa5500; }
+.f_blue          { color: #0000cc; }
+.f_magenta       { color: #aa00aa; }
+.f_cyan          { color: #00aaaa; }
+.f_gray          { color: #aaaaaa; }
+.f_darkgray      { color: #555555; }
+.f_orange        { color: #ff5555; }
+.f_brightgreen   { color: #55ff55; }
+.f_yellow        { color: #ffff55; }
+.f_brightblue    { color: #5555ff; }
+.f_brightmagenta { color: #ff55ff; }
+.f_brightcyan    { color: #55ffff; }
+.f_white         { color: #ffffff; }
+
+.b_black         { background-color: #000000; }
+.b_red           { background-color: #aa0000; }
+.b_green         { background-color: #00aa00; }
+.b_brown         { background-color: #aa5500; }
+.b_blue          { background-color: #0000aa; }
+.b_magenta       { background-color: #aa00aa; }
+.b_cyan          { background-color: #00aaaa; }
+.b_gray          { background-color: #aaaaaa; }
+.b_darkgray      { background-color: #555555; }
+.b_orange        { background-color: #ff5555; }
+.b_brightgreen   { background-color: #55ff55; }
+.b_yellow        { background-color: #ffff55; }
+.b_brightblue    { background-color: #5555ff; }
+.b_brightmagenta { background-color: #ff55ff; }
+.b_brightcyan    { background-color: #55ffff; }
+.b_white         { background-color: #ffffff; }
+
+.panel .hovered:hover {
+ cursor: pointer;
+ background-color: red;
+}
+
+.cursor_hilite {
+ background-color:green;
+}
+
+#strip_code_div {
+ background:#e0e0e0;
+ border:1px solid black;
+ padding:0.25em;
+ margin:1em;
+}
+
+#strip_code_div > pre {
+ padding-top:0.25em;
+ padding-left:0.2em;
+ margin:0;
+}
+
+span.colorselection {
+  background:#000000;
+  white-space:pre;
+  font-family:monospace;
+}
+
+span.colorselection span:hover {
+ cursor: pointer;
+ background-color: lightgray;
+}
+
+span.charselection {
+  background:#000000;
+  white-space:pre;
+  font-family:monospace;
+}
+span.charselection span:hover {
+ cursor: pointer;
+ background-color: lightgray;
+}
+
+
+div.gamesymselection {
+  background:#000000;
+  white-space:pre;
+  font-family:monospace;
+}
+div.gamesymselection span:hover {
+ cursor: pointer;
+ background-color: lightgray;
+}
+
+
+
+.pen_glyph {
+  background:#000000;
+  white-space:pre;
+  font-family:monospace;
+  font-size:x-large;
+}
+
+a.withtooltip:hover {
+ background-color: lightgray;
+}
+
+.saved_pens {
+  background:#000000;
+  white-space:pre;
+  font-family:monospace;
+  font-size:x-large;
+}
+.saved_pens span:hover {
+ cursor: pointer;
+ background-color: lightgray;
+}
+
+.editpanel_border {
+ border:1px solid black;
+ padding:0.25em;
+ margin:1em;
+}
+
+
+
+
+.withtooltip {
+    display: inline-block !important;
+    display: inline;
+    position: relative;
+    text-decoration:none;
+}
+.withtooltip .tooltip {
+    visibility: hidden;
+
+        display: block;
+        position: absolute;
+        width: 30em;
+        padding: 2px;
+        border: 1px #000 solid;
+        font-size: 0.8em;
+        left: -1em;
+        top: 1.2em;
+        background-color: lightgray;
+        color: black;
+        opacity:.80;
+        font-family:monospace;
+        z-index:2;
+}
+/* Opera 6+ specific values. Bad Opera, Bad! */
+@media screen and (min-width: 0px) {
+    .withtooltip .tooltip {
+        left: inherit;
+        top: inherit;
+        margin-top: 0;
+        width: 0;
+    }
+}
+.withtooltip:hover {
+        background-color: lightgray;
+}
+.withtooltip:hover .tooltip {
+    visibility: visible;
+    /* blow up width, could be zeroed by opera hack */
+        width: 30em;
+}
+
+
+.button {
+ color:black;
+ background-color:#90e090;
+ border: 1px green solid;
+ margin: 0.25em;
+ line-height: 1.5em;
+ cursor: pointer;
+ text-decoration:none;
+}
+.button:hover, .tooltip .button:hover {
+ background-color:green;
+ border: 1px black solid;
+}
+.button_disabled {
+ background-color:#909090;
+ border: 1px darkgray solid;
+ margin: 0.25em;
+ line-height: 1.5em;
+ cursor: pointer;
+ text-decoration:none;
+ color:black;
+}
+.withtooltip a {
+ display:none;
+}
+.withtooltip a:hover {
+ display: inline;
+}
+.tooltip .button_disabled:hover {
+  background-color:darkgray;
+ border: 1px black solid;
+}
+
+#help {
+ position:absolute;
+ right:1em;
+ top:1em;
+}
+
+.xlink {
+ cursor: pointer;
+}
+
+.xlink:hover {
+  border-color: green;
+}
+
+
+
+
+td.conttl {
+  text-align:left;
+}
+
+td.contpic {
+ border:1px solid black;
+}
+
+table.comic {
+  background-color:white;
+  padding:0.25em;
+  border-width:0.25em;
+}
+
+td.comic {
+  border:0.5em solid white;
+  margin:0;
+  padding:0;
+}
+
+td.comic > div {
+  margin:0;
+  padding:0;
+  border:1px solid black;
+}
+
+td.comic div pre {
+  background-color:black;
+  color:#aaaaaa; /* f_gray from above! */
+  margin: 0;
+  padding:0;
+}
+
+div.txt {
+  background-color:white;
+  color:black;
+  height:100%;
+  padding:1em;
+  text-align:center;
+}
+
+td.copyright {
+  font-size:1.2ex;
+  line-height:1.4ex;
+  text-align:right;
+}
+
+td.footnote {
+  font-size:smaller;
+}
+
+
+
+
+.kbd {
+      font-family:arial,helvetica,sans-serif;
+      padding:2px 3px;
+      white-space:nowrap;
+      color:#000;
+      background:#eee;
+      border-width:2px 4px 5px 3px;
+      border-style:solid;
+      border-color:#ccc #aaa #888 #bbb;
+}
