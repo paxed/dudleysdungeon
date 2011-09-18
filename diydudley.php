@@ -102,14 +102,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if ($usr_is_logged_in) {
 	    $usernam = $_SESSION['username'];
-	    $passwd = $_SESSION['password'];
+	    $passwd = (isset($_SESSION['password']) ? $_SESSION['password'] : NULL);
 	    $author_id = $_SESSION['userid'];
 	    $username = $_SESSION['username'];
 	} else {
 	    $usernam = $_POST['username'];
 	    $passwd =  $_POST['password'];
 	    log_in_user($usernam, $passwd);
-	    $author_id = $_SESSION['userid'];
+	    $author_id = (isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL);
 	}
 
 	if (isset($author_id)) {
@@ -227,7 +227,7 @@ Symbols: <label>NetHack:<input type="checkbox" id="nhsym_cbox" onchange="game_sy
  <label>Code edit:<input type="checkbox" id="code_edit_cbox" onchange="panel_showcode();return false;"></label>
 <div id="strip_code_div"></div>
 
-
+<div id="download_save"></div>
 
 
 <script type="text/javascript"></script>

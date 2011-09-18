@@ -533,6 +533,33 @@ function panel_submitcode()
   tmp.innerHTML = '';
 }
 
+function panel_download_save()
+{
+  var tmp = document.getElementById("download_save");
+  var txt = "";
+  if (!tmp) return;
+
+  if (USR_login == 0) {
+     txt += " Username: <input type='text' size='20' id='user_name'>";
+     txt += " Password: <input type='password' size='10' id='user_passwd'>";
+  } else {
+     txt += " You are logged in as <em><b>" + USR_name + "</b></em>";
+  }
+  txt += "<br>You can:<ul>";
+
+  txt += "<li><a href='#' class='button' onclick='panel_downloadcode();return false;'>Download</a> the comic strip code to your own computer, or";
+
+  txt += "<li><a href='#' class='button' onclick='panel_submitcode();return false;'>";
+  if (USR_strip_in_queue == 1) {
+      txt += "Update</a> this comic in the database";
+  } else {
+      txt += "Submit</a> this comic to the database";
+  }
+
+  txt += "</ul>";
+
+  tmp.innerHTML = txt;
+}
 
 function panel_showcode()
 {
@@ -554,21 +581,6 @@ function panel_showcode()
     txt += "</pre>";
   }
 
-  btn += " <a href='#' class='button' onclick='panel_downloadcode();return false;'>download</a>\n";
-
-  btn += "<br>";
-
-  if (USR_login == 0) {
-     btn += " Username: <input type='text' size='20' id='user_name'>";
-     btn += " Password: <input type='password' size='10' id='user_passwd'>";
-  } else {
-     btn += " Logged in as <em><b>" + USR_name + "</b></em>";
-  }
-  btn += " <a href='#' class='button' onclick='panel_submitcode();return false;'>";
-  if (USR_strip_in_queue == 1) { btn += "update"; } else { btn += "submit"; }
-  btn += "</a>\n";
-
-  txt += "<br>" + btn;
 
   tmp.innerHTML = txt;
 }
@@ -2086,6 +2098,7 @@ function pageload_init()
   nethacksym_selection();
   output_strip_data_edit();
   panel_showcode();
+  panel_download_save();
   editpanel_dirty = 0;
 
   strip_preview_panels();

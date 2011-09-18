@@ -311,3 +311,9 @@ td.footnote {
       border-style:solid;
       border-color:#ccc #aaa #888 #bbb;
 }
+
+#download_save {
+  border: 1px solid black;
+  padding: 1em;
+  margin: 1em;
+}
