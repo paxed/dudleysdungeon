@@ -43,7 +43,7 @@ if ($numrows > 0) {
 	$txt = preg_replace('/>/', '&gt;', $txt);
 
 	$title = date("M jS, Y", $strip['epoch']);
-	if ($strip['footnote']) {
+	if (isset($strip['footnote'])) {
 	    $title .= ' - '.strip_tags($strip['footnote']);
 	}
 
