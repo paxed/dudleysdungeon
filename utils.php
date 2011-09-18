@@ -9,7 +9,7 @@
  *  css     = array of css files to use. none by default.
  *  notop   = don't print the top banner
  */
-function html_top($data=NULL)
+function dud_html_top($data=NULL)
 {
   global $dudley_root_url;
   $chrset = isset($data['charset']) ? $data['charset'] : 'ISO-8859-1';
@@ -49,7 +49,7 @@ function html_top($data=NULL)
 }
 
 
-function html_bottom($data = null) {
+function dud_html_bottom($data = null) {
     print "</DIV>\n";
     if (!isset($data['notop'])) {
         print '<DIV class="footerbar"></DIV>'."\n";

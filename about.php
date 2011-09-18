@@ -42,6 +42,9 @@ one newline will be converted to linebreak (&lt;br&gt;).
 <h2>How do I report bugs or contact the admin?</h2>
 EMail paxed on this server.
 
+<h2>Can I run my own Dudley's Dungeon?</h2>
+Sure, the sources for this are available on github: <a href="https://github.com/paxed/dudleysdungeon">https://github.com/paxed/dudleysdungeon</a>
+
 
 <?php
 dud_html_bottom();
