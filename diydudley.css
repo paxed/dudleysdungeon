@@ -317,3 +317,9 @@ td.footnote {
   padding: 1em;
   margin: 1em;
 }
+
+#poststatusdiv {
+    color: black;
+    padding: 0.5em;
+    display: none;
+}

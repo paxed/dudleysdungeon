@@ -449,27 +449,33 @@ function hide_POST_status()
   tmp.style.display = "none";
 }
 
+function add_POST_error(txt)
+{
+    if (POST_errorstr == undefined) {
+	POST_errorstr = txt;
+    } else {
+	POST_errorstr += "<br>" + txt;
+    }
+}
+
 function show_POST_status()
 {
   var tmp = document.getElementById("poststatusdiv");
   if (tmp == undefined) return;
   var btn = "<br><a class='button' href='javascript:hide_POST_status();'>OK</a>";
-  if (typeof POST_errorstr == "string") {
-    var str = POST_errorstr + btn;
-    tmp.innerHTML = str;
-    tmp.style.color = "black";
-    tmp.style.backgroundColor = "yellow";
-    tmp.style.border = "0.5em solid red";
-    tmp.style.padding = "0.5em";
-    tmp.style.visibility = "visible";
-    tmp.style.display = "block";
-  } else if (typeof POST_success == "string") {
+
+  if (typeof POST_success == "string") {
     var str = POST_success + btn;
     tmp.innerHTML = str;
-    tmp.style.color = "black";
     tmp.style.backgroundColor = "white";
     tmp.style.border = "0.5em solid green";
-    tmp.style.padding = "0.5em";
+    tmp.style.visibility = "visible";
+    tmp.style.display = "block";
+  } else  if (typeof POST_errorstr == "string") {
+    var str = POST_errorstr + btn;
+    tmp.innerHTML = str;
+    tmp.style.backgroundColor = "yellow";
+    tmp.style.border = "0.5em solid red";
     tmp.style.visibility = "visible";
     tmp.style.display = "block";
   } else {
@@ -2105,9 +2111,9 @@ function pageload_init()
   show_panel_number();
 
   if (USR_login == undefined) {
-      POST_errorstr = "USR_login is undefined. This is a bug.";
+      add_POST_error("USR_login is undefined. This is a bug.");
   } else if (USR_login == 0) {
-      POST_errorstr = "<b>You are not logged in.</b> You can still edit and download the strip, but you need to login before you can save it.";
+      add_POST_error("<b>You are not logged in.</b> You can still edit and download the strip, but you need to login before you can save it.");
   }
 
   show_POST_status();

@@ -66,13 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$strip_id = $_POST['strip_id'];
 
 	if ($usr_is_logged_in) {
-	    $usernam = $_SESSION['username'];
-	    $passwd = $_SESSION['password'];
-	    $author_id = $_SESSION['userid'];
-	    $username = $_SESSION['username'];
+	    $usernam = (isset($_SESSION['username']) ? $_SESSION['username'] : NULL);
+	    $passwd = (isset($_SESSION['password']) ? $_SESSION['password'] : NULL);
+	    $author_id = (isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL);
+	    $username = $usernam;
 	} else {
-	    $usernam = $_POST['username'];
-	    $passwd =  $_POST['password'];
+	    $usernam = (isset($_POST['username']) ? $_POST['username'] : NULL);
+	    $passwd =  (isset($_POST['password']) ? $_POST['password'] : NULL);
 	    log_in_user($usernam, $passwd);
 	}
 
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	    } else {
 		$errorstr = "Something went wrong when inserting the strip into the database.";
 	    }
-	} else $errorstr = "Login error. Wrong username / password? xxx";
+	} else $errorstr = "Login error. Wrong username / password?";
 	$action = 1;
 
     } else $errorstr = "You wanted to do what?";
@@ -161,7 +161,8 @@ if ((isset($action) && ($action == 1)) || isset($errorstr)) {
 	print 'var POST_comicstrip = "'.$strip.'";'."\n";
     }
     if (isset($errorstr)) print 'var POST_errorstr = "'.$errorstr.'";'."\n";
-}
+    else print 'var POST_errorstr;';
+} else print 'var POST_errorstr;';
 if (isset($successstr)) print 'var POST_success = "'.$successstr.'";'."\n";
 print 'var USR_login='.(($usr_is_logged_in) ? 1 : 0).";\n";
 print 'var USR_name="'.(($usr_is_logged_in) ? $username : '')."\";\n";
