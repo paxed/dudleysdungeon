@@ -2059,6 +2059,9 @@ function update_editpanel_textarea(dir)
   if (tmp == undefined) return;
   if (dir == 1) { /* textarea -> editpanel */
     var str = tmp.value;
+    if (str.length > (editpaneldata.HEI * editpaneldata.WID)) {
+	str = str.substr(0, (editpaneldata.HEI * editpaneldata.WID));
+    }
     var arr = str.split("\n");
     editpaneldata.save_undopoint();
     for (y = 0; y < editpaneldata.HEI; y++) {

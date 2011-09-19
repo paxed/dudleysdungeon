@@ -26,7 +26,9 @@ body {
   font-size:xx-large;
   background-color: #000000;
   color: #aaaaaa;
-  overflow:auto;
+  overflow:hidden;
+  border: none;
+  resize: none;
 }
 
 .f_cur { text-decoration: underline; }
@@ -255,6 +257,7 @@ a.withtooltip:hover {
 #configpage table input {
   text-align:center;
   padding:0 0.5em;
+  font-family: monospace;
 }
 
 
