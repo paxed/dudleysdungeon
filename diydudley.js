@@ -2221,7 +2221,7 @@ function config_window()
     txt += "<h3>Key bindings</h3>";
     txt += "<input type='hidden' id='max_keybind_idx' value='" + keybindings.length + "'>";
     txt += "<table id='keybindings_table'>";
-    txt += "<tr><th>Key</th><th>Description</th></tr>";
+    txt += "<tr><th>Key</th><th>Description</th><th>&nbsp;</th></tr>";
     var i;
     for (i = 0; i < keybindings.length; i++) {
 	txt += get_keybind_table_tr(i, keybindings[i].key, keybindings[i].act, 0);
