@@ -553,9 +553,9 @@ function panel_download_save()
   }
   txt += "<br>You can:<ul>";
 
-  txt += "<li><a href='#' class='button' onclick='panel_downloadcode();return false;'>Download</a> the comic strip code to your own computer, or";
+  txt += "<li><a href='#' class='button' onclick='return buttonfunc_act(40);'>Download</a> the comic strip code to your own computer, or";
 
-  txt += "<li><a href='#' class='button' onclick='panel_submitcode();return false;'>";
+  txt += "<li><a href='#' class='button' onclick='return buttonfunc_act(41);'>";
   if (USR_strip_in_queue == 1) {
       txt += "Update</a> this comic in the database";
   } else {
@@ -580,7 +580,7 @@ function panel_showcode()
     txt += "<textarea id='strip_code_textarea' "+getkeyb_handler_string()+" rows='50' cols='80'>";
     txt += panel_getcode(0);
     txt += "</textarea>";
-    btn += "<a href='#' class='button' onclick='parse_code();return false;'>parse</a>";
+    btn += "<a href='#' class='button' onclick='return buttonfunc_act(42);'>parse</a>";
   } else {
     txt += "<pre>";
     txt += panel_getcode(1);
@@ -900,9 +900,9 @@ function color_selection()
   if (!(pen.chr == " ")) chr = pen.chr;
 
   txt += "<span class='colorselection_title'>Colors: </span>";
-  txt += "<a class='button' onclick='pen_clr_fgcolor();return false;' href='#'>no color</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(43);' href='#'>no color</a>";
   /*txt += "<a class='button' onclick='pen_set_fgcolor(colors[Math.floor(Math.random()*(colors.length-1))+1]);return false;' href='#'>random</a>";*/
-  txt += "<a class='button' onclick='pen_set_fgcolor(\"random\");return false;' href='#'>random</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(44);' href='#'>random</a>";
   txt += "<span class='colorselection'>";
   for (i = 1; i < colors.length; i++) {
     txt += " <span class='f_"+colors[i]+" b_black' onclick='pen_set_fgcolor(\""+colors[i]+"\");'>"+htmlentities(chr+chr+chr+chr)+"</span>";
@@ -1031,7 +1031,7 @@ function nethacksym_selection(searchstr)
   txt += '<span id="nethacksymselbox"></span>';
   //txt += '<input type="text" id="nethacksymsearchbox" onchange="nethacksym_searchstr();" value="'+((searchstr == '') ? 'Search' : searchstr)+'">';
 
-  txt += "<a class='button' onclick='pen_set_sym(random_nethack_monster_sym());return false;' href='#'>random monster</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(45);' href='#'>random monster</a>";
 
   txt += '<div class="gamesymselection">';
   for (i = 0; i < nethack_symbols.length; i++) {
@@ -1083,8 +1083,8 @@ function show_saved_pens()
   var txt;
   var ldir, rdir;
 
-  txt = "pen: <a class='button' onclick='pen_save();return false;' href='#'>save</a>";
-  txt += "<a class='button' onclick='pen_random();return false;' href='#'>random</a> - ";
+  txt = "pen: <a class='button' onclick='return buttonfunc_act(46);' href='#'>save</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(47);' href='#'>random</a> - ";
 
   for (i = 0; i < saved_pens.length; i++) {
     var fg = saved_pens[i].fg;
@@ -1151,7 +1151,7 @@ function show_edit_panel_text()
   var txt = "";
   txt += '<br>';
   txt += '<textarea id="editpanel_text" '+getkeyb_handler_string()+' cols="80" rows="4" onchange="set_panel_text();"></textarea>';
-  txt += "<a class='button' onclick='pen_insert();return false;' href='#'>insert pen</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(48);' href='#'>insert pen</a>";
   txt += '<br>';
   tmp.innerHTML = txt;
 }
@@ -1208,13 +1208,13 @@ function show_editmode()
   var txt = "";
   txt += '<b>' + editmode_str[editmode] + '</b> ';
 
-  txt += "<a class='"+(editmode==0 ? "button_disabled" : "button")+"' onclick='change_editmode(0);return false;' href='#'>draw</a>";
-  txt += "<a class='"+(editmode==1 ? "button_disabled" : "button")+"' onclick='change_editmode(1);return false;' href='#'>colorpicker</a>";
-  txt += "<a class='"+(editmode==3 ? "button_disabled" : "button")+"' onclick='change_editmode(3);return false;' href='#'>floodfill</a>";
-  txt += "<a class='"+(editmode==4 ? "button_disabled" : "button")+"' onclick='change_editmode(4);return false;' href='#'>lines</a>";
-  txt += "<a class='"+(editmode==5 ? "button_disabled" : "button")+"' onclick='change_editmode(5);return false;' href='#'>rect</a>";
-  txt += "<a class='"+(editmode==6 ? "button_disabled" : "button")+"' onclick='change_editmode(6);return false;' href='#'>fillrect</a>";
-  txt += "<a class='"+(editmode==7 ? "button_disabled" : "button")+"' onclick='change_editmode(7);return false;' href='#'>roomrect</a>";
+  txt += "<a class='"+(editmode==0 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(50);' href='#'>draw</a>";
+  txt += "<a class='"+(editmode==1 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(51);' href='#'>colorpicker</a>";
+  txt += "<a class='"+(editmode==3 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(53);' href='#'>floodfill</a>";
+  txt += "<a class='"+(editmode==4 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(54);' href='#'>lines</a>";
+  txt += "<a class='"+(editmode==5 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(55);' href='#'>rect</a>";
+  txt += "<a class='"+(editmode==6 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(56);' href='#'>fillrect</a>";
+  txt += "<a class='"+(editmode==7 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(57);' href='#'>roomrect</a>";
 
   tmp.innerHTML = txt;
 }
@@ -1236,7 +1236,9 @@ function show_panel_number()
 
 function buttonfunc_act(act)
 {
-  editpaneldata.save_undopoint();
+  if (act < 40) {
+    editpaneldata.save_undopoint();
+  }
   switch (act) {
   case 0:  editpaneldata.fill(pen); break;
   case 1:  editpaneldata.clear(); break;
@@ -1271,8 +1273,35 @@ function buttonfunc_act(act)
 
   case 26: strip_pastepanel(); break;
 
+
+  case 40: panel_downloadcode(); break;
+  case 41: panel_submitcode(); break;
+  case 42: parse_code(); break;
+  case 43: pen_clr_fgcolor(); break;
+  case 44: pen_set_fgcolor("random"); break;
+  case 45: pen_set_sym(random_nethack_monster_sym()); break;
+  case 46: pen_save(); break;
+  case 47: pen_random(); break;
+  case 48: pen_insert(); break;
+
+  case 50: change_editmode(0); break;
+  case 51: change_editmode(1); break;
+  case 53: change_editmode(3); break;
+  case 54: change_editmode(4); break;
+  case 55: change_editmode(5); break;
+  case 56: change_editmode(6); break;
+  case 57: change_editmode(7); break;
+
+  case 60: strip_copypanel(); panel_redraw(); break;
+  case 61: strip_addpanel(); panel_redraw(); break;
+  case 62: strip_deletepanel(); panel_redraw(); break;
+  case 63: editpaneldata.undo(); panel_redraw(); break;
+  case 64: strip_prevpanel(); panel_redraw(); break;
+  case 65: strip_nextpanel(); panel_redraw(); break;
   }
-  panel_redraw();
+  if (act < 40) {
+    panel_redraw();
+  }
   return false;
 }
 
@@ -1325,21 +1354,21 @@ function show_buttons()
   txt += "<a class='button' onclick='return buttonfunc_act(24);' href='#'>wallify</a>";
   txt += "<a class='button' onclick='return buttonfunc_act(25);' href='#'>gravestone</a>";
   txt += " | ";
-  txt += "<a class='button' onclick='strip_copypanel();panel_redraw();return false;' href='#'>copy</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(60);' href='#'>copy</a>";
   txt += "<a class='button' onclick='return buttonfunc_act(26);' href='#'>paste</a>";
   txt += " | ";
-  txt += "<a class='button' onclick='strip_addpanel();panel_redraw();return false;' href='#'>add</a>";
-  txt += "<a class='button' onclick='strip_deletepanel();panel_redraw();return false;' href='#'>del</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(61);' href='#'>add</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(62);' href='#'>del</a>";
 
   txt += " | ";
-  txt += "<a class='button' onclick='editpaneldata.undo();panel_redraw();return false;' href='#'>undo</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(63);' href='#'>undo</a>";
 
   tmp.innerHTML = txt;
 
   tmp = document.getElementById("panel_selection_buttons");
   txt = "";
-  txt += "<a class='button' onclick='strip_prevpanel();panel_redraw();return false;' href='#'>&lt;-prev</a>";
-  txt += "<a class='button' onclick='strip_nextpanel();panel_redraw();return false;' href='#'>next-&gt;</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(64);' href='#'>&lt;-prev</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(65);' href='#'>next-&gt;</a>";
   tmp.innerHTML = txt;
 }
 
