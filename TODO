@@ -3,8 +3,6 @@
 
 -Add user's voting "history" to duduser.php
 
--Move all the stuff into a git repo.
-
 -month table should have links for previous & next month, and
  years. (drop-down options for both, too?)
 
@@ -50,8 +48,6 @@
 -list all comments by user 'foo'
 -page for listing links to a year's worth of comics (12 month tables)
 -paginate comments, if there's lots of them.
-
--paginate comments, if there's lots of them.
 -< Dentarthur> paxed: Also when changing the text of one panel
  and trying to switch to another, it jumps back to the panel you were
  just editing.
@@ -71,5 +67,3 @@
 -save more stuff into cookies
 -allow toggling the textentry editpanel off/on.
 -maybe move all those green buttons into <li> css menu structure.
--maybe allow user to define keys for commands.
-
