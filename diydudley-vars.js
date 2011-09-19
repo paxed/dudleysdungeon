@@ -1204,6 +1204,84 @@ var angband_symbols_array = new Array(
 
 var nethack_symbols = new Array();
 
+var buttonfunc_act_desc = new Array(
+    {'act':0,  'desc': "Fill panel with pen char"},
+    {'act':1,  'desc': "Clear panel"},
+    {'act':2,  'desc': "Remove panel colors"},
+    {'act':3,  'desc': "Randomly replace pen characters with ctrl_pen characters"},
+    {'act':4,  'desc': "Randomly scatter pen characters in the panel"},
+    {'act':5,  'desc': "Generate random panel"},
+    {'act':6,  'desc': "Generate random panel, dungeon room"},
+    {'act':7,  'desc': "Generate random panel, field"},
+    {'act':8,  'desc': "Generate random panel, splatterfield"},
+    {'act':9,  'desc': "Generate random panel, reverse splatterfield"},
+    {'act':10, 'desc': "Generate random panel, dug randwalk"},
+    {'act':11, 'desc': "Generate random panel, mines"},
+    {'act':12, 'desc': "Generate random panel, maze"},
+    {'act':13, 'desc': "Shift panel contents up"},
+    {'act':14, 'desc': "Shift panel contents left"},
+    {'act':15, 'desc': "Shift panel contents right"},
+    {'act':16, 'desc': "Shift panel contents down"},
+    {'act':17, 'desc': "Move symbols towards cursor"},
+    {'act':18, 'desc': "Move symbols randomly"},
+    {'act':19, 'desc': "Move symbols upwards"},
+    {'act':20, 'desc': "Move symbols downwards"},
+    {'act':21, 'desc': "Move symbols left"},
+    {'act':22, 'desc': "Move symbols right"},
+    {'act':23, 'desc': "Generate a maze, using pen"},
+    {'act':24, 'desc': "Wallify"},
+    {'act':25, 'desc': "Generate a gravestone"},
+    {'act':26, 'desc': "Paste panel"},
+    {'act':40, 'desc': "Download comic strip"},
+    {'act':41, 'desc': "Submit comic strip to the database (login required)"},
+    {'act':42, 'desc': "Parse comic code"},
+    {'act':43, 'desc': "Clear pen color"},
+    {'act':44, 'desc': "Random pen color"},
+    {'act':45, 'desc': "Set Pen to random monster"},
+    {'act':46, 'desc': "Save Pen"},
+    {'act':47, 'desc': "Randomize Pen"},
+    {'act':48, 'desc': "Insert Pen into panel text"},
+    {'act':50, 'desc': "Editmode: Draw"},
+    {'act':51, 'desc': "Editmode: Color picker"},
+    {'act':53, 'desc': "Editmode: Flood fill"},
+    {'act':54, 'desc': "Editmode: Lines"},
+    {'act':55, 'desc': "Editmode: Rectangles"},
+    {'act':56, 'desc': "Editmode: Filled rectangles"},
+    {'act':57, 'desc': "Editmode: Room rectangle"},
+    {'act':60, 'desc': "Copy panel"},
+    {'act':61, 'desc': "Add panel"},
+    {'act':62, 'desc': "Delete panel"},
+    {'act':63, 'desc': "Undo panel changes"},
+    {'act':64, 'desc': "Go to previous panel"},
+    {'act':65, 'desc': "Go to next panel"},
+    {'act':70, 'desc': "Swap Pen and ctrl_pen"},
+    {'act':71, 'desc': "Colorpick the symbol you hover on"},
+    {'act':72, 'desc': "Save current panel hover position as the start point for lines and rectangles"},
+    {'act':73, 'desc': "Set current panel hover position as cursor location"},
+    {'act':74, 'desc': "Show help"},
+    {'act':75, 'desc': "Toggle between colorpicker and draw mode"},
+    {'act':76, 'desc': "Toggle between flood fill and draw mode"},
+    {'act':77, 'desc': "Toggle between lines and draw mode"},
+    {'act':78, 'desc': "Toggle between rectangles, filled rectangles and draw modes"},
+    {'act':79, 'desc': "Show configuration window"}
+);
+
+/* saved pen quick keys override these */
+var default_keybindings = new Array(
+    {'key':'x', 'act':70},
+    {'key':'z', 'act':71},
+    {'key':'s', 'act':72},
+    {'key':'m', 'act':73},
+    {'key':'?', 'act':74},
+    {'key':'d', 'act':50},
+    {'key':'c', 'act':75},
+    {'key':'f', 'act':76},
+    {'key':'g', 'act':77},
+    {'key':'v', 'act':78}
+);
+
+var keybindings = default_keybindings;
+
 
 var cookie_prefix = "dudley_diy_";
 
@@ -1231,6 +1309,7 @@ var saved_pens = new Array(
 );
 
 var preview_window = undefined;
+var configuration_window = undefined;
 
 var code_checkbox;
 var preview_checkbox;

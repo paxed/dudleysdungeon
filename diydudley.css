@@ -230,10 +230,9 @@ a.withtooltip:hover {
  border: 1px black solid;
 }
 
+#configbtn,
 #help {
- position:absolute;
- right:1em;
- top:1em;
+  float:right;
 }
 
 .xlink {
@@ -244,7 +243,19 @@ a.withtooltip:hover {
   border-color: green;
 }
 
-
+#configpage {
+  background-color: white;
+}
+#configpage table tr:nth-child(odd) {
+  background-color: #f0f0f0;
+}
+#configpage table tr:hover td {
+  background-color: #c0c0c0;
+}
+#configpage table input {
+  text-align:center;
+  padding:0 0.5em;
+}
 
 
 td.conttl {

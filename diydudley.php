@@ -181,7 +181,8 @@ print 'var USR_dudley_root_url="'.$dudley_root_url."\";\n";
 </head>
 <body onload="pageload_init();">
 
-<a id="help" class="button" onclick="popup_help();return false;" href="#">HELP</a>
+<a id="help" class="button" onclick="return buttonfunc_act(74);" href="#">HELP</a>
+<a id="configbtn" class="button" onclick="return buttonfunc_act(79);" href="#">Config</a>
 <h1><a href="<?php echo $dudley_root_url; ?>">Dudley</a> D-I-Y</h1>
 
 <div id="poststatusdiv"></div>

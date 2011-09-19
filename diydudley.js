@@ -1298,6 +1298,59 @@ function buttonfunc_act(act)
   case 63: editpaneldata.undo(); panel_redraw(); break;
   case 64: strip_prevpanel(); panel_redraw(); break;
   case 65: strip_nextpanel(); panel_redraw(); break;
+
+  case 70: { var tmp = pen; pen = ctrl_pen; ctrl_pen = tmp; show_current_pen(); } break;
+  case 71:
+      if (hovering_on_editpanel) {
+	  var tmp = editpaneldata.get_data(current_pos_x,current_pos_y);
+	  pen_set_sym(tmp);
+      }
+      break;
+  case 72:
+    if (hovering_on_editpanel) {
+      var tmpeditmode = editmode;
+      change_editmode(0);
+      cursor_x = current_pos_x;
+      cursor_y = current_pos_y;
+      change_editmode(tmpeditmode);
+    }
+    break;
+  case 73:
+    if (hovering_on_editpanel) {
+	if (panels[editpanel_strippanel].panel.cursor.x == current_pos_x &&
+	    panels[editpanel_strippanel].panel.cursor.y == current_pos_y) {
+	    editpaneldata.set_cursor(-1, -1);
+	    panels[editpanel_strippanel].panel.set_cursor(-1, -1);
+	} else {
+	    editpaneldata.set_cursor(current_pos_x, current_pos_y);
+	    panels[editpanel_strippanel].panel.set_cursor(current_pos_x, current_pos_y);
+	}
+	panel_redraw();
+    }
+    break;
+  case 74: popup_help(); break;
+  case 75:
+    if (editmode == 1) change_editmode(0);
+    else change_editmode(1);
+    break;
+  case 76:
+    if (editmode == 3) change_editmode(0);
+    else change_editmode(3);
+    break;
+  case 77:
+    if (editmode == 4) change_editmode(0);
+    else change_editmode(4);
+    break;
+  case 78:
+    if (editmode == 5) {
+      change_editmode(6);
+    } else if (editmode == 6) {
+      change_editmode(0);
+    } else {
+      change_editmode(5);
+    }
+    break;
+  case 79: config_window(); break;
   }
   if (act < 40) {
     panel_redraw();
@@ -1977,78 +2030,20 @@ function handle_keyb(e)
   else
     str = str.toLowerCase();
 
-  switch (str) {
-  default:
     /* is it a saved pen quick key? */
     for (i = 0; i < saved_pens.length; i++) {
       if ((saved_pens[i].key != undefined) && (str == saved_pens[i].key)) {
-	pen_set_fg_chr(undefined, saved_pens[i].fg, saved_pens[i].chr.charCodeAt(0));
-	break;
+	  pen_set_fg_chr(undefined, saved_pens[i].fg, saved_pens[i].chr.charCodeAt(0));
+	  return;
       }
     }
-    break;
-  case 'x':
-    var tmp = pen;
-    pen = ctrl_pen;
-    ctrl_pen = tmp;
-    show_current_pen();
-    break;
-  case 'z':
-    if (hovering_on_editpanel) {
-      var tmp = editpaneldata.get_data(current_pos_x,current_pos_y);
-      pen_set_sym(tmp);
-    }
-    break;
-  case 's':
-    if (hovering_on_editpanel) {
-      var tmpeditmode = editmode;
-      change_editmode(0);
-      cursor_x = current_pos_x;
-      cursor_y = current_pos_y;
-      change_editmode(tmpeditmode);
-    }
-    break;
-  case 'm':
-    if (hovering_on_editpanel) {
-	if (panels[editpanel_strippanel].panel.cursor.x == current_pos_x &&
-	    panels[editpanel_strippanel].panel.cursor.y == current_pos_y) {
-	    editpaneldata.set_cursor(-1, -1);
-	    panels[editpanel_strippanel].panel.set_cursor(-1, -1);
-	} else {
-	    editpaneldata.set_cursor(current_pos_x, current_pos_y);
-	    panels[editpanel_strippanel].panel.set_cursor(current_pos_x, current_pos_y);
+
+    for (i = 0; i < keybindings.length; i++) {
+	if (keybindings[i].key == str) {
+	    buttonfunc_act(keybindings[i].act);
+	    return;
 	}
-	panel_redraw();
     }
-    break;
-  case '?':
-      popup_help();
-      break;
-  case 'd':
-    change_editmode(0);
-    break;
-  case 'c':
-    if (editmode == 1) change_editmode(0);
-    else change_editmode(1);
-    break;
-  case 'f':
-    if (editmode == 3) change_editmode(0);
-    else change_editmode(3);
-    break;
-  case 'g':
-    if (editmode == 4) change_editmode(0);
-    else change_editmode(4);
-    break;
-  case 'v':
-    if (editmode == 5) {
-      change_editmode(6);
-    } else if (editmode == 6) {
-      change_editmode(0);
-    } else {
-      change_editmode(5);
-    }
-    break;
-  }
 }
 
 function set_checkbox_on(cbox)
@@ -2104,12 +2099,165 @@ function popup_help()
     var helpwin = window.open('diydudley-help.html', 'Dudley DIY Help', 'width=500, height=600, resizeable=yes,scrollbars=yes');
 }
 
+function get_buttonfunc_act_desc(act)
+{
+    var i;
+    for (i = 0; i < buttonfunc_act_desc.length; i++) {
+	if (buttonfunc_act_desc[i].act == act) {
+	    return buttonfunc_act_desc[i].desc;
+	}
+    }
+    return "Unknown action?";
+}
+
+function keybindings_clear()
+{
+    eraseCookie(cookie_prefix + "keybindings");
+    keybindings = default_keybindings;
+}
+
+function keybindings_save()
+{
+    var txt = "";
+    var i;
+    for (i = 0; i < keybindings.length; i++) {
+	txt += keybindings[i].key.charCodeAt(0)+":"+keybindings[i].act;
+	if (i < keybindings.length - 1) { txt += ","; }
+    }
+    createCookie(cookie_prefix + "keybindings", txt, 365);
+}
+
+
+function keybindings_load()
+{
+    var str = readCookie(cookie_prefix + "keybindings");
+    if (str) {
+	var i;
+	var arr = str.split(",");
+	keybindings = new Array();
+	for (i = 0; i < arr.length; i++) {
+	    var tmp = arr[i].split(":");
+	    var key = String.fromCharCode(tmp[0]);
+	    var act = parseInt(tmp[1]);
+	    keybindings.push({'key':key, 'act':act});
+	}
+    }
+}
+
+function get_keybind_table_tr(i, key, act, notr)
+{
+    var txt = "";
+    if (!notr) { txt += "<tr id='keybind_table_row_"+i+"'>"; }
+    txt += "<td><input type='text' size='1' maxlength='1' id='keybind_key_"+i+"' value='" +key + "'></td>";
+    txt += "<td>" + mk_buttonfunc_desc_select(i, act) + "</td>";
+    txt += "<td><span class='button' onClick='window.opener.config_window_keybind_delbtn("+i+");'>del</span></td>";
+    if (!notr) { txt += "</tr>"; }
+    return txt;
+}
+
+function keybindings_add()
+{
+    var len = configuration_window.document.getElementById("max_keybind_idx");
+    if (!len) return;
+    len.value = parseInt(len.value) + 1;
+    var keytable = configuration_window.document.getElementById("keybindings_table");
+    if (!keytable) return;
+    var tr = document.createElement('tr');
+    tr.id = 'keybind_table_row_' + len.value;
+    tr.innerHTML = get_keybind_table_tr(len.value, '?', 0, 1);
+    keytable.appendChild(tr);
+}
+
+function config_window_keybind_delbtn(i)
+{
+    var e = configuration_window.document.getElementById("keybind_table_row_"+i);
+    if (!e) return;
+    e.style.display='none';
+    var key = configuration_window.document.getElementById("keybind_key_"+i);
+    if (!key) return;
+    key.value = '';
+}
+
+function config_window_save()
+{
+    if (configuration_window == undefined || configuration_window.closed) return false;
+    var i;
+    var len = configuration_window.document.getElementById("max_keybind_idx");
+    if (!len) return false;
+    keybindings = new Array();
+    for (i = 0; i <= len.value; i++) {
+	var e = configuration_window.document.getElementById("keybind_key_"+i);
+	var a = configuration_window.document.getElementById("keybind_act_"+i);
+	if (e && a) {
+	    var ch = e.value.charCodeAt(0);
+	    if ((ch >= ' '.charCodeAt(0)) && (ch <= '~'.charCodeAt(0))) {
+		keybindings.push({'key':e.value, 'act':parseInt(a.options[a.selectedIndex].value)});
+	    }
+	}
+    }
+    keybindings_save();
+    return false;
+}
+
+function mk_buttonfunc_desc_select(id, act)
+{
+    var txt = '<select id="keybind_act_'+id+'">';
+    var i;
+    for (i = 0; i < buttonfunc_act_desc.length; i++) {
+	txt += '<option value="'+buttonfunc_act_desc[i].act+'"';
+	if (buttonfunc_act_desc[i].act == act) {
+	    txt += ' selected';
+	}
+	txt += '>' + buttonfunc_act_desc[i].desc + '</option>';
+    }
+    txt += '</select>';
+    return txt;
+}
+
+function config_window()
+{
+    var txt = "<h2>Configuration</h2>";
+
+    txt += "<h3>Key bindings</h3>";
+    txt += "<input type='hidden' id='max_keybind_idx' value='" + keybindings.length + "'>";
+    txt += "<table id='keybindings_table'>";
+    txt += "<tr><th>Key</th><th>Description</th></tr>";
+    var i;
+    for (i = 0; i < keybindings.length; i++) {
+	txt += get_keybind_table_tr(i, keybindings[i].key, keybindings[i].act, 0);
+    }
+    txt += "</table>";
+
+    txt += "<span class='button' onClick='window.opener.keybindings_add();'>Add</span>";
+
+    txt += "<hr>";
+
+    txt += "<a class='button' onClick='window.opener.config_window_save();window.close(); return false;' href='#'>Save</a>";
+    txt += " | <a class='button' onClick='window.close(); return false;' href='#'>Close without saving</a>";
+    txt += " | <a class='button' onClick='window.opener.keybindings_clear();window.close(); return false;' href='#'>Reset to defaults</a>";
+
+    if (configuration_window == undefined || configuration_window.closed) {
+	var cw = window.open('', 'DIY Dudley Configuration', 'width=800, height=800, resizeable=yes,scrollbars=yes');
+	cw.document.open("text/html", "replace");
+	cw.document.write('<html>'+
+			  '<head>'+
+			  '<link rel="stylesheet" type="text/css" media="screen" href="diydudley.css">'+
+			  '</head>'+
+			  '<body id="configpage">'+txt+
+			  '</body>'+
+			  '</html>');
+	cw.document.close();
+	configuration_window = cw;
+    }
+}
+
 function pageload_init()
 {
   code_checkbox = document.getElementById("code_cbox");
   preview_checkbox = document.getElementById("preview_cbox");
 
   old_pen_parsecookiestr(readCookie(cookie_prefix + "saved_pens"));
+  keybindings_load();
 
   game_symbols_update();
   /*fix_nethacksym_list();*/
