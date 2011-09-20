@@ -202,7 +202,7 @@ a.withtooltip:hover {
 .button {
  color:black;
  background-color:#90e090;
- border: 1px green solid;
+ border: 2px outset green;
  margin: 0.25em;
  line-height: 1.5em;
  cursor: pointer;
@@ -210,11 +210,11 @@ a.withtooltip:hover {
 }
 .button:hover, .tooltip .button:hover {
  background-color:green;
- border: 1px black solid;
+ border: 2px inset black;
 }
 .button_disabled {
  background-color:#909090;
- border: 1px darkgray solid;
+ border: 2px outset darkgray;
  margin: 0.25em;
  line-height: 1.5em;
  cursor: pointer;
@@ -228,8 +228,6 @@ a.withtooltip:hover {
  display: inline;
 }
 .tooltip .button_disabled:hover {
-  background-color:darkgray;
- border: 1px black solid;
 }
 
 #configbtn,

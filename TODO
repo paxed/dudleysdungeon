@@ -18,6 +18,11 @@
 -BUG: duduser.php considers user's comments from strips with approved=false
 
 
+-diydudley: config window should also show the pen quick keys
+-diydudley: make config window complain when two entries have same keys?
+
+-document the comic strip format
+
 
 -diydudley: a new method of doing written text into the panel:
   WRITE:(x,y),"text"
