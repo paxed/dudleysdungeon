@@ -1774,7 +1774,7 @@ function strip_preview_panels()
   if (popup && (popup.checked == true)) {
     txt = txt.replace(/ onClick=.strip_editpanel/g, ' onClick="window.opener.strip_editpanel');
     if (preview_window == undefined || preview_window.closed) {
-	preview_window = window.open('', 'Preview', 'width=600, height=400, resizeable=yes,scrollbars=yes');
+	preview_window = window.open('', null, 'width=600, height=400, resizeable=yes,scrollbars=yes');
 	preview_window.document.open("text/html","replace");
 	preview_window.document.write('<html>'+
 				      '<head>'+
@@ -2099,7 +2099,7 @@ function show_editpanel_textarea()
 
 function popup_help()
 {
-    var helpwin = window.open('diydudley-help.html', 'Dudley DIY Help', 'width=500, height=600, resizeable=yes,scrollbars=yes');
+    var helpwin = window.open('diydudley-help.html', null, 'width=500, height=600, resizeable=yes,scrollbars=yes');
 }
 
 function get_buttonfunc_act_desc(act)
@@ -2240,7 +2240,7 @@ function config_window()
     txt += " | <a class='button' onClick='window.opener.keybindings_clear();window.close(); return false;' href='#'>Reset to defaults</a>";
 
     if (configuration_window == undefined || configuration_window.closed) {
-	var cw = window.open('', 'DIY Dudley Configuration', 'width=800, height=800, resizeable=yes,scrollbars=yes');
+	var cw = window.open('', null, 'width=800, height=800, resizeable=yes,scrollbars=yes');
 	cw.document.open("text/html", "replace");
 	cw.document.write('<html>'+
 			  '<head>'+
