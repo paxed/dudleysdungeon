@@ -765,8 +765,14 @@ function pen_set_chr(chr)
 
 function pen_set_sym(sym)
 {
-  pen.chr = sym.chr;
-  pen.fg = sym.fg;
+  if ((ctrl_pen.chr == sym.chr) && (ctrl_pen.fg == sym.fg)) {
+      var tmp = pen;
+      pen = ctrl_pen;
+      ctrl_pen = tmp;
+  } else {
+      pen.chr = sym.chr;
+      pen.fg = sym.fg;
+  }
   show_current_pen();
   color_selection();
   char_selection();
