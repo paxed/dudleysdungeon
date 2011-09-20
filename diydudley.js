@@ -1785,6 +1785,7 @@ function strip_preview_panels()
 	preview_window.document.write('<html>'+
 				      '<head>'+
 				      '<link rel="stylesheet" type="text/css" media="screen" href="diydudley.css">'+
+				      '<title>Strip Preview - Dudley D-I-Y</title>'+
 				      '</head>'+
 				      '<body>'+
 				      '<div id="preview_strip">'+txt+'</div>'+
@@ -2251,6 +2252,7 @@ function config_window()
 	cw.document.write('<html>'+
 			  '<head>'+
 			  '<link rel="stylesheet" type="text/css" media="screen" href="diydudley.css">'+
+			  '<title>Configuration - Dudley D-I-Y</title>'+
 			  '</head>'+
 			  '<body id="configpage">'+txt+
 			  '</body>'+
