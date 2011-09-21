@@ -20,6 +20,14 @@ function Panel(wid, hei)
 	  this.undostate.push(this.clone());
       };
 
+  this.check_undopoint = function()
+      {
+	  if ((this.undostate == undefined) || (this.undostate.length < 1)) return;
+	  if (this.equal(this.undostate[this.undostate.length - 1])) {
+	      this.undostate.pop();
+	  }
+      };
+
   this.has_undo = function()
       {
 	  if (this.undostate != undefined) {
@@ -42,6 +50,23 @@ function Panel(wid, hei)
 	      }
 	  }
       };
+
+  this.equal = function(panel)
+    {
+	var i;
+	if (panel.cursor.x != this.cursor.x || panel.cursor.y != this.cursor.y) return false;
+	if (panel.WID != this.WID || panel.HEI != this.HEI) return false;
+	for (i = 0; i < (this.WID * this.HEI); i++) {
+	    var tc = this.mapdata[i].chr;
+	    var pc = panel.mapdata[i].chr;
+	    var tf = this.mapdata[i].fg;
+	    var pf = panel.mapdata[i].fg;
+	    if (tf == undefined) tf = "gray";
+	    if (pf == undefined) pf = "gray";
+	    if ((tc != pc) || (tf != pf)) return false;
+	}
+	return true;
+    }
 
   this.clone = function()
     {

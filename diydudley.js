@@ -117,6 +117,7 @@ function panel_draw_gravestone()
 
   cursor_x = oldx;
   cursor_y = oldy;
+  editpaneldata.check_undopoint();
 }
 
 
@@ -281,6 +282,7 @@ function panel_update(event, x,y)
   case 0: /* pen drawing */
     editpaneldata.save_undopoint();
     editpaneldata.set_data(x,y,p);
+    editpaneldata.check_undopoint();
     break;
   case 1: /* color picker */
     var tmp = editpaneldata.get_data(x,y);
@@ -290,18 +292,22 @@ function panel_update(event, x,y)
   case 3: /* flood fill */
     editpaneldata.save_undopoint();
     editpaneldata.draw_floodfill(x,y, p);
+    editpaneldata.check_undopoint();
     break;
   case 4: /* line draw */
     editpaneldata.save_undopoint();
     editpaneldata.draw_line(cursor_x, cursor_y, x,y, p);
+    editpaneldata.check_undopoint();
     break;
   case 5: /* rect draw */
     editpaneldata.save_undopoint();
     editpaneldata.draw_rect(cursor_x, cursor_y, x,y, p);
+    editpaneldata.check_undopoint();
     break;
   case 6: /* fill rect draw */
     editpaneldata.save_undopoint();
     editpaneldata.draw_rect_filled(cursor_x, cursor_y, x,y, p);
+    editpaneldata.check_undopoint();
     break;
   case 7: /* room rect */
       editpaneldata.save_undopoint();
@@ -310,6 +316,7 @@ function panel_update(event, x,y)
 
       editpaneldata.draw_line(cursor_x, cursor_y, x, cursor_y, {'chr':'-'});
       editpaneldata.draw_line(cursor_x,        y, x,        y, {'chr':'-'});
+      editpaneldata.check_undopoint();
       break;
   }
 
@@ -1433,6 +1440,7 @@ function buttonfunc_act(act)
   case 79: config_window(); break;
   }
   if (act < 40) {
+    editpaneldata.check_undopoint();
     panel_redraw();
   }
   return false;
@@ -1976,12 +1984,15 @@ function accept_new_panels_size()
     for (i = 0; i < n_panels; i++) {
       panels[i].panel.save_undopoint();
       panels[i].panel.resize(nw, nh);
+      panels[i].panel.check_undopoint();
     }
     editpaneldata.save_undopoint();
     editpaneldata.resize(nw, nh);
+    editpaneldata.check_undopoint();
   } else {
     editpaneldata.save_undopoint();
     editpaneldata.resize(nw, nh);
+    editpaneldata.check_undopoint();
   }
 
   show_editpanel_textarea();
@@ -2168,6 +2179,7 @@ function update_editpanel_textarea(dir)
 	}
       }
     }
+    editpaneldata.check_undopoint();
     panel_redraw();
   } else { /* editpanel -> textarea */
     str = "";
