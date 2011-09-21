@@ -1266,6 +1266,9 @@ var buttonfunc_act_desc = new Array(
     {'act':79, 'desc': "Show configuration window"}
 );
 
+var default_keybinding_keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+var keybinding_keys = default_keybinding_keys;
+
 /* saved pen quick keys override these */
 var default_keybindings = new Array(
     {'key':'x', 'act':70},

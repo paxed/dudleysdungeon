@@ -17,8 +17,41 @@ function getkeyb_handler_string()
   return " onfocus='document.onkeyup=null' onblur='document.onkeyup=handle_keyb' ";
 }
 
+function bindable_key_get()
+{
+    if (keybinding_keys.length > 0) {
+	var chr = keybinding_keys.substr(0,1);
+	keybinding_keys = keybinding_keys.substr(1);
+	return chr;
+    } else return undefined;
+}
 
+function bindable_key_remove(key)
+{
+    var idx = keybinding_keys.indexOf(key);
+    if (idx >= 0) {
+	keybinding_keys = keybinding_keys.substr(0, idx) + keybinding_keys.substr(idx+1);
+    }
+}
 
+function bindable_key_release(key)
+{
+    var x = key.charCodeAt(0);
+    var i;
+    for (i = 0; i < keybinding_keys.length; i++) {
+	var ch = keybinding_keys.substr(i,0);
+	if (ch.charCodeAt(0) < x) {
+	    keybinding_keys = keybinding_keys.substr(0, i) + key + keybinding_keys.substr(i);
+	}
+    }
+}
+
+function bindable_key_isfree(key)
+{
+    var idx = keybinding_keys.indexOf(key);
+    if (idx >= 0) return true;
+    return false;
+}
 
 function panel_write_character(ch, fg)
 {
@@ -828,8 +861,10 @@ function old_pen_parsecookiestr(str)
 	  quick_pen_keys = quick_pen_keys.substr(0, idx) + quick_pen_keys.substr(idx+1);
       }
     }
-    if (chr)
-      saved_pens.push({'chr':chr, 'fg':fg, 'key':key});
+    if (chr) {
+	saved_pens.push({'chr':chr, 'fg':fg, 'key':key});
+	bindable_key_remove(key);
+    }
   }
 }
 
@@ -842,6 +877,7 @@ function assign_keys_to_pens()
 	    quick_pen_keys = quick_pen_keys.substr(1);
 	    if (chr) {
 		saved_pens[i].key = chr;
+		bindable_key_remove(chr);
 	    }
 	}
     }
@@ -1102,6 +1138,7 @@ function old_pen_assign_key(i, key)
   var idx = quick_pen_keys.indexOf(key);
   if (idx >= 0) {
     quick_pen_keys = quick_pen_keys.substr(0, idx) + quick_pen_keys.substr(idx+1);
+    bindable_key_remove(key);
   }
 }
 
@@ -2186,15 +2223,24 @@ function keybindings_load()
 	    var key = String.fromCharCode(tmp[0]);
 	    var act = parseInt(tmp[1]);
 	    keybindings.push({'key':key, 'act':act});
+	    bindable_key_remove(key);
 	}
     }
+}
+
+function config_keybind_input_error(t)
+{
+    if (!t) return
+    if ((t.value.length < 1) || (t.value.length > 1) || (bindable_key_isfree(t.value) == false))
+	t.style.background = 'pink';
+    else t.style.background = 'white';
 }
 
 function get_keybind_table_tr(i, key, act, notr)
 {
     var txt = "";
     if (!notr) { txt += "<tr id='keybind_table_row_"+i+"'>"; }
-    txt += "<td><input type='text' size='1' maxlength='1' id='keybind_key_"+i+"' value='" +key + "'></td>";
+    txt += "<td><input type='text' size='1' maxlength='1' id='keybind_key_"+i+"' value='" +key + "' onkeyup='window.opener.config_keybind_input_error(this);'></td>";
     txt += "<td>" + mk_buttonfunc_desc_select(i, act) + "</td>";
     txt += "<td><span class='button' onClick='window.opener.config_window_keybind_delbtn("+i+");'>del</span></td>";
     if (!notr) { txt += "</tr>"; }
@@ -2209,8 +2255,10 @@ function keybindings_add()
     var keytable = configuration_window.document.getElementById("keybindings_table");
     if (!keytable) return;
     var tr = document.createElement('tr');
+    var key = bindable_key_get();
+    if (key == undefined) key = '?';
     tr.id = 'keybind_table_row_' + len.value;
-    tr.innerHTML = get_keybind_table_tr(len.value, '?', 0, 1);
+    tr.innerHTML = get_keybind_table_tr(len.value, key, 0, 1);
     keytable.appendChild(tr);
 }
 
@@ -2224,10 +2272,27 @@ function config_window_keybind_delbtn(i)
     key.value = '';
 }
 
+function bindable_keys_reset()
+{
+    var i;
+    keybinding_keys = default_keybinding_keys;
+    for (i = 0; i < saved_pens.length; i++) {
+	if (saved_pens[i].key != undefined) {
+	    bindable_key_remove(saved_pens[i].key);
+	}
+    }
+    for (i = 0; i < keybindings.length; i++) {
+	if (keybindings[i].key != undefined) {
+	    bindable_key_remove(keybindings[i].key);
+	}
+    }
+}
+
 function config_window_reset()
 {
     keybindings_clear();
     saved_pens_restore();
+    bindable_keys_reset();
 }
 
 function config_window_nosave()
@@ -2243,6 +2308,7 @@ function config_window_save()
     var i;
     var len = configuration_window.document.getElementById("max_keybind_idx");
     if (!len) return false;
+    keybinding_keys = default_keybinding_keys;
     keybindings = new Array();
     for (i = 0; i <= len.value; i++) {
 	var e = configuration_window.document.getElementById("keybind_key_"+i);
@@ -2251,6 +2317,7 @@ function config_window_save()
 	    var ch = e.value.charCodeAt(0);
 	    if ((ch >= ' '.charCodeAt(0)) && (ch <= '~'.charCodeAt(0))) {
 		keybindings.push({'key':e.value, 'act':parseInt(a.options[a.selectedIndex].value)});
+		bindable_key_remove(e.value);
 	    }
 	}
     }
@@ -2264,6 +2331,7 @@ function config_window_save()
 		var e = configuration_window.document.getElementById("pen_quick_key_" + i);
 		if (e) {
 		    saved_pens[i].key = e.value;
+		    bindable_key_remove(e.value);
 		}
 	    }
 	}
