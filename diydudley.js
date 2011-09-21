@@ -833,6 +833,29 @@ function old_pen_parsecookiestr(str)
   }
 }
 
+function assign_keys_to_pens()
+{
+    var i;
+    for (i = 0; i < saved_pens.length; i++) {
+	if (quick_pen_keys.length > 0) {
+	    var chr = quick_pen_keys.substr(0,1);
+	    quick_pen_keys = quick_pen_keys.substr(1);
+	    if (chr) {
+		saved_pens[i].key = chr;
+	    }
+	}
+    }
+}
+
+function saved_pens_restore()
+{
+    saved_pens = default_saved_pens;
+    quick_pen_keys = default_quick_pen_keys;
+    assign_keys_to_pens();
+    show_saved_pens();
+    eraseCookie(cookie_prefix + "saved_pens");
+}
+
 function old_pen_cookiestr()
 {
   var str = "";
@@ -932,6 +955,14 @@ function penset_span(chr, fg, desc)
   if (desc != undefined) { txt += "<span class='tooltip'>" + desc + "</span>"; }
   txt += "</a>";
 
+  return txt;
+}
+
+function penset_span_noclick(chr, fg)
+{
+  var txt = "";
+  if (fg == undefined) fg = "gray";
+  txt += "<span class='f_" + fg + "'>" + htmlentities(chr) + "</span>";
   return txt;
 }
 
@@ -1082,19 +1113,8 @@ function old_pen_set_key(i)
   show_saved_pens();
 }
 
-function show_saved_pens()
+function get_saved_pens_popup(i)
 {
-  var tmp = document.getElementById("saved_pens");
-  var i;
-  var txt;
-  var ldir, rdir;
-
-  txt = "pen: <a class='button' onclick='return buttonfunc_act(46);' href='#'>save</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(47);' href='#'>random</a> - ";
-
-  for (i = 0; i < saved_pens.length; i++) {
-    var fg = saved_pens[i].fg;
-    var chr = saved_pens[i].chr;
     var key = saved_pens[i].key;
     var popup = undefined;
 
@@ -1124,9 +1144,25 @@ function show_saved_pens()
     popup += " key:<input type='text' "+getkeyb_handler_string()+" size='1' id='old_pen_set_key_"+i+"'";
     if (key != undefined) popup += " value='"+key+"'";
     popup += " onchange='old_pen_set_key("+i+");'>";
+    return popup;
+}
+
+function show_saved_pens()
+{
+  var tmp = document.getElementById("saved_pens");
+  var i;
+  var txt;
+  var ldir, rdir;
+
+  txt = "pen: <a class='button' onclick='return buttonfunc_act(46);' href='#'>save</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(47);' href='#'>random</a> - ";
+
+  for (i = 0; i < saved_pens.length; i++) {
+    var fg = saved_pens[i].fg;
+    var chr = saved_pens[i].chr;
 
     txt += "<span class='saved_pens'>";
-    txt += penset_span(chr, fg, popup);
+    txt += penset_span(chr, fg, get_saved_pens_popup(i));
     txt += "</span>";
   }
 
@@ -2188,6 +2224,19 @@ function config_window_keybind_delbtn(i)
     key.value = '';
 }
 
+function config_window_reset()
+{
+    keybindings_clear();
+    saved_pens_restore();
+}
+
+function config_window_nosave()
+{
+    var i;
+    for (i = 0; i < saved_pens.length; i++)
+	saved_pens[i].del = 0;
+}
+
 function config_window_save()
 {
     if (configuration_window == undefined || configuration_window.closed) return false;
@@ -2206,6 +2255,21 @@ function config_window_save()
 	}
     }
     keybindings_save();
+
+    for (i = saved_pens.length - 1; i > -1; i--) {
+	if (saved_pens[i] != undefined) {
+	    if (saved_pens[i].del == 1) {
+		old_pen_remove(i);
+	    } else {
+		var e = configuration_window.document.getElementById("pen_quick_key_" + i);
+		if (e) {
+		    saved_pens[i].key = e.value;
+		}
+	    }
+	}
+    }
+    if (saved_pens.length == 0) saved_pens_restore();
+
     return false;
 }
 
@@ -2228,13 +2292,26 @@ function config_window()
 {
     if ((configuration_window != undefined) && !configuration_window.closed) return;
 
+    var i;
     var txt = "<h2>Configuration</h2>";
 
     txt += "<h3>Key bindings</h3>";
     txt += "<input type='hidden' id='max_keybind_idx' value='" + keybindings.length + "'>";
     txt += "<table id='keybindings_table'>";
     txt += "<tr><th>Key</th><th>Description</th><th>&nbsp;</th></tr>";
-    var i;
+
+    for (i = 0; i < saved_pens.length; i++) {
+	if ((saved_pens[i].key != undefined)) {
+	    txt += "<tr>";
+	    txt += "<td><input type='text' size='1' maxlength='1' id='pen_quick_key_"+i+"' value='" + saved_pens[i].key + "'></td>";
+	    txt += "<td>Set Pen to <span class='saved_pens'>" + penset_span_noclick(saved_pens[i].chr, saved_pens[i].fg) + "</span></td>";
+	    txt += "<td><span class='button' onClick='window.opener.saved_pens["+i+"].del=1; this.parentNode.parentNode.style.display=\"none\";'>del</span></td>";
+	    txt += "</tr>";
+	    pen_set_fg_chr(undefined, saved_pens[i].fg, saved_pens[i].chr.charCodeAt(0));
+	    saved_pens[i].del=0;
+	}
+    }
+
     for (i = 0; i < keybindings.length; i++) {
 	txt += get_keybind_table_tr(i, keybindings[i].key, keybindings[i].act, 0);
     }
@@ -2245,8 +2322,8 @@ function config_window()
     txt += "<hr>";
 
     txt += "<a class='button' onClick='window.opener.config_window_save();window.close(); return false;' href='#'>Save</a>";
-    txt += " | <a class='button' onClick='window.close(); return false;' href='#'>Close without saving</a>";
-    txt += " | <a class='button' onClick='window.opener.keybindings_clear();window.close(); return false;' href='#'>Reset to defaults</a>";
+    txt += " | <a class='button' onClick='window.opener.config_window_nosave();window.close(); return false;' href='#'>Close without saving</a>";
+    txt += " | <a class='button' onClick='window.opener.config_window_reset();window.close(); return false;' href='#'>Reset to defaults</a>";
 
     var cw = window.open('', null, 'width=800, height=800, resizeable=yes,scrollbars=yes');
     cw.document.open("text/html", "replace");

@@ -1285,7 +1285,8 @@ var keybindings = default_keybindings;
 
 var cookie_prefix = "dudley_diy_";
 
-var quick_pen_keys = "1234567890";
+var default_quick_pen_keys = "1234567890";
+var quick_pen_keys = default_quick_pen_keys;
 
 var editmode_str = new Array("Drawing Pen", "ColorPicker", "TextWriter", "FloodFill", "LineDraw", "Rectangle", "FillRect", "RoomWallRect");
 
@@ -1294,7 +1295,7 @@ var editmode = 0;
 var pen = {'chr':"."};
 var ctrl_pen = {'chr':" "};
 
-var saved_pens = new Array(
+var default_saved_pens = new Array(
 {'chr':".", 'fg': "gray"},
 {'chr':" ", 'fg': "gray"},
 {'chr':"|", 'fg': "gray"},
@@ -1307,6 +1308,7 @@ var saved_pens = new Array(
 {'chr':"f", 'fg': "white"},
 {'chr':"d", 'fg': "white"}
 );
+var saved_pens = default_saved_pens;
 
 var preview_window = undefined;
 var configuration_window = undefined;
