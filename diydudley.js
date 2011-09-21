@@ -185,6 +185,7 @@ function panel_redraw()
   panel_showcode();
   strip_preview_panels();
   update_editpanel_textarea();
+  set_undobtn_state();
 }
 
 function panel_mouse_hover(x,y, onoff)
@@ -1437,6 +1438,17 @@ function buttonfunc_act(act)
   return false;
 }
 
+function set_undobtn_state()
+{
+    var tmp = document.getElementById('undo_btn');
+    if (tmp) {
+	if (editpaneldata.has_undo()) {
+	    tmp.className = "button";
+	} else {
+	    tmp.className = "button_disabled";
+	}
+    }
+}
 
 function show_buttons()
 {
@@ -1493,7 +1505,7 @@ function show_buttons()
   txt += "<a class='button' onclick='return buttonfunc_act(62);' href='#'>del</a>";
 
   txt += " | ";
-  txt += "<a class='button' onclick='return buttonfunc_act(63);' href='#'>undo</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(63);' href='#' id='undo_btn'>undo</a>";
 
   tmp.innerHTML = txt;
 
@@ -2439,6 +2451,7 @@ function pageload_init()
   panel_showcode();
   panel_download_save();
   editpanel_dirty = 0;
+  set_undobtn_state();
 
   strip_preview_panels();
   show_panel_number();

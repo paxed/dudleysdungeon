@@ -18,9 +18,7 @@
 -BUG: duduser.php considers user's comments from strips with approved=false
 
 
--diydudley: config window should also show the pen quick keys
 -diydudley: make config window complain when two entries have same keys?
--diydudley: undo-button should be greyed out if nothing to undo.
 
 -document the comic strip format
 
