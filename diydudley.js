@@ -2226,6 +2226,8 @@ function mk_buttonfunc_desc_select(id, act)
 
 function config_window()
 {
+    if ((configuration_window != undefined) && !configuration_window.closed) return;
+
     var txt = "<h2>Configuration</h2>";
 
     txt += "<h3>Key bindings</h3>";
@@ -2246,20 +2248,18 @@ function config_window()
     txt += " | <a class='button' onClick='window.close(); return false;' href='#'>Close without saving</a>";
     txt += " | <a class='button' onClick='window.opener.keybindings_clear();window.close(); return false;' href='#'>Reset to defaults</a>";
 
-    if (configuration_window == undefined || configuration_window.closed) {
-	var cw = window.open('', null, 'width=800, height=800, resizeable=yes,scrollbars=yes');
-	cw.document.open("text/html", "replace");
-	cw.document.write('<html>'+
-			  '<head>'+
-			  '<link rel="stylesheet" type="text/css" media="screen" href="diydudley.css">'+
-			  '<title>Configuration - Dudley D-I-Y</title>'+
-			  '</head>'+
-			  '<body id="configpage">'+txt+
-			  '</body>'+
-			  '</html>');
-	cw.document.close();
-	configuration_window = cw;
-    }
+    var cw = window.open('', null, 'width=800, height=800, resizeable=yes,scrollbars=yes');
+    cw.document.open("text/html", "replace");
+    cw.document.write('<html>'+
+		      '<head>'+
+		      '<link rel="stylesheet" type="text/css" media="screen" href="diydudley.css">'+
+		      '<title>Configuration - Dudley D-I-Y</title>'+
+		      '</head>'+
+		      '<body id="configpage">'+txt+
+		      '</body>'+
+		      '</html>');
+    cw.document.close();
+    configuration_window = cw;
 }
 
 function pageload_init()
