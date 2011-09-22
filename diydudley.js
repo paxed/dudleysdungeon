@@ -621,7 +621,7 @@ function panel_showcode()
     txt += "<textarea id='strip_code_textarea' "+getkeyb_handler_string()+" rows='50' cols='80'>";
     txt += panel_getcode(0);
     txt += "</textarea>";
-    btn += "<a href='#' class='button' onclick='return buttonfunc_act(42);'>parse</a>";
+    txt += "<a href='#' class='button' onclick='return buttonfunc_act(42);'>parse</a>";
   } else {
     txt += "<pre>";
     txt += panel_getcode(1);
@@ -2196,8 +2196,8 @@ function update_editpanel_textarea(dir)
 
 function show_editpanel_textarea()
 {
-  tmp = document.getElementById("editpanel_textarea_div");
-  txt = "<textarea onchange='update_editpanel_textarea(1);' "+getkeyb_handler_string()+" id='editpanel_textarea' rows='"+editpaneldata.HEI+"' cols='"+editpaneldata.WID+"'></textarea>";
+  var tmp = document.getElementById("editpanel_textarea_div");
+  var txt = "<textarea onchange='update_editpanel_textarea(1);' "+getkeyb_handler_string()+" id='editpanel_textarea' rows='"+editpaneldata.HEI+"' cols='"+editpaneldata.WID+"'></textarea>";
   tmp.innerHTML = txt;
 }
 
