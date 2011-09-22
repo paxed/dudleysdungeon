@@ -106,8 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	    $author_id = $_SESSION['userid'];
 	    $username = $_SESSION['username'];
 	} else {
-	    $usernam = $_POST['username'];
-	    $passwd =  $_POST['password'];
+	    $usernam = (isset($_POST['username']) ? $_POST['username'] : NULL);
+	    $passwd =  (isset($_POST['password']) ? $_POST['password'] : NULL);
 	    log_in_user($usernam, $passwd);
 	    $author_id = (isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL);
 	}
