@@ -68,6 +68,21 @@ function Panel(wid, hei)
 	return true;
     }
 
+  this.from_str = function(str)
+    {
+	var x, y, i;
+	var lines = str.split(/\n/);
+	var maxhei = lines.length;
+	var maxwid = 0;
+	for (i = 0; i < maxhei; i++)
+	    if (lines[i].length > maxwid) maxwid = lines[i].length;
+	this.resize(maxwid, maxhei);
+	for (y = 0; y < maxhei; y++)
+	    for (x = 0; x < maxwid; x++) {
+		this.set_data(x,y, {'chr':lines[y].substr(x, 1)});
+	    }
+    }
+
   this.clone = function()
     {
       var newobj = new Panel(this.WID, this.HEI);

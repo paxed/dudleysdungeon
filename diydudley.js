@@ -1438,6 +1438,7 @@ function buttonfunc_act(act)
     }
     break;
   case 79: config_window(); break;
+  case 80: maptemplate_window(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -1514,6 +1515,8 @@ function show_buttons()
 
   txt += " | ";
   txt += "<a class='button' onclick='return buttonfunc_act(63);' href='#' id='undo_btn'>undo</a>";
+
+  txt += " | <a class='button' onclick='return buttonfunc_act(80);' href='#'>map template</a>";
 
   tmp.innerHTML = txt;
 
@@ -2429,6 +2432,166 @@ function config_window()
 		      '</html>');
     cw.document.close();
     configuration_window = cw;
+}
+
+function maptemplate_panel_mouse_hover(x,y,on)
+{
+  function maptemplate_mousehover_mark_on(x1,y1)
+    {
+      tmp = map_template_window.document.getElementById("templatemap_panelpos"+x1+"x"+y1);
+      if (tmp) tmp.style.background = "red";
+    }
+
+  function maptemplate_mousehover_mark_off(x1,y1)
+    {
+      tmp = map_template_window.document.getElementById("templatemap_panelpos"+x1+"x"+y1);
+      if (tmp) tmp.style.background = "black";
+    }
+    var w = editpaneldata.WID;
+    var h = editpaneldata.HEI;
+    var w2 = Math.floor((w/2));
+    var h2 = Math.floor((h/2));
+
+    var wa = 1;
+    var ha = 1;
+    if (w%2) wa = 0;
+    if (h%2) ha = 0;
+
+    if (x + w2 >= curr_maptemplatedata.WID) x = curr_maptemplatedata.WID - w2 - 1;
+    else if (x - w2 < 0) x = w2;
+    if (y + h2 >= curr_maptemplatedata.HEI) y = curr_maptemplatedata.HEI - h2 - 1;
+    else if (y - h2 < 0) y = h2;
+
+    if (on) {
+	curr_maptemplatedata.draw_rect_filled((x-w2), (y-h2), (x+w2-wa), (y+h2-ha), maptemplate_mousehover_mark_on);
+    } else {
+	curr_maptemplatedata.draw_rect_filled((x-w2), (y-h2), (x+w2-wa), (y+h2-ha), maptemplate_mousehover_mark_off);
+    }
+
+}
+
+function maptemplate_panel_update(ev, x, y)
+{
+    var w = editpaneldata.WID;
+    var h = editpaneldata.HEI;
+    var w2 = Math.floor(w/2);
+    var h2 = Math.floor(h/2);
+    var i, j;
+
+    if (x + w2 >= curr_maptemplatedata.WID) x = curr_maptemplatedata.WID - w2 - 1;
+    else if (x - w2 < 0) x = w2;
+    if (y + h2 >= curr_maptemplatedata.HEI) y = curr_maptemplatedata.HEI - h2 - 1;
+    else if (y - h2 < 0) y = h2;
+
+    editpaneldata.save_undopoint();
+
+    for (i = x-w2; i <= (x+w2); i++) {
+	for (j = y-h2; j <= (y+h2); j++) {
+	    var dat = curr_maptemplatedata.get_data(i,j);
+	    editpaneldata.set_data(i-x+w2,j-y+h2, dat);
+	}
+    }
+
+    editpaneldata.set_cursor(-1, -1);
+    editpaneldata.check_undopoint();
+    panel_redraw();
+}
+
+function maptemplate_getpanel(map)
+{
+  var txt = "";
+  txt += "<div class='panelborder'>";
+  txt += "<pre class='panel'>";
+  for (y = 0; y < map.HEI; y++) {
+    for (x = 0; x < map.WID; x++) {
+      dat = map.get_data(x,y);
+      txt += "<span class='hovered'";
+      txt += " id='templatemap_panelpos"+x+"x"+y+"'";
+      txt += " onmouseover='window.opener.maptemplate_panel_mouse_hover("+x+","+y+",1);'";
+      txt += " onmouseout='window.opener.maptemplate_panel_mouse_hover("+x+","+y+",0);'";
+      txt += " onClick='window.opener.maptemplate_panel_update(event, "+x+","+y+");'>";
+      txt += get_data_span({'chr':dat.chr, 'fg':dat.fg});
+      txt += "</span>";
+    }
+    txt += "<br>";
+  }
+  txt += "</pre>";
+  txt += "</div>";
+  return txt;
+}
+
+function maptemplate_get_panelstr(tmpl, forcegen)
+{
+    var txt = "";
+    if (map_templates_panels[tmpl] && (forcegen == 0)) {
+	curr_maptemplatedata = map_templates_panels[tmpl];
+    } else {
+	curr_maptemplatedata = new Panel(5,5);
+	curr_maptemplatedata.from_str(map_templates[tmpl].map);
+	if (map_templates[tmpl].replaces != undefined) {
+	    for (i = 0; i < map_templates[tmpl].replaces.length; i++) {
+		var fromsym = map_templates[tmpl].replaces[i].from;
+		var tosym = map_templates[tmpl].replaces[i].to;
+		var chance = ((map_templates[tmpl].replaces[i].chance != undefined) ? map_templates[tmpl].replaces[i].chance : 100);
+		curr_maptemplatedata.random_replace(fromsym, tosym, chance);
+	    }
+	}
+	map_templates_panels[tmpl] = curr_maptemplatedata;
+    }
+
+    var tmpl_name = map_templates[tmpl].name;
+
+    txt += '<h4>Template: '+tmpl_name+'</h4>';
+    txt += maptemplate_getpanel(curr_maptemplatedata);
+    return txt;
+}
+
+function maptemplate_window_handler(tmpl, forcegen)
+{
+    var e = map_template_window.document.getElementById("map_template_display_div");
+    if (!e) return;
+    var txt = "";
+    var i;
+
+    txt += "<select onchange='window.opener.maptemplate_window_handler(this.options[this.selectedIndex].value, 0)'>";
+    for (i = 0; i < map_templates.length; i++) {
+	txt += "<option value='"+i+"'";
+	if (i == tmpl) txt += " selected";
+	txt += ">"+map_templates[i].name+"</option>";
+    }
+    txt += "</select>";
+
+    txt += "<hr>";
+
+    txt += maptemplate_get_panelstr(tmpl, forcegen);
+    e.innerHTML = txt;
+    selected_map_template = tmpl;
+}
+
+function maptemplate_window()
+{
+    if ((map_template_window != undefined) && !map_template_window.closed) return;
+
+    var i;
+    var txt = "<h2>Map Templates</h2>";
+
+    txt += "<div id='map_template_display_div'></div>";
+
+    txt += "<hr>";
+    txt += "<a class='button' onClick='window.close(); return false;' href='#'>Close</a>";
+
+    var cw = window.open('', null, 'width=800, height=800, resizeable=yes,scrollbars=yes');
+    cw.document.open("text/html", "replace");
+    cw.document.write('<html>'+
+		      '<head>'+
+		      '<link rel="stylesheet" type="text/css" media="screen" href="diydudley.css">'+
+		      '<title>Map Templates - Dudley D-I-Y</title>'+
+		      '</head>'+
+		      '<body id="maptemplatepage" onload="window.opener.maptemplate_window_handler(window.opener.selected_map_template, 0);">'+txt+
+		      '</body>'+
+		      '</html>');
+    cw.document.close();
+    map_template_window = cw;
 }
 
 function pageload_init()
