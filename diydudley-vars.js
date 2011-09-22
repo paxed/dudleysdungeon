@@ -1325,6 +1325,7 @@ var map_templates = new Array(
      'replaces':new Array(
 	 {'from':{'chr':'K'}, 'to':{'chr':'#'}},
 	 {'from':{'chr':'+'}, 'to':{'chr':'+', 'fg':'brown'}},
+	 {'from':{'chr':'S'}, 'to':{'chr':'+', 'fg':'brown'}},
 	 {'from':{'chr':'{'}, 'to':{'chr':'{', 'fg':'blue'}})
     },
     {'name':'Minetown v2', 'map':
