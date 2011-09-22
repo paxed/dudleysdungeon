@@ -175,6 +175,80 @@ function random_monster_sym()
   return {'chr':chr, 'fg':fg};
 }
 
+var nethack_shop_types = new Array('?', '+', '=', '%', '(', '!', '*', '[', ')', 'general');
+
+function get_random_shop_sym(shoptype)
+{
+    var rnd = Math.random();
+    switch (shoptype) {
+    case '?': if (rnd < 0.1) return {'chr':'+', 'fg':pen_getcolor('random')};
+	return {'chr':'?', 'fg':'white'};
+    case '+': if (rnd < 0.9) return {'chr':'+', 'fg':pen_getcolor('random')};
+	return {'chr':'?', 'fg':'white'};
+    case '=': if (rnd < 0.85) return {'chr':'=', 'fg':pen_getcolor('random')};
+	if (rnd < 0.95) return {'chr':'*', 'fg':pen_getcolor('random')};
+	return {'chr':'"', 'fg':'cyan'};
+    case '%':
+	var foodcolors = new Array('brown','brown','brown','brown','cyan','brightgreen','orange','red','white','yellow','yellow','green','green');
+	if (rnd < 0.83) return {'chr':'%', 'fg':foodcolors[Math.floor(Math.random() * foodcolors.length)]};
+	if (rnd < 0.88) return {'chr':'!', 'fg':'red'};
+	if (rnd < 0.93) return {'chr':'!', 'fg':'cyan'};
+	if (rnd < 0.97) return {'chr':'!', 'fg':'pink'};
+	return {'chr':'(', 'fg':'white'};
+    case '(':
+	var toolcolors = new Array('darkgray', 'red', 'red', 'white', 'white', 'white', 'white', 'white', 'white', 'white',
+				   'cyan', 'cyan', 'cyan', 'cyan', 'cyan', 'cyan', 'cyan', 'cyan', 'cyan', 'cyan',
+				   'brightcyan', 'brightcyan', 'brown', 'brown', 'brown', 'brown', 'brown', 'brown', 'brown', 'brown',
+				   'yellow', 'yellow', 'yellow', 'yellow', 'gray', 'gray', 'gray');
+
+	return {'chr':'(', 'fg':toolcolors[Math.floor(Math.random() * toolcolors.length)]};
+    case '!':
+	return {'chr':'(', 'fg':pen_getcolor('random')};
+    case '*':
+	if (rnd < 0.85) return {'chr':'=', 'fg':pen_getcolor('random')};
+	if (rnd < 0.95) return {'chr':'*', 'fg':pen_getcolor('random')};
+	return {'chr':'"', 'fg':'cyan'};
+    case '[':
+	if (rnd < 0.9) {
+	    if (rnd < 0.40) return {'chr':'[', 'fg':'cyan'};
+	    if (rnd < 0.80) return {'chr':'[', 'fg':'brown'};
+	    return {'chr':'[', 'fg':pen_getcolor('random')};
+	} else {
+	    return {'chr':')', 'fg':((Math.random() < 0.5) ? 'cyan' : 'brown')};
+	}
+    case ')':
+	if (rnd < 0.1) {
+	    if (rnd < 0.04) return {'chr':'[', 'fg':'cyan'};
+	    if (rnd < 0.08) return {'chr':'[', 'fg':'brown'};
+	    return {'chr':'[', 'fg':pen_getcolor('random')};
+	} else {
+	    return {'chr':')', 'fg':((Math.random() < 0.5) ? 'cyan' : 'brown')};
+	}
+    default:
+	var sym;
+	do {
+	    sym = random_obj_sym();
+	} while (sym.chr == '$');
+	return sym;
+    }
+}
+
+function generate_random_shop(shoptype)
+{
+    var x, y;
+    editpaneldata.save_undopoint();
+    editpaneldata.draw_random(10); /* makes a scroll shop */
+
+    if (typeof shoptype == "number") shoptype = nethack_shop_types[shoptype];
+
+    for (x = 0; x < editpaneldata.WID; x++)
+	for (y = 0; y < editpaneldata.HEI; y++) {
+	    var dat = editpaneldata.get_data(x,y);
+	    if (dat.chr == '?' && dat.fg == 'white') editpaneldata.set_data(x,y, get_random_shop_sym(shoptype));
+	}
+    editpaneldata.check_undopoint();
+    panel_redraw();
+}
 
 
 
@@ -1360,7 +1434,6 @@ function buttonfunc_act(act)
 
   case 26: strip_pastepanel(); break;
 
-
   case 40: panel_downloadcode(); break;
   case 41: panel_submitcode(); break;
   case 42: parse_code(); break;
@@ -1439,6 +1512,18 @@ function buttonfunc_act(act)
     break;
   case 79: config_window(); break;
   case 80: maptemplate_window(); break;
+
+  case 81: generate_random_shop(); break;
+  case 82: generate_random_shop('?'); break;
+  case 83: generate_random_shop('+'); break;
+  case 84: generate_random_shop('='); break;
+  case 85: generate_random_shop('%'); break;
+  case 86: generate_random_shop('('); break;
+  case 87: generate_random_shop('!'); break;
+  case 88: generate_random_shop('*'); break;
+  case 89: generate_random_shop('['); break;
+  case 90: generate_random_shop(')'); break;
+
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -1461,6 +1546,7 @@ function set_undobtn_state()
 
 function show_buttons()
 {
+    var i;
   var tmp = document.getElementById("buttondiv");
   var txt ="Actions:<br>";
 
@@ -1473,6 +1559,10 @@ function show_buttons()
   popup += "<span class='button' onclick='return buttonfunc_act(10);' href='#'>dug randwalk</span><br>";
   popup += "<span class='button' onclick='return buttonfunc_act(11);' href='#'>mines</span><br>";
   popup += "<span class='button' onclick='return buttonfunc_act(12);' href='#'>maze</span><br>";
+
+  popup += "Shops: ";
+    for (i = 0; i < nethack_shop_types.length; i++)
+	popup += "<span class='button' onclick='generate_random_shop("+i+");'>&nbsp;"+htmlentities(nethack_shop_types[i])+"&nbsp;</span> ";
 
   txt += "panel: <span class='button withtooltip'>generate<span class='tooltip'>"+popup+"</span></span>";
   txt += "<a class='button' onclick='return buttonfunc_act(2);' href='#'>remove colors</a>";

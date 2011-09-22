@@ -523,10 +523,12 @@ function Panel(wid, hei)
     };
 
 
-  this.draw_random_room = function(drawcorridor)
+  this.draw_random_room = function(drawcorridor, shoptype)
     {
       var wid = Math.ceil(Math.random() * (this.WID - 3)) + 2;
       var hei = Math.ceil(Math.random() * (this.HEI - 3)) + 2;
+      var tmp;
+      var dx, dy, horiz;
 
       var ndoors = Math.ceil((Math.random() * (wid + hei)) / 5);
       var features = Math.ceil((Math.random() * (wid + hei)) / 10);
@@ -534,11 +536,13 @@ function Panel(wid, hei)
       var x = Math.floor(Math.random() * (this.WID - wid));
       var y = Math.floor(Math.random() * (this.HEI - hei));
 
+      if (shoptype != undefined) ndoors = 1;
+
       this.draw_room(x,y, x+wid, y+hei, 1);
 
       for (i = 0; i < ndoors; i++) {
-	var tmp = Math.floor(Math.random() * 4);
-	var dx, dy, horiz = 0;
+	tmp = Math.floor(Math.random() * 4);
+	horiz = 0;
 	var doorsym = {'chr':"+", 'fg':'brown'};
 	switch (tmp) {
 	case 0: dx = x; dy = y + Math.ceil(Math.random() * (hei-1)); horiz = 1; break;
@@ -565,7 +569,18 @@ function Panel(wid, hei)
 	this.set_data(dx,dy, doorsym);
       }
 
-      if (Math.random() < 0.6) {
+      if (shoptype != undefined) {
+	  var shopsym = shoptype;
+	  switch (tmp) {
+	  case 0: dx += 1; this.draw_rect_filled(x+2, y+1, x+wid-1, y+hei-1, shopsym); break;
+	  case 1: dx -= 1; this.draw_rect_filled(x+1, y+1, x+wid-2, y+hei-1, shopsym); break;
+	  case 2: dy += 1; this.draw_rect_filled(x+1, y+2, x+wid-1, y+hei-1, shopsym); break;
+	  case 3: dy -= 1; this.draw_rect_filled(x+1, y+1, x+wid-1, y+hei-2, shopsym); break;
+	  }
+	  this.set_data(dx, dy, {'chr':'@', 'fg':'white'});
+      }
+
+      if ((Math.random() < 0.6) && (shoptype == undefined)) {
 	for (i = 0; i < features; i++) {
 	  var tmp = Math.floor(Math.random() * 20);
 	  var sym;
@@ -686,6 +701,11 @@ function Panel(wid, hei)
 	}
 	this.wallify();
 	break;
+      case 10: /* scroll shop */
+	  this.fill(empty);
+	  this.draw_random_room(1, {'chr':'?', 'fg':'white'});
+	  return;
+	  break;
       }
 
       /* Dudley */
