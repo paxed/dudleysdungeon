@@ -32,20 +32,7 @@
 -diydudley: on opera, diydudley.js, line 1789,
  check the preview_window is not undefined or null!
 
--diydudley: templated maps, eg. could change panel to (a part of)
- medusa's level.
- [map template]
- |
- --->   [sokoban 1]    [ up ]
-                     [<]    [>]
-                       [down]
-
-        [resize panel to template size]
-
- the [sokoban 1] is a select box, allowing user to select the map template
- [up], [down], [<] and [>] select which portion of the template is inserted
- into panel
- [resize panel to template size] does what it says
+-diydudley: add more map templates.
 
 
 -config options for users
