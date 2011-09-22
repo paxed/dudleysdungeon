@@ -236,6 +236,6 @@ Symbols: <label>NetHack:<input type="checkbox" id="nhsym_cbox" onchange="game_sy
 <noscript><p><b>Sorry, this page requires javascript.</b></p></noscript>
 
 <div style="display:none" id="hidden_div"></div>
-
+<div style="display:none;position:absolute;" id="pen_selection_popup"></div>
 </body>
 </html>

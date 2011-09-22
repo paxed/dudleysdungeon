@@ -1395,6 +1395,48 @@ function show_panel_number()
   tmp.innerHTML = txt;
 }
 
+function record_mouse_cursor_pos(e)
+{
+    dudley_mouse_pos_x = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+    dudley_mouse_pos_y = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+}
+
+function update_pen_selection_popup()
+{
+    var elem = document.getElementById("pen_selection_popup");
+    if (!elem) return;
+    var txt = "";
+    var i;
+
+    for (i = 0; i < colors.length; i++) {
+	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(pen.chr, colors[i]) + "</span>";
+    }
+    txt += "<br><br>";
+
+    var cnt = 0;
+    for (var ch = ' '.charCodeAt(0); ch <= '~'.charCodeAt(0); ch++) {
+	var chr = String.fromCharCode(ch);
+	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(chr, pen.fg) + "</span>";
+	cnt++;
+	if (cnt > 15) { txt += '<br>'; cnt = 0; }
+    }
+    elem.innerHTML = txt;
+}
+
+function show_pen_selection_popup()
+{
+    var elem = document.getElementById("pen_selection_popup");
+    if (!elem) return;
+    if (elem.style.display != "none") {
+	elem.style.display = "none";
+	return;
+    }
+    update_pen_selection_popup();
+    elem.style.display = "block";
+    elem.style.left = (dudley_mouse_pos_x - Math.floor(elem.offsetWidth / 2)) + 'px';
+    elem.style.top = (dudley_mouse_pos_y - Math.floor(elem.offsetHeight / 2)) + 'px';
+}
+
 function buttonfunc_act(act)
 {
   if (act < 40) {
@@ -1523,7 +1565,7 @@ function buttonfunc_act(act)
   case 88: generate_random_shop('*'); break;
   case 89: generate_random_shop('['); break;
   case 90: generate_random_shop(')'); break;
-
+  case 91: show_pen_selection_popup(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2735,5 +2777,6 @@ function pageload_init()
   set_checkbox_on("preview_cbox");
 
   document.onkeyup = handle_keyb;
-}
 
+  document.addEventListener('mousemove', record_mouse_cursor_pos, false);
+}

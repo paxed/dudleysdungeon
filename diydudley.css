@@ -340,3 +340,15 @@ td.footnote {
     padding: 0.5em;
     display: none;
 }
+
+#pen_selection_popup {
+    display: none;
+    position: absolute;
+    padding: 0.5em;
+    z-index: 100;
+    border: 1px solid black;
+    background-color: white;
+    -moz-box-shadow: 2px 2px 2px rgba(68,68,68,0.6);
+    -webkit-box-shadow: 2px 2px 2px rgba(68,68,68,0.6);
+    box-shadow: 2px 2px 2px rgba(68,68,68,0.6);
+}

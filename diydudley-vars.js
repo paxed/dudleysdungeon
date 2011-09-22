@@ -1273,7 +1273,8 @@ var buttonfunc_act_desc = new Array(
     {'act':40, 'desc': "Download comic strip"},
     {'act':41, 'desc': "Submit comic strip to the database (login required)"},
     {'act':74, 'desc': "Show help window"},
-    {'act':79, 'desc': "Show configuration window"}
+    {'act':79, 'desc': "Show configuration window"},
+    {'act':91, 'desc': "Show or hide Pen symbol selection popup"}
 );
 
 var default_keybinding_keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -1290,7 +1291,8 @@ var default_keybindings = new Array(
     {'key':'c', 'act':75},
     {'key':'f', 'act':76},
     {'key':'g', 'act':77},
-    {'key':'v', 'act':78}
+    {'key':'v', 'act':78},
+    {'key':'e', 'act':91}
 );
 
 var keybindings = default_keybindings;
@@ -1565,3 +1567,6 @@ var STRIP_HEI = 1;
 var n_panels = STRIP_WID*STRIP_HEI;
 var panels = new Array();
 var stripdata = new Array();
+
+var dudley_mouse_pos_x = 0;
+var dudley_mouse_pos_y = 0;
