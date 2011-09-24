@@ -2772,7 +2772,6 @@ function config_window()
 	    txt += "<td>Set Pen to <span class='saved_pens'>" + penset_span_noclick(saved_pens[i]) + "</span></td>";
 	    txt += "<td><span class='button' onClick='window.opener.saved_pens["+i+"].del=1; this.parentNode.parentNode.style.display=\"none\";'>del</span></td>";
 	    txt += "</tr>";
-	    pen_set_fg_chr(undefined, saved_pens[i].fg, escape(saved_pens[i].chr));
 	    saved_pens[i].del=0;
 	}
     }

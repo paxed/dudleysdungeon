@@ -1,6 +1,4 @@
 
--bug: clicking on "config" changes current pen.
-
 -use PDO instead of pg_foo
 
 -Add user's voting "history" to duduser.php
