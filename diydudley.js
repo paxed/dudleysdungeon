@@ -175,7 +175,7 @@ function random_monster_sym()
   return {'chr':chr, 'fg':fg};
 }
 
-var nethack_shop_types = new Array('?', '+', '=', '%', '(', '!', '*', '[', ')', 'general');
+var nethack_shop_types = new Array('?', '+', '=', '%', '(', '!', '/', '[', ')', 'general');
 
 function get_random_shop_sym(shoptype)
 {
@@ -203,11 +203,9 @@ function get_random_shop_sym(shoptype)
 
 	return {'chr':'(', 'fg':toolcolors[Math.floor(Math.random() * toolcolors.length)]};
     case '!':
-	return {'chr':'(', 'fg':pen_getcolor('random')};
-    case '*':
-	if (rnd < 0.85) return {'chr':'=', 'fg':pen_getcolor('random')};
-	if (rnd < 0.95) return {'chr':'*', 'fg':pen_getcolor('random')};
-	return {'chr':'"', 'fg':'cyan'};
+	return {'chr':'!', 'fg':pen_getcolor('random')};
+    case '/': if (rnd < 0.9) return {'chr':'/', 'fg':pen_getcolor('random')};
+	return {'chr':'[', 'fg':'brown'};
     case '[':
 	if (rnd < 0.9) {
 	    if (rnd < 0.40) return {'chr':'[', 'fg':'cyan'};
