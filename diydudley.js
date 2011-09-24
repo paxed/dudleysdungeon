@@ -698,6 +698,7 @@ function panel_download_save()
   } else {
       txt += "Submit</a> this comic to the database";
   }
+  txt += " <em><small>(requires login)</small></em>";
 
   txt += "</ul>";
 
