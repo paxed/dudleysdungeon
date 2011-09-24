@@ -1,5 +1,7 @@
 .f_cur { text-decoration: underline; }
 
+.f_bold { font-weight: bold; }
+
 .f_ul { text-decoration: underline; }
 .f_bl { text-decoration: blink; }
 

@@ -1,16 +1,32 @@
 
+function pen_clone(pen)
+{
+    return {'chr':pen.chr, 'fg':pen.fg, 'bold':pen.bold};
+}
+
 function pen_insert()
 {
     var fg = pen_getcolor(pen.fg);
     if (fg == undefined || fg == "white" || fg == "black" || pen.chr == ' ') {
 	str = pen.chr;
     } else {
-	str = '<span class="f_'+fg+'">'+pen.chr+'</span>';
+	str = '<span class="'+datspanclass(pen)+'">'+pen.chr+'</span>';
     }
     insertAtCursor('editpanel_text', str);
     set_panel_text();
 }
 
+function pen_swap_ctrl()
+{
+    var tmp = pen;
+    pen = ctrl_pen;
+    ctrl_pen = tmp;
+    show_current_pen();
+    if (ctrl_pen != pen) {
+	color_selection();
+	char_selection();
+    }
+}
 
 function getkeyb_handler_string()
 {
@@ -341,9 +357,9 @@ function panel_update(event, x,y)
 {
   var p;
   if (event.ctrlKey) {
-      p = {'chr':ctrl_pen.chr, 'fg':pen_getcolor(ctrl_pen.fg)};
+      p = {'chr':ctrl_pen.chr, 'fg':pen_getcolor(ctrl_pen.fg), 'bold':ctrl_pen.bold};
   } else {
-      p = {'chr':pen.chr, 'fg':pen_getcolor(pen.fg)};
+      p = {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold};
   }
 
   if (p.chr == ' ') p.fg = "gray";
@@ -425,7 +441,7 @@ function panel_getdiv()
       txt += " onmouseout='panel_mouse_hover("+x+","+y+",0);'";
       txt += " onClick='panel_update(event, "+x+","+y+");'>";
       if (p_cursor_x == x && p_cursor_y == y) { cur = 1; } else { cur = 0; }
-      txt += get_data_span({'chr':dat.chr, 'fg':dat.fg, 'cur':cur});
+	txt += get_data_span({'chr':dat.chr, 'fg':dat.fg, 'cur':cur, 'bold':dat.bold});
       txt += "</span>";
     }
     txt += "<br>";
@@ -523,6 +539,14 @@ function panel_getcode(html)
     }
     txt += "ENDMAP\n";
     txt += panel_get_colornotes(i);
+    for (y = 0; y < panels[i].panel.HEI; y++) {
+      for (x = 0; x < panels[i].panel.WID; x++) {
+	dat = panels[i].panel.get_data(x,y);
+	  if (dat.bold == 1) {
+	      txt += "SETATTR:("+x+","+y+"),bold\n";
+	  }
+      }
+    }
     if (panels[i].panel.inmap(panels[i].panel.cursor.x,panels[i].panel.cursor.y)) {
 	txt += "CURSOR:"+panels[i].panel.cursor.x+","+panels[i].panel.cursor.y+"\n";
     }
@@ -823,6 +847,22 @@ function parse_code(code_data)
 	  var cursor_x = parseInt(tmp2[0]);
 	  var cursor_y = parseInt(tmp2[1]);
 	  panels[(curr_map-1)].panel.set_cursor(cursor_x, cursor_y);
+      } else if (line.match(/^SETATTR:/)) {
+	  tmp = line.replace(/^SETATTR:\((\d+),(\d+)\),(.+)$/, "$1\t$2\t$3");
+	  var tmp2 = tmp.split("\t");
+	  if (tmp2.length == 3) {
+	      var cursor_x = parseInt(tmp2[0]);
+	      var cursor_y = parseInt(tmp2[1]);
+	      var attrs = tmp2[2].split('&');
+	      var dat = panels[(curr_map-1)].panel.get_data(cursor_x, cursor_y);
+	      for (var tmpa = 0; tmpa < attrs.length; tmpa++) {
+		  switch (attrs[tmpa]) {
+		  default: break;
+		  case 'bold': dat.bold = 1; break;
+		  }
+	      }
+	      panels[(curr_map-1)].panel.set_data(cursor_x, cursor_y, dat);
+	  } else alert("ERROR parsing "+line);
       } else if (line.match(/^MAP:/)) {
 	tmp = line.replace("MAP:", "");
 	var tmp2 = tmp.split(',');
@@ -878,13 +918,14 @@ function pen_set_chr(chr)
 
 function pen_set_sym(sym)
 {
-  if ((ctrl_pen.chr == sym.chr) && (ctrl_pen.fg == sym.fg)) {
+  if ((ctrl_pen.chr == sym.chr) && (ctrl_pen.fg == sym.fg) && (ctrl_pen.bold == sym.bold)) {
       var tmp = pen;
       pen = ctrl_pen;
       ctrl_pen = tmp;
   } else {
       pen.chr = sym.chr;
       pen.fg = sym.fg;
+      pen.bold = sym.bold;
   }
   show_current_pen();
   color_selection();
@@ -931,9 +972,12 @@ function old_pen_parsecookiestr(str)
     var tmp = arr[i].split("&");
     var chr = String.fromCharCode(tmp[0]);
     var fg = tmp[1];
-    var key = undefined;
-    if (tmp[2] != undefined) {
-      key = String.fromCharCode(tmp[2]);
+    var bold = tmp[2];
+    var key = tmp[3];
+    if (bold != 1) { bold = undefined; }
+    if (key == '') { key = undefined; }
+    if (key != undefined) {
+      key = String.fromCharCode(key);
       if (key.length != 1) key = undefined;
       else {
 	var idx = quick_pen_keys.indexOf(key);
@@ -942,7 +986,7 @@ function old_pen_parsecookiestr(str)
       }
     }
     if (chr) {
-	saved_pens.push({'chr':chr, 'fg':fg, 'key':key});
+	saved_pens.push({'chr':chr, 'fg':fg, 'key':key, 'bold':bold});
 	bindable_key_remove(key);
     }
   }
@@ -979,11 +1023,13 @@ function old_pen_cookiestr()
   for (i = 0; i < saved_pens.length; i++) {
     var chr = saved_pens[i].chr;
     var fg = saved_pens[i].fg;
+    var bold = saved_pens[i].bold;
     var key = saved_pens[i].key;
     if (fg == undefined) { fg = "gray"; }
+    if (bold == undefined) { bold = 0; }
+    if (key == undefined) { key = ''; } else { key = key.charCodeAt(0); }
     if (i > 0) { str += ","; }
-    str += chr.charCodeAt(0) + "&" + fg;
-    if (key != undefined) str += "&" + key.charCodeAt(0);
+    str += chr.charCodeAt(0) + "&" + fg + "&" + bold + "&" + key;
   }
   return str;
 }
@@ -1023,13 +1069,13 @@ function pen_save()
   if (fg == undefined) { fg = "gray"; }
 
   for (i = 0; i < saved_pens.length; i++) {
-    if ((saved_pens[i].chr == pen.chr) && (saved_pens[i].fg == fg)) {
+      if ((saved_pens[i].chr == pen.chr) && (saved_pens[i].fg == fg) && (saved_pens[i].bold == pen.bold)) {
       exists = 1;
     }
   }
 
   if (!exists) {
-    saved_pens.push({'chr':pen.chr, 'fg':fg});
+    saved_pens.push({'chr':pen.chr, 'fg':fg, 'bold':pen.bold});
     show_saved_pens();
     createCookie(cookie_prefix + "saved_pens", old_pen_cookiestr(), 30);
   }
@@ -1041,6 +1087,7 @@ function color_selection()
   var txt = "";
   var i;
   var chr = "#";
+  var tmpen = pen_clone(pen);
 
   if (!(pen.chr == " ")) chr = pen.chr;
 
@@ -1050,35 +1097,34 @@ function color_selection()
   txt += "<a class='button' onclick='return buttonfunc_act(44);' href='#'>random</a>";
   txt += "<span class='colorselection'>";
   for (i = 1; i < colors.length; i++) {
-    txt += " <span class='f_"+colors[i]+" b_black' onclick='pen_set_fgcolor(\""+colors[i]+"\");'>"+htmlentities(chr+chr+chr+chr)+"</span>";
+      tmpen.fg = colors[i];
+      txt += " <span class='"+datspanclass(tmpen)+"' onclick='pen_set_fgcolor(\""+colors[i]+"\");'>"+htmlentities(chr+chr+chr+chr)+"</span>";
   }
   txt += "</span>";
   tmp.innerHTML = txt;
 }
 
-function penset_escaped_func(chr,fg)
+function penset_escaped_func(pen)
 {
-  if (fg == undefined) fg = "gray";
-  return "pen_set_fg_chr(event, \""+fg+"\","+chr.charCodeAt(0)+");";
+  if (pen.fg == undefined) pen.fg = "gray";
+  return "pen_set_fg_chr(event, \""+pen.fg+"\","+pen.chr.charCodeAt(0)+");";
 }
 
-function penset_span(chr, fg, desc)
+function penset_span(pen, desc)
 {
   var txt = "";
-  if (fg == undefined) fg = "gray";
-  txt += "<a class='withtooltip f_" + fg + "' onclick='"+penset_escaped_func(chr,fg)+"return false;' href='#'>";
-  txt += htmlentities(chr);
+  txt += "<a class='withtooltip " + datspanclass(pen) + "' onclick='"+penset_escaped_func(pen)+"return false;' href='#'>";
+  txt += htmlentities(pen.chr);
   if (desc != undefined) { txt += "<span class='tooltip'>" + desc + "</span>"; }
   txt += "</a>";
 
   return txt;
 }
 
-function penset_span_noclick(chr, fg)
+function penset_span_noclick(pen)
 {
   var txt = "";
-  if (fg == undefined) fg = "gray";
-  txt += "<span class='f_" + fg + "'>" + htmlentities(chr) + "</span>";
+  txt += "<span class='" + datspanclass(pen) + "'>" + htmlentities(pen.chr) + "</span>";
   return txt;
 }
 
@@ -1087,13 +1133,11 @@ function char_selection()
   var tmp = document.getElementById("charselection");
   var txt = "";
   var i;
-  var fg = pen_getcolor(pen.fg);
 
-  if (fg == undefined) { fg = "gray"; }
   txt += "Chars: ";
   txt += "<span class='charselection'>";
   for (i = ' '.charCodeAt(0); i <= '~'.charCodeAt(0); i++) {
-      txt += "<span class='f_"+fg+"' onclick='pen_set_fg_chr(event, \""+fg+"\","+i+");'>";
+      txt += "<span class='"+datspanclass(pen)+"' onclick='pen_set_fg_chr(event, \""+pen.fg+"\","+i+");'>";
       txt += String.fromCharCode(i) + "</span>";
   }
   txt += "</span>";
@@ -1200,7 +1244,7 @@ function nethacksym_selection(searchstr)
 
     if (chr == undefined) { txt += "<br>"; linelen = 0; continue; }
 
-    txt += penset_span(chr, fg, popup);
+    txt += penset_span({'chr':chr, 'fg':fg}, popup);
 
     if (linelen > 40) { txt += "<br>"; linelen = 0; }
 
@@ -1275,11 +1319,8 @@ function show_saved_pens()
   txt += "<a class='button' onclick='return buttonfunc_act(47);' href='#'>random</a> - ";
 
   for (i = 0; i < saved_pens.length; i++) {
-    var fg = saved_pens[i].fg;
-    var chr = saved_pens[i].chr;
-
     txt += "<span class='saved_pens'>";
-    txt += penset_span(chr, fg, get_saved_pens_popup(i));
+    txt += penset_span(saved_pens[i], get_saved_pens_popup(i));
     txt += "</span>";
   }
 
@@ -1332,19 +1373,11 @@ function show_edit_panel()
 function show_current_pen()
 {
   var tmp = document.getElementById("current_pen");
-
   var txt = "Current pen: ";
-  var fg = pen_getcolor(pen.fg);
-  var chr = pen.chr;
-  if (fg == undefined) fg = "gray";
-  txt += "<span class='pen_glyph f_" + fg + "'>" + htmlentities(chr) + "</span>";
+  txt += "<span class='pen_glyph " + datspanclass(pen) + "'>" + htmlentities(pen.chr) + "</span>";
 
-
-  var fg = pen_getcolor(ctrl_pen.fg);
-  var chr = ctrl_pen.chr;
-  if (fg == undefined) fg = "gray";
   txt += " with ctrl:";
-  txt += "<span class='pen_glyph f_" + fg + "'>" + htmlentities(chr) + "</span>";
+  txt += "<span class='pen_glyph " + datspanclass(ctrl_pen) + "'>" + htmlentities(ctrl_pen.chr) + "</span>";
 
   tmp.innerHTML = txt;
 }
@@ -1405,16 +1438,17 @@ function update_pen_selection_popup()
     if (!elem) return;
     var txt = "";
     var i;
-
+    var tmpen;
     for (i = 0; i < colors.length; i++) {
-	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(pen.chr, colors[i]) + "</span>";
+	tmpen = {'chr':pen.chr, 'fg':colors[i], 'bold':pen.bold};
+	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(tmpen) + "</span>";
     }
     txt += "<br><br>";
 
     var cnt = 0;
     for (var ch = ' '.charCodeAt(0); ch <= '~'.charCodeAt(0); ch++) {
-	var chr = String.fromCharCode(ch);
-	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(chr, pen.fg) + "</span>";
+	tmpen = {'chr':String.fromCharCode(ch), 'fg':pen.fg, 'bold':pen.bold};
+	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(tmpen) + "</span>";
 	cnt++;
 	if (cnt > 15) { txt += '<br>'; cnt = 0; }
     }
@@ -1474,6 +1508,15 @@ function buttonfunc_act(act)
 
   case 26: strip_pastepanel(); break;
 
+  case 27:
+      if (hovering_on_editpanel) {
+	  var dat = editpaneldata.get_data(current_pos_x, current_pos_y);
+	  if (dat.bold == 1) { dat.bold = undefined; } else { dat.bold = 1; }
+	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
+      }
+      break;
+
+
   case 40: panel_downloadcode(); break;
   case 41: panel_submitcode(); break;
   case 42: parse_code(); break;
@@ -1499,7 +1542,7 @@ function buttonfunc_act(act)
   case 64: strip_prevpanel(); panel_redraw(); break;
   case 65: strip_nextpanel(); panel_redraw(); break;
 
-  case 70: { var tmp = pen; pen = ctrl_pen; ctrl_pen = tmp; show_current_pen(); } break;
+  case 70: pen_swap_ctrl(); break;
   case 71:
       if (hovering_on_editpanel) {
 	  var tmp = editpaneldata.get_data(current_pos_x,current_pos_y);
@@ -1564,6 +1607,12 @@ function buttonfunc_act(act)
   case 89: generate_random_shop('['); break;
   case 90: generate_random_shop(')'); break;
   case 91: show_pen_selection_popup(); break;
+  case 92:
+      if (pen.bold == 1) { pen.bold = undefined; } else { pen.bold = 1; }
+      show_current_pen();
+      color_selection();
+      char_selection();
+      break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -1936,31 +1985,27 @@ function strip_preview_panels()
 	txt += '<pre id="comicpanel'+i+'">';
 	for (dy = 0; dy < panels[i].panel.HEI; dy++) {
 	  for (dx = 0; dx < panels[i].panel.WID; dx++) {
-	      if (p_cursor_x == dx && p_cursor_y == dy) { cur = " f_cur"; } else { cur = ''; }
-	    if (panels[i].panel.get_data(dx,dy)) {
-	      var chr = panels[i].panel.get_data(dx,dy).chr;
-	      var fg  = panels[i].panel.get_data(dx,dy).fg;
-	      if (!chr) chr = '.';
-	      else if (chr == '<') chr = '&lt;';
-	      else if (chr == '>') chr = '&gt;';
-	      else if (chr == '&') chr = '&amp;';
-	      else if (chr == '~') chr = '&tilde;';
-	      if (fg && (fg != "gray")) {
-		txt += '<span class="f_'+fg+cur+'">' + chr + '</span>';
-	      } else {
-		  if (cur) {
-		      txt += '<span class="'+cur+'">' + chr + '</span>';
-		  } else {
-		      txt += chr;
+	      var sclass = '';
+	      var chr = '#';
+	      var dat = panels[i].panel.get_data(dx,dy);
+	      if (p_cursor_x == dx && p_cursor_y == dy) { sclass = "f_cur"; }
+	      if (dat) {
+		  var chr = dat.chr;
+		  var bold = dat.bold;
+		  var fg  = dat.fg;
+		  if (!chr) chr = '.';
+		  else if (chr == '<') chr = '&lt;';
+		  else if (chr == '>') chr = '&gt;';
+		  else if (chr == '&') chr = '&amp;';
+		  else if (chr == '~') chr = '&tilde;';
+		  if (fg && (fg != "gray")) {
+		      sclass += " f_"+fg;
 		  }
+		  if (bold && (bold == 1)) sclass += " f_bold";
 	      }
-	    } else {
-		  if (cur) {
-		      txt += '<span class="'+cur+'">#</span>';
-		  } else {
-		      txt += '#';
-		  }
-	    }
+	      txt += '<span';
+	      if (sclass != '') txt += ' class="'+sclass+'"';
+	      txt += '>' + chr + '</span>';
 	  }
 	  txt += "\n";
 	}
@@ -2529,7 +2574,7 @@ function config_window()
 	if ((saved_pens[i].key != undefined)) {
 	    txt += "<tr>";
 	    txt += "<td><input type='text' size='1' maxlength='1' id='pen_quick_key_"+i+"' value='" + saved_pens[i].key + "'></td>";
-	    txt += "<td>Set Pen to <span class='saved_pens'>" + penset_span_noclick(saved_pens[i].chr, saved_pens[i].fg) + "</span></td>";
+	    txt += "<td>Set Pen to <span class='saved_pens'>" + penset_span_noclick(saved_pens[i]) + "</span></td>";
 	    txt += "<td><span class='button' onClick='window.opener.saved_pens["+i+"].del=1; this.parentNode.parentNode.style.display=\"none\";'>del</span></td>";
 	    txt += "</tr>";
 	    pen_set_fg_chr(undefined, saved_pens[i].fg, saved_pens[i].chr.charCodeAt(0));

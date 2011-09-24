@@ -662,6 +662,17 @@ function parse_comic_strip($lines)
 	    $chr = $match[3];
 	    $clr = $match[4];
 	    $panels[$curr_panel]['panel'][$cx][$cy]['fg'] = $clr;
+	} else if (preg_match('/^SETATTR: *\(([0-9]+),([0-9]+)\),(.+)$/', $line, $match)) {
+	    $cx = $match[1];
+	    $cy = $match[2];
+	    $attrs = explode("&", $match[3]);
+	    foreach ($attrs as $attr) {
+		$attr = trim($attr);
+		switch ($attr) {
+		default: break;
+		case 'bold': $panels[$curr_panel]['panel'][$cx][$cy]['bold'] = 1;
+		}
+	    }
 	} else if (preg_match('/^SETCOLORS: *All +\'(.)\' +are +"(.+)"$/', $line, $match)) {
 	    $chr = $match[1];
 	    $clr = $match[2];
@@ -738,6 +749,7 @@ function render_comic_strip($strip, $title=NULL)
           for ($dx = 0; $dx < $strip[$i]['wid']; $dx++) {
 	      if (isset($strip[$i]['panel'][$dx][$dy])) {
 		  $chr = $strip[$i]['panel'][$dx][$dy]['chr'];
+		  $bold = (isset($strip[$i]['panel'][$dx][$dy]['bold']) ? $strip[$i]['panel'][$dx][$dy]['bold'] : 0);
 		  $fg  = (isset($strip[$i]['panel'][$dx][$dy]['fg']) ? $strip[$i]['panel'][$dx][$dy]['fg'] : "gray");
 		  if (!isset($chr)) $chr = '.';
 		  else if ($chr == '<') $chr = '&lt;';
@@ -746,6 +758,7 @@ function render_comic_strip($strip, $title=NULL)
 		  $spann = null;
 		  if ($fg && ($fg != "gray")) $spann .= 'f_'.$fg;
 		  if ($dx == $strip[$i]['cursor_x'] && $dy == $strip[$i]['cursor_y']) $spann .= ' f_cur';
+		  if ($bold == 1) $spann .= ' f_bold';
 
 		  if ($spann) {
 		      $txt .= '<span class="'.$spann.'">'.$chr.'</span>';

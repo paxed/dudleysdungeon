@@ -1,4 +1,8 @@
 
+String.prototype.trim = function() {
+    return this.replace(/^\s+|\s+$/g,'');
+}
+
 function htmlentities( s ){
   // http://kevin.vanzonneveld.net
   // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
@@ -73,12 +77,19 @@ function pen_getcolor(color)
     return fg;
 }
 
+function datspanclass(dat)
+{
+    var sclass = '';
+    if (dat.fg == undefined) { sclass += " f_gray"; } else { sclass += " f_"+dat.fg; }
+    if (dat.bold == 1) { sclass += " f_bold"; }
+    if (dat.cur) { sclass += " f_cur"; }
+    return sclass.trim();
+}
+
 function get_data_span(dat)
 {
-    span = '';
+    span = datspanclass(dat);
     if (!dat.chr) { c = " "; } else { c = htmlentities(dat.chr); }
-    if (dat.fg) { span += "f_"+dat.fg; }
-    if (dat.cur) { span += " f_cur"; }
     if (span) {
 	return "<span class='" + span + "'>" + c + "</span>";
     } else {

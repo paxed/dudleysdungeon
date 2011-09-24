@@ -61,9 +61,11 @@ function Panel(wid, hei)
 	    var pc = panel.mapdata[i].chr;
 	    var tf = this.mapdata[i].fg;
 	    var pf = panel.mapdata[i].fg;
+	    var tb = this.mapdata[i].bold;
+	    var pb = panel.mapdata[i].bold;
 	    if (tf == undefined) tf = "gray";
 	    if (pf == undefined) pf = "gray";
-	    if ((tc != pc) || (tf != pf)) return false;
+	    if ((tc != pc) || (tf != pf) || (tb != pb)) return false;
 	}
 	return true;
     }
@@ -126,7 +128,7 @@ function Panel(wid, hei)
   this.set_data = function(x,y,dat)
     {
       if (this.inmap(x,y)) {
-	this.mapdata[this.mapidx(x,y)] = {'chr':dat.chr, 'fg':dat.fg};
+	  this.mapdata[this.mapidx(x,y)] = {'chr':dat.chr, 'fg':dat.fg, 'bold':dat.bold};
       }
     };
 

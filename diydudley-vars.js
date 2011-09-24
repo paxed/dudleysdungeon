@@ -1249,6 +1249,8 @@ var buttonfunc_act_desc = new Array(
     {'act':70, 'desc': "Pen: Swap Pen and ctrl_pen"},
     {'act':71, 'desc': "Pen: Colorpick the symbol you hover on"},
     {'act':48, 'desc': "Insert Pen into panel text"},
+    {'act':92, 'desc': 'Pen: Toggle bold attribute on or off'},
+    {'act':27, 'desc': 'Toggle bold attribute at panel hover position on or off'},
     {'act':50, 'desc': "Editmode: Draw"},
     {'act':51, 'desc': "Editmode: Color picker"},
     {'act':53, 'desc': "Editmode: Flood fill"},
