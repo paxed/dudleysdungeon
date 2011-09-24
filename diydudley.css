@@ -206,6 +206,7 @@ a.withtooltip:hover {
 
 
 .button {
+ padding: 0 0.2em;
  color:black;
  background-color:#90e090;
  border: 2px outset green;
@@ -219,6 +220,7 @@ a.withtooltip:hover {
  border: 2px inset black;
 }
 .button_disabled {
+ padding: 0 0.2em;
  background-color:#909090;
  border: 2px outset darkgray;
  margin: 0.25em;
