@@ -1450,6 +1450,30 @@ function record_mouse_cursor_pos(e)
     dudley_mouse_pos_y = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
 }
 
+function pen_selection_popup_checkbox_check(typ)
+{
+    var e = document.getElementById("pen_selection_popup_checkbox_"+typ);
+    if (!e) return;
+    if (e.checked) {
+	pen[typ] = 1;
+    } else {
+	delete pen[typ];
+    }
+    pen_has_changed();
+}
+
+function pen_selection_attr_checkboxes()
+{
+    var txt = "<span class='pen_attrs'><label>Bold<input type='checkbox' id='pen_selection_popup_checkbox_bold' onchange='pen_selection_popup_checkbox_check(\"bold\");'";
+    if (pen.bold == 1) txt += " checked";
+    txt += "></label>";
+
+    txt += "<label>Rev<input type='checkbox' id='pen_selection_popup_checkbox_rev' onchange='pen_selection_popup_checkbox_check(\"rev\");'";
+    if (pen.rev == 1) txt += " checked";
+    txt += "></label></span>";
+    return txt;
+}
+
 function update_pen_selection_popup()
 {
     var elem = document.getElementById("pen_selection_popup");
@@ -1472,13 +1496,20 @@ function update_pen_selection_popup()
 	cnt++;
 	if (cnt > 15) { txt += '<br>'; cnt = 0; }
     }
+    txt += "<br>";
+    txt += pen_selection_attr_checkboxes();
+
     elem.innerHTML = txt;
 }
 
-function show_pen_selection_popup()
+function show_pen_selection_popup(close)
 {
     var elem = document.getElementById("pen_selection_popup");
     if (!elem) return;
+    if (close == 1) {
+	elem.style.display = "none";
+	return;
+    }
     if (elem.style.display != "none") {
 	elem.style.display = "none";
 	return;
@@ -2358,6 +2389,11 @@ function handle_keyb(e)
 	    buttonfunc_act(keybindings[i].act);
 	    return;
 	}
+    }
+
+    /* ESC */
+    if (e == 27) {
+	show_pen_selection_popup(1); // close it
     }
 }
 

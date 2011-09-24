@@ -24,12 +24,12 @@
 
 -document the comic strip format
 
--diydudley: support for reverse, underline &c. attributes.
+-diydudley: support for underline 
 
 -diydudley: support for any html entity in panel.
 
 -css class "f_random" should switch between colors...
-
+-also "f_random_fire", "f_random_cold", etc
 
 
 -diydudley: a new method of doing written text into the panel:
