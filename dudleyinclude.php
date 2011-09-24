@@ -656,13 +656,23 @@ function parse_comic_strip($lines)
 	} else if (preg_match('/^PANELS: *([0-9]+) *, *([0-9]+)$/', $line, $match)) {
 	    $panels['strip_wid'] = $match[1];
 	    $panels['strip_hei'] = $match[2];
-	} else if (preg_match('/^SETCOLOR: *\(([0-9]+),([0-9]+)\), *\'(.)\' +is +"(.+)"$/', $line, $match)) {
+	} else if (preg_match('/^SETCOLOR: *\(([0-9]+) *, *([0-9]+)\) *, *\'(.)\' +is +"(.+)"$/', $line, $match)) {
 	    $cx = $match[1];
 	    $cy = $match[2];
 	    $chr = $match[3];
 	    $clr = $match[4];
 	    $panels[$curr_panel]['panel'][$cx][$cy]['fg'] = $clr;
-	} else if (preg_match('/^SETATTR: *\(([0-9]+),([0-9]+)\),(.+)$/', $line, $match)) {
+	} else if (preg_match('/^SETCOLOR: *\(([0-9]+) *, *([0-9]+)\) *, *\"(.+)"$/', $line, $match)) {
+	    $cx = $match[1];
+	    $cy = $match[2];
+	    $clr = $match[3];
+	    $panels[$curr_panel]['panel'][$cx][$cy]['fg'] = $clr;
+	} else if (preg_match('/^SETCHAR: *\(([0-9]+) *, *([0-9]+)\) *, *([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])$/', $line, $match)) {
+	    $cx = $match[1];
+	    $cy = $match[2];
+	    $chr = '&#'.$match[3].';';
+	    $panels[$curr_panel]['panel'][$cx][$cy]['chr'] = $chr;
+	} else if (preg_match('/^SETATTR: *\(([0-9]+) *, *([0-9]+)\) *, *(.+)$/', $line, $match)) {
 	    $cx = $match[1];
 	    $cy = $match[2];
 	    $attrs = explode("&", $match[3]);

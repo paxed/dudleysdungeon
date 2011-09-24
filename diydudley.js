@@ -14,6 +14,18 @@ function pen_equal(pen1, pen2)
     return ((pen1.chr == pen2.chr) && (pen1.fg == pen2.fg) && (pen1.bold == pen2.bold) && (pen1.rev == pen2.rev) && (pen1.ul == pen2.ul));
 }
 
+function pen_htmlchr(pen)
+{
+    var chr = pen.chr;
+    if (!chr) chr = '.';
+    else if (chr == '<') chr = '&lt;';
+    else if (chr == '>') chr = '&gt;';
+    else if (chr == '&') chr = '&amp;';
+    else if (chr == '~') chr = '&tilde;';
+    else if (chr < ' ' || chr > '~') return chr;
+    return chr;
+}
+
 function pen_insert()
 {
     var fg = pen_getcolor(pen.fg);
@@ -32,6 +44,7 @@ function pen_has_changed()
     color_selection();
     char_selection();
     update_pen_selection_popup();
+    update_extended_char_popup();
 }
 
 function pen_swap_ctrl()
@@ -477,32 +490,32 @@ function panel_get_colornotes(panelnum)
   var tmppanel = panels[panelnum].panel.clone();
   var fg;
 
-  for (i = ' '.charCodeAt(0); i <= '~'.charCodeAt(0); i++) {
-    notes[i] = {'colors':new Array(), 'numcolors':0};
-    for (r in colors) {
-      notes[i].colors[colors[r]] = 0;
-    }
-  }
-
   for (y = 0; y < tmppanel.HEI; y++) {
     for (x = 0; x < tmppanel.WID; x++) {
       dat = tmppanel.get_data(x,y);
-      if (dat.chr != undefined) { ch = dat.chr.charCodeAt(0); } else { continue; }
+      if (dat.chr != undefined) { ch = dat.chr; } else { continue; }
       if (dat.chr == ' ') continue;
       fg = dat.fg;
       if (fg == undefined) { fg = "gray"; }
+      if (notes[ch] == undefined) {
+	  notes[ch] = {'colors':new Array(), 'numcolors':0};
+	  for (r in colors) {
+	      notes[ch].colors[colors[r]] = 0;
+	  }
+      }
       if (notes[ch].colors[fg] == 0) { notes[ch].numcolors++; }
       notes[ch].colors[fg]++;
     }
   }
 
   for (i = ' '.charCodeAt(0); i <= '~'.charCodeAt(0); i++) {
-    if (notes[i].numcolors != 1) continue;
+    ch = String.fromCharCode(i);
+    if ((notes[ch] == undefined) || (notes[ch].numcolors != 1)) continue;
     for (r in colors) {
       if (colors[r] == "gray") continue;
-      if ((notes[i].colors[colors[r]] > 1) && (notes[i].numcolors == 1)) {
-	txt += "SETCOLORS: All '" + String.fromCharCode(i) + "' are \"" + colors[r] + "\"\n";
-	notes[i].colors[colors[r]] = 0;
+      if ((notes[ch].colors[colors[r]] > 1) && (notes[ch].numcolors == 1)) {
+	txt += "SETCOLORS: All '" + ch + "' are \"" + colors[r] + "\"\n";
+	notes[ch].colors[colors[r]] = 0;
 	break;
       }
     }
@@ -511,14 +524,17 @@ function panel_get_colornotes(panelnum)
   for (y = 0; y < tmppanel.HEI; y++) {
     for (x = 0; x < tmppanel.WID; x++) {
       dat = tmppanel.get_data(x,y);
-      if (dat.chr != undefined) { ch = dat.chr.charCodeAt(0); } else { continue; }
+      if (dat.chr != undefined) { ch = dat.chr; } else { continue; }
       if (dat.chr == ' ') continue;
       if (dat.fg && (dat.fg != "gray") && (notes[ch].colors[dat.fg] > 0)) {
-	txt += "SETCOLOR: (" + x + "," + y + "), '"+String.fromCharCode(ch)+"' is \"" + dat.fg + "\"\n";
+          if (ch >= ' ' && ch <= '~' && ch.length == 1) {
+	      txt += "SETCOLOR: (" + x + "," + y + "), '"+ch+"' is \"" + dat.fg + "\"\n";
+	  } else {
+	      txt += "SETCOLOR: (" + x + "," + y + "), \"" + dat.fg + "\"\n";
+	  }
       }
     }
   }
-
   return txt;
 }
 
@@ -546,9 +562,11 @@ function panel_getcode(html)
       for (x = 0; x < panels[i].panel.WID; x++) {
 	dat = panels[i].panel.get_data(x,y);
 	chr = dat.chr;
-	if (chr == '<') chr = '&lt;';
-	else if (chr == '>') chr = '&gt;';
-	else if (chr == '&') chr = '&amp;';
+        if (chr >= ' ' && chr <= '~' && chr.length == 1) {
+	    if (chr == '<') chr = '&lt;';
+	    else if (chr == '>') chr = '&gt;';
+	    else if (chr == '&') chr = '&amp;';
+	} else chr = '.';
 	txt += chr;
       }
       txt += "\n";
@@ -567,6 +585,17 @@ function panel_getcode(html)
 	  }
       }
     }
+    for (y = 0; y < panels[i].panel.HEI; y++) {
+      for (x = 0; x < panels[i].panel.WID; x++) {
+	dat = panels[i].panel.get_data(x,y);
+	chr = dat.chr;
+        if (!(chr >= ' ' && chr <= '~' && chr.length == 1)) {
+	    chr = chr.replace(/^&#([0-9a-fA-F]+);$/, "$1");
+	    txt += "SETCHAR:("+x+","+y+"),"+chr+"\n";
+	}
+      }
+    }
+
     if (panels[i].panel.inmap(panels[i].panel.cursor.x,panels[i].panel.cursor.y)) {
 	txt += "CURSOR:"+panels[i].panel.cursor.x+","+panels[i].panel.cursor.y+"\n";
     }
@@ -818,7 +847,7 @@ function parse_code(code_data)
 	}
 */
       } else if (line.match(/^SETCOLORS:/)) {
-	tmp = line.replace(/^SETCOLORS: All '(.)' are "(.+)"/, "$1:$2");
+	tmp = line.replace(/^SETCOLORS: *All +'(.)' +are +"(.+)"/, "$1:$2");
 	var chr = tmp.substr(0, 1);
 	if (chr == undefined) continue;
 	var color = tmp.substr(2);
@@ -833,12 +862,16 @@ function parse_code(code_data)
 	  alert("NOT OK: all colors. " + okcolor +","+ curr_map + "\n"+tmp);
 	}
       } else if (line.match(/^SETCOLOR:/)) {
-	tmp = line.replace(/^SETCOLOR: \((\d+),(\d+)\), '(.)' is "(.+)"/, "$3:$1:$2:$4");
-	var chr = tmp.substr(0, 1);
-	var tmpx = tmp.substr(2);
-	var tmp2 = tmpx.split(':');
-	var color = tmp2[2];
+	if (line.match(/^SETCOLOR: *\((\d+) *, *(\d+)\) *, *'(.)' +is +"(.+)"/)) {
+	    tmp = line.replace(/^SETCOLOR: *\((\d+) *, *(\d+)\) *, *'(.)' +is +"(.+)"/, "$3:$1:$2:$4");
+	} else {
+	    tmp = line.replace(/^SETCOLOR: *\((\d+) *, *(\d+)\) *, *"(.+)"/, ":$1:$2:$3");
+	}
+	var tmp2 = tmp.split(':');
 	var okcolor = 0;
+	var tmpx = parseInt(tmp2[1]);
+	var tmpy = parseInt(tmp2[2]);
+	var color = tmp2[3];
 	if (color == undefined) {
 	    color = "undefined";
 	    alert("Could not parse " + line);
@@ -847,7 +880,9 @@ function parse_code(code_data)
 		if (color.indexOf(colors[tmpi]) == 0) okcolor = 1;
 	    }
 	    if (okcolor && (curr_map > 0)) {
-		panels[(curr_map-1)].panel.set_data(parseInt(tmp2[0]), parseInt(tmp2[1]), {'chr':chr, 'fg':color});
+		var tmpdat = panels[(curr_map-1)].panel.get_data(tmpx, tmpy);
+		tmpdat.fg = color;
+		panels[(curr_map-1)].panel.set_data(tmpx, tmpy, tmpdat);
 	    } else {
 		alert("NOT OK: (okcolor="+okcolor+") "+tmp);
 	    }
@@ -869,7 +904,7 @@ function parse_code(code_data)
 	  var cursor_y = parseInt(tmp2[1]);
 	  panels[(curr_map-1)].panel.set_cursor(cursor_x, cursor_y);
       } else if (line.match(/^SETATTR:/)) {
-	  tmp = line.replace(/^SETATTR:\((\d+),(\d+)\),(.+)$/, "$1\t$2\t$3");
+	  tmp = line.replace(/^SETATTR: *\((\d+) *, *(\d+)\) *, *(.+)$/, "$1\t$2\t$3");
 	  var tmp2 = tmp.split("\t");
 	  if (tmp2.length == 3) {
 	      var cursor_x = parseInt(tmp2[0]);
@@ -885,6 +920,17 @@ function parse_code(code_data)
 		  case 'underline': dat.ul = 1; break;
 		  }
 	      }
+	      panels[(curr_map-1)].panel.set_data(cursor_x, cursor_y, dat);
+	  } else alert("ERROR parsing "+line);
+      } else if (line.match(/^SETCHAR:/)) {
+	  tmp = line.replace(/^SETCHAR: *\((\d+) *, *(\d+)\) *, *([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])$/, "$1\t$2\t$3");
+	  var tmp2 = tmp.split("\t");
+	  if (tmp2.length == 3) {
+	      var cursor_x = parseInt(tmp2[0]);
+	      var cursor_y = parseInt(tmp2[1]);
+	      var chr = tmp2[2];
+	      var dat = panels[(curr_map-1)].panel.get_data(cursor_x, cursor_y);
+	      dat.chr = '&#'+chr+';';
 	      panels[(curr_map-1)].panel.set_data(cursor_x, cursor_y, dat);
 	  } else alert("ERROR parsing "+line);
       } else if (line.match(/^MAP:/)) {
@@ -961,11 +1007,9 @@ function pen_set_fg_chr(event, clr, chr)
 	pen = pen_clone(ctrl_pen);
   }
 
-  chr = String.fromCharCode(chr);
-
   if (clr != undefined)
     pen.fg = clr;
-  pen.chr = chr;
+  pen.chr = unescape(chr);
   pen_has_changed();
 }
 
@@ -987,7 +1031,8 @@ function old_pen_parsecookiestr(str)
 
   for (i = 0; i < arr.length; i++) {
     var tmp = arr[i].split("&");
-    var chr = String.fromCharCode(tmp[0]);
+    var chrh = tmp[0];
+    var chr = parseInt(tmp[0], 16);
     var fg = tmp[1];
     var bold = tmp[2];
     var key = tmp[3];
@@ -1007,6 +1052,11 @@ function old_pen_parsecookiestr(str)
       }
     }
     if (chr) {
+	if (chr >= ' '.charCodeAt(0) && chr <= '~'.charCodeAt(0)) {
+	    chr = String.fromCharCode(chr);
+	} else {
+	    chr = '&#' + chrh + ';';
+	}
 	saved_pens.push({'chr':chr, 'fg':fg, 'key':key, 'bold':bold, 'rev':rev, 'ul':ul});
 	bindable_key_remove(key);
     }
@@ -1054,7 +1104,12 @@ function old_pen_cookiestr()
     if (ul == undefined) { ul = 0; }
     if (key == undefined) { key = ''; } else { key = key.charCodeAt(0); }
     if (i > 0) { str += ","; }
-    str += chr.charCodeAt(0) + "&" + fg + "&" + bold + "&" + key + '&' + rev + '&' + ul;
+    if (chr.length == 1) {
+	chr = chr.charCodeAt(0).toString(16);
+    } else if (chr.match(/^&#[0-9a-fA-F]+;$/)){
+	chr = chr.replace(/^&#([0-9a-fA-F]+);$/, "$1");
+    }
+    str += chr + "&" + fg + "&" + bold + "&" + key + '&' + rev + '&' + ul;
   }
   return str;
 }
@@ -1114,7 +1169,7 @@ function color_selection()
   var chr = "#";
   var tmpen = pen_clone(pen);
 
-  if (!(pen.chr == " ")) chr = pen.chr;
+  if (!(pen.chr == " ")) chr = pen_htmlchr(pen);
 
   txt += "<span class='colorselection_title'>Colors: </span>";
   txt += "<a class='button' onclick='return buttonfunc_act(43);' href='#'>no color</a>";
@@ -1123,7 +1178,7 @@ function color_selection()
   txt += "<span class='colorselection'>";
   for (i = 1; i < colors.length; i++) {
       tmpen.fg = colors[i];
-      txt += " <span class='"+datspanclass(tmpen)+"' onclick='pen_set_fgcolor(\""+colors[i]+"\");'>"+htmlentities(chr+chr+chr+chr)+"</span>";
+      txt += " <span class='"+datspanclass(tmpen)+"' onclick='pen_set_fgcolor(\""+colors[i]+"\");'>"+chr+chr+chr+chr+"</span>";
   }
   txt += "</span>";
   tmp.innerHTML = txt;
@@ -1132,14 +1187,14 @@ function color_selection()
 function penset_escaped_func(pen)
 {
   if (pen.fg == undefined) pen.fg = "gray";
-  return "pen_set_fg_chr(event, \""+pen.fg+"\","+pen.chr.charCodeAt(0)+");";
+  return "pen_set_fg_chr(event, \""+pen.fg+"\",\""+escape(pen.chr)+"\");";
 }
 
 function penset_span(pen, desc)
 {
   var txt = "";
   txt += "<a class='withtooltip " + datspanclass(pen) + "' onclick='"+penset_escaped_func(pen)+"return false;' href='#'>";
-  txt += htmlentities(pen.chr);
+  txt += pen_htmlchr(pen);
   if (desc != undefined) { txt += "<span class='tooltip'>" + desc + "</span>"; }
   txt += "</a>";
 
@@ -1149,7 +1204,7 @@ function penset_span(pen, desc)
 function penset_span_noclick(pen)
 {
   var txt = "";
-  txt += "<span class='" + datspanclass(pen) + "'>" + htmlentities(pen.chr) + "</span>";
+  txt += "<span class='" + datspanclass(pen) + "'>" + pen_htmlchr(pen) + "</span>";
   return txt;
 }
 
@@ -1162,8 +1217,8 @@ function char_selection()
   txt += "Chars: ";
   txt += "<span class='charselection'>";
   for (i = ' '.charCodeAt(0); i <= '~'.charCodeAt(0); i++) {
-      txt += "<span class='"+datspanclass(pen)+"' onclick='pen_set_fg_chr(event, \""+pen.fg+"\","+i+");'>";
-      txt += String.fromCharCode(i) + "</span>";
+      var c = String.fromCharCode(i);
+      txt += "<span class='"+datspanclass(pen)+"' onclick='pen_set_fg_chr(event, \""+pen.fg+"\",\""+escape(c)+"\");'>" + c + "</span>";
   }
   txt += "</span>";
   tmp.innerHTML = txt;
@@ -1175,7 +1230,7 @@ function pen_set_by_text(text)
   for (i = 0; i < game_symbols_orig.length; i++) {
     if (game_symbols_orig[i].chr == undefined) { continue; }
     if (text == game_symbols_orig[i].text) {
-      pen_set_fg_chr(undefined, game_symbols_orig[i].fg, game_symbols_orig[i].chr.charCodeAt(0));
+      pen_set_fg_chr(undefined, game_symbols_orig[i].fg, escape(game_symbols_orig[i].chr));
       return;
     }
   }
@@ -1399,10 +1454,10 @@ function show_current_pen()
 {
   var tmp = document.getElementById("current_pen");
   var txt = "Current pen: ";
-  txt += "<span class='pen_glyph " + datspanclass(pen, 1) + "'>" + htmlentities(pen.chr) + "</span>";
+  txt += "<span class='pen_glyph " + datspanclass(pen, 1) + "'>" + pen_htmlchr(pen) + "</span>";
 
   txt += " with ctrl:";
-  txt += "<span class='pen_glyph " + datspanclass(ctrl_pen, 1) + "'>" + htmlentities(ctrl_pen.chr) + "</span>";
+  txt += "<span class='pen_glyph " + datspanclass(ctrl_pen, 1) + "'>" + pen_htmlchr(ctrl_pen) + "</span>";
 
   tmp.innerHTML = txt;
 }
@@ -1526,6 +1581,50 @@ function show_pen_selection_popup(close)
 	return;
     }
     update_pen_selection_popup();
+    elem.style.display = "block";
+    elem.style.left = (dudley_mouse_pos_x - Math.floor(elem.offsetWidth / 2)) + 'px';
+    elem.style.top = (dudley_mouse_pos_y - Math.floor(elem.offsetHeight / 2)) + 'px';
+}
+
+
+var dud_extended_char = 256;
+
+function update_extended_char_popup(adj)
+{
+    var elem = document.getElementById("extchar_selection_popup");
+    if (!elem) return;
+    if (adj != undefined) {
+	dud_extended_char += adj;
+	if (dud_extended_char < 256) dud_extended_char = 256;
+    }
+    var tmpen = pen_clone(pen);
+    var txt = "";
+    var i;
+    var cnt = 0;
+    for (i = 0; i < 256; i++) {
+	var d = (i + dud_extended_char);
+	tmpen.chr = '&#'+'0000'.substr(d.toString().length)+d+';';
+	txt += "<span class='saved_pens'>" + penset_span(tmpen) + "</span>";
+	cnt++;
+	if (cnt > 32) { txt += '<br>'; cnt = 0; }
+    }
+    txt += "<br>";
+    txt += "<div><a class='button' href='#' onclick='update_extended_char_popup(-256); return false;'>&lt;--</a>";
+    txt += "<span style='padding:0 2em'>"+('0000'.substr(dud_extended_char.toString(16).length)+dud_extended_char.toString(16))+"</span>";
+    txt += "<span style='float:right'><a class='button' href='#' onclick='update_extended_char_popup(256); return false;'>--&gt;</a></span></div>";
+
+    elem.innerHTML = txt;
+}
+
+function show_extended_char_popup()
+{
+    var elem = document.getElementById("extchar_selection_popup");
+    if (!elem) return;
+    if (elem.style.display != "none") {
+	elem.style.display = "none";
+	return;
+    }
+    update_extended_char_popup();
     elem.style.display = "block";
     elem.style.left = (dudley_mouse_pos_x - Math.floor(elem.offsetWidth / 2)) + 'px';
     elem.style.top = (dudley_mouse_pos_y - Math.floor(elem.offsetHeight / 2)) + 'px';
@@ -1695,6 +1794,7 @@ function buttonfunc_act(act)
       if (pen.ul == 1) { pen.ul = undefined; } else { pen.ul = 1; }
       pen_has_changed();
       break;
+  case 95: show_extended_char_popup(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2403,7 +2503,7 @@ function handle_keyb(e)
     /* is it a saved pen quick key? */
     for (i = 0; i < saved_pens.length; i++) {
       if ((saved_pens[i].key != undefined) && (str == saved_pens[i].key)) {
-	  pen_set_fg_chr(undefined, saved_pens[i].fg, saved_pens[i].chr.charCodeAt(0));
+	  pen_set_fg_chr(undefined, saved_pens[i].fg, escape(saved_pens[i].chr));
 	  return;
       }
     }
@@ -2419,6 +2519,7 @@ function handle_keyb(e)
     if (e == 27) {
 	show_pen_selection_popup(1); // close it
     }
+
 }
 
 function set_checkbox_on(cbox)
@@ -2671,7 +2772,7 @@ function config_window()
 	    txt += "<td>Set Pen to <span class='saved_pens'>" + penset_span_noclick(saved_pens[i]) + "</span></td>";
 	    txt += "<td><span class='button' onClick='window.opener.saved_pens["+i+"].del=1; this.parentNode.parentNode.style.display=\"none\";'>del</span></td>";
 	    txt += "</tr>";
-	    pen_set_fg_chr(undefined, saved_pens[i].fg, saved_pens[i].chr.charCodeAt(0));
+	    pen_set_fg_chr(undefined, saved_pens[i].fg, escape(saved_pens[i].chr));
 	    saved_pens[i].del=0;
 	}
     }

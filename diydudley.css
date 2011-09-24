@@ -344,6 +344,7 @@ td.footnote {
     display: none;
 }
 
+#extchar_selection_popup,
 #pen_selection_popup {
     display: none;
     position: absolute;

@@ -1280,7 +1280,8 @@ var buttonfunc_act_desc = new Array(
     {'act':41, 'desc': "Submit comic strip to the database (login required)"},
     {'act':74, 'desc': "Show help window"},
     {'act':79, 'desc': "Show configuration window"},
-    {'act':91, 'desc': "Show or hide Pen symbol selection popup"}
+    {'act':91, 'desc': "Show or hide Pen symbol selection popup"},
+    {'act':95, 'desc': "Show or hide Extended char selection popup"}
 );
 
 var default_keybinding_keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

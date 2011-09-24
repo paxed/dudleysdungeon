@@ -95,7 +95,7 @@ function datspanclass(dat, forcebg)
 function get_data_span(dat)
 {
     span = datspanclass(dat);
-    if (!dat.chr) { c = " "; } else { c = htmlentities(dat.chr); }
+    if (!dat.chr) { c = " "; } else { c = dat.chr; }
     if (span) {
 	return "<span class='" + span + "'>" + c + "</span>";
     } else {

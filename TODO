@@ -1,4 +1,6 @@
 
+-bug: clicking on "config" changes current pen.
+
 -use PDO instead of pg_foo
 
 -Add user's voting "history" to duduser.php
@@ -23,8 +25,6 @@
 -diydudley: allow filling an area with "shop items"
 
 -document the comic strip format
-
--diydudley: support for underline 
 
 -diydudley: support for any html entity in panel.
 
