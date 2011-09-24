@@ -4,6 +4,16 @@ function pen_clone(pen)
     return {'chr':pen.chr, 'fg':pen.fg, 'bold':pen.bold, 'rev':pen.rev};
 }
 
+function pen_clone_nornd(pen)
+{
+    return {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold, 'rev':pen.rev};
+}
+
+function pen_equal(pen1, pen2)
+{
+    return ((pen1.chr == pen2.chr) && (pen1.fg == pen2.fg) && (pen1.bold == pen2.bold) && (pen1.rev == pen2.rev));
+}
+
 function pen_insert()
 {
     var fg = pen_getcolor(pen.fg);
@@ -16,16 +26,20 @@ function pen_insert()
     set_panel_text();
 }
 
+function pen_has_changed()
+{
+    show_current_pen();
+    color_selection();
+    char_selection();
+    update_pen_selection_popup();
+}
+
 function pen_swap_ctrl()
 {
     var tmp = pen;
     pen = ctrl_pen;
     ctrl_pen = tmp;
-    show_current_pen();
-    if (ctrl_pen != pen) {
-	color_selection();
-	char_selection();
-    }
+    pen_has_changed();
 }
 
 function getkeyb_handler_string()
@@ -357,9 +371,9 @@ function panel_update(event, x,y)
 {
   var p;
   if (event.ctrlKey) {
-      p = {'chr':ctrl_pen.chr, 'fg':pen_getcolor(ctrl_pen.fg), 'bold':ctrl_pen.bold, 'rev':ctrl_pen.rev};
+      p = pen_clone_nornd(ctrl_pen);
   } else {
-      p = {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold, 'rev':pen.rev};
+      p = pen_clone_nornd(pen);
   }
 
   if (p.chr == ' ') p.fg = "gray";
@@ -420,6 +434,7 @@ function panel_getdiv()
   var x, y;
   var txt = "";
   var dat;
+  var tmpen;
 
   var p_cursor_x = -1;
   var p_cursor_y = -1;
@@ -440,8 +455,9 @@ function panel_getdiv()
       txt += " onmouseover='panel_mouse_hover("+x+","+y+",1);'";
       txt += " onmouseout='panel_mouse_hover("+x+","+y+",0);'";
       txt += " onClick='panel_update(event, "+x+","+y+");'>";
-      if (p_cursor_x == x && p_cursor_y == y) { cur = 1; } else { cur = 0; }
-	txt += get_data_span({'chr':dat.chr, 'fg':dat.fg, 'cur':cur, 'bold':dat.bold, 'rev':dat.rev});
+      tmpen = pen_clone(dat);
+      if (p_cursor_x == x && p_cursor_y == y) { tmpen.cur = 1; } else { tmpen.cur = 0; }
+      txt += get_data_span(tmpen);
       txt += "</span>";
     }
     txt += "<br>";
@@ -901,68 +917,60 @@ function parse_code(code_data)
 
 function pen_set_fgcolor(clr)
 {
-  pen.fg = clr;
-  show_current_pen();
-  char_selection();
+    if (pen.fg != clr) {
+	pen.fg = clr;
+	pen_has_changed();
+    }
 }
 
 function pen_clr_fgcolor()
 {
-  delete pen.fg;
-  show_current_pen();
-  char_selection();
+    if (pen.fg != undefined) {
+	delete pen.fg;
+	pen_has_changed();
+    }
 }
 
 function pen_set_chr(chr)
 {
-  pen.chr = chr;
-  show_current_pen();
-  color_selection();
-  char_selection();
+    if (pen.chr != chr) {
+	pen.chr = chr;
+	pen_has_changed();
+    }
 }
 
 function pen_set_sym(sym)
 {
-  if ((ctrl_pen.chr == sym.chr) && (ctrl_pen.fg == sym.fg) && (ctrl_pen.bold == sym.bold) && (ctrl_pen.rev == sym.rev)) {
+  if (pen_equal(ctrl_pen, sym)) {
       var tmp = pen;
       pen = ctrl_pen;
       ctrl_pen = tmp;
   } else {
-      pen.chr = sym.chr;
-      pen.fg = sym.fg;
-      pen.bold = sym.bold;
-      pen.rev = sym.rev;
+      pen = pen_clone(sym);
   }
-  show_current_pen();
-  color_selection();
-  char_selection();
+  pen_has_changed();
 }
 
 function pen_set_fg_chr(event, clr, chr)
 {
-  var p = pen;
   if (event != undefined) {
     if (event.ctrlKey)
-      p = ctrl_pen;
+	pen = pen_clone(ctrl_pen);
   }
 
   chr = String.fromCharCode(chr);
 
   if (clr != undefined)
-    p.fg = clr;
-  p.chr = chr;
-  show_current_pen();
-  color_selection();
-  char_selection();
+    pen.fg = clr;
+  pen.chr = chr;
+  pen_has_changed();
 }
 
 function pen_random()
 {
   pen.fg = colors[Math.floor(Math.random() * colors.length)];
   pen.chr = String.fromCharCode(Math.floor(Math.random() * ('~'.charCodeAt(0) - ' '.charCodeAt(0))) + ' '.charCodeAt(0));
-  show_current_pen();
-  color_selection();
-  char_selection();
+  pen_has_changed();
 }
 
 function old_pen_parsecookiestr(str)
@@ -1074,18 +1082,18 @@ function old_pen_move(i, dir)
 function pen_save()
 {
   var i;
-  var fg = pen_getcolor(pen.fg);
+  var tmpen = pen_clone_nornd(pen);
   var exists = 0;
-  if (fg == undefined) { fg = "gray"; }
+  if (tmpen.fg == undefined) { tmpen.fg = "gray"; }
 
-  for (i = 0; i < saved_pens.length; i++) {
-      if ((saved_pens[i].chr == pen.chr) && (saved_pens[i].fg == fg) && (saved_pens[i].bold == pen.bold) && (saved_pens[i].rev == pen.rev)) {
-      exists = 1;
-    }
-  }
+  for (i = 0; i < saved_pens.length; i++)
+      if (pen_equal(tmpen, saved_pens[i])) {
+	  exists = 1;
+	  break;
+      }
 
   if (!exists) {
-    saved_pens.push({'chr':pen.chr, 'fg':fg, 'bold':pen.bold, 'rev':pen.rev});
+    saved_pens.push(tmpen);
     show_saved_pens();
     createCookie(cookie_prefix + "saved_pens", old_pen_cookiestr(), 30);
   }
@@ -1450,14 +1458,16 @@ function update_pen_selection_popup()
     var i;
     var tmpen;
     for (i = 0; i < colors.length; i++) {
-	tmpen = {'chr':pen.chr, 'fg':colors[i], 'bold':pen.bold, 'rev':pen.rev};
+	tmpen = pen_clone(pen);
+	tmpen.fg = colors[i];
 	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(tmpen) + "</span>";
     }
     txt += "<br><br>";
 
     var cnt = 0;
     for (var ch = ' '.charCodeAt(0); ch <= '~'.charCodeAt(0); ch++) {
-	tmpen = {'chr':String.fromCharCode(ch), 'fg':pen.fg, 'bold':pen.bold, 'rev':pen.rev};
+	tmpen = pen_clone(pen);
+	tmpen.chr = String.fromCharCode(ch);
 	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(tmpen) + "</span>";
 	cnt++;
 	if (cnt > 15) { txt += '<br>'; cnt = 0; }
@@ -1626,15 +1636,11 @@ function buttonfunc_act(act)
   case 91: show_pen_selection_popup(); break;
   case 92:
       if (pen.bold == 1) { pen.bold = undefined; } else { pen.bold = 1; }
-      show_current_pen();
-      color_selection();
-      char_selection();
+      pen_has_changed();
       break;
   case 93:
       if (pen.rev == 1) { pen.rev = undefined; } else { pen.rev = 1; }
-      show_current_pen();
-      color_selection();
-      char_selection();
+      pen_has_changed();
       break;
   }
   if (act < 40) {
