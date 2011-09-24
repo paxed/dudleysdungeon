@@ -1,13 +1,13 @@
 
 function pen_clone(pen)
 {
-    return {'chr':pen.chr, 'fg':pen.fg, 'bold':pen.bold};
+    return {'chr':pen.chr, 'fg':pen.fg, 'bold':pen.bold, 'rev':pen.rev};
 }
 
 function pen_insert()
 {
     var fg = pen_getcolor(pen.fg);
-    if (fg == undefined || fg == "white" || fg == "black" || pen.chr == ' ') {
+    if ((fg == undefined || fg == "white" || fg == "black" || pen.chr == ' ') && (pen.rev != 1)) {
 	str = pen.chr;
     } else {
 	str = '<span class="'+datspanclass(pen)+'">'+pen.chr+'</span>';
@@ -357,9 +357,9 @@ function panel_update(event, x,y)
 {
   var p;
   if (event.ctrlKey) {
-      p = {'chr':ctrl_pen.chr, 'fg':pen_getcolor(ctrl_pen.fg), 'bold':ctrl_pen.bold};
+      p = {'chr':ctrl_pen.chr, 'fg':pen_getcolor(ctrl_pen.fg), 'bold':ctrl_pen.bold, 'rev':ctrl_pen.rev};
   } else {
-      p = {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold};
+      p = {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold, 'rev':pen.rev};
   }
 
   if (p.chr == ' ') p.fg = "gray";
@@ -441,7 +441,7 @@ function panel_getdiv()
       txt += " onmouseout='panel_mouse_hover("+x+","+y+",0);'";
       txt += " onClick='panel_update(event, "+x+","+y+");'>";
       if (p_cursor_x == x && p_cursor_y == y) { cur = 1; } else { cur = 0; }
-	txt += get_data_span({'chr':dat.chr, 'fg':dat.fg, 'cur':cur, 'bold':dat.bold});
+	txt += get_data_span({'chr':dat.chr, 'fg':dat.fg, 'cur':cur, 'bold':dat.bold, 'rev':dat.rev});
       txt += "</span>";
     }
     txt += "<br>";
@@ -542,8 +542,11 @@ function panel_getcode(html)
     for (y = 0; y < panels[i].panel.HEI; y++) {
       for (x = 0; x < panels[i].panel.WID; x++) {
 	dat = panels[i].panel.get_data(x,y);
-	  if (dat.bold == 1) {
-	      txt += "SETATTR:("+x+","+y+"),bold\n";
+	  var attrs = new Array();
+	  if (dat.bold == 1) { attrs.push('bold'); }
+	  if (dat.rev == 1) { attrs.push('reverse'); }
+	  if (attrs.length > 0) {
+	      txt += "SETATTR:("+x+","+y+"),"+attrs.join('&')+"\n";
 	  }
       }
     }
@@ -860,6 +863,7 @@ function parse_code(code_data)
 		  switch (attrs[tmpa]) {
 		  default: break;
 		  case 'bold': dat.bold = 1; break;
+		  case 'reverse': dat.rev = 1; break;
 		  }
 	      }
 	      panels[(curr_map-1)].panel.set_data(cursor_x, cursor_y, dat);
@@ -919,7 +923,7 @@ function pen_set_chr(chr)
 
 function pen_set_sym(sym)
 {
-  if ((ctrl_pen.chr == sym.chr) && (ctrl_pen.fg == sym.fg) && (ctrl_pen.bold == sym.bold)) {
+  if ((ctrl_pen.chr == sym.chr) && (ctrl_pen.fg == sym.fg) && (ctrl_pen.bold == sym.bold) && (ctrl_pen.rev == sym.rev)) {
       var tmp = pen;
       pen = ctrl_pen;
       ctrl_pen = tmp;
@@ -927,6 +931,7 @@ function pen_set_sym(sym)
       pen.chr = sym.chr;
       pen.fg = sym.fg;
       pen.bold = sym.bold;
+      pen.rev = sym.rev;
   }
   show_current_pen();
   color_selection();
@@ -975,7 +980,9 @@ function old_pen_parsecookiestr(str)
     var fg = tmp[1];
     var bold = tmp[2];
     var key = tmp[3];
+    var rev = tmp[4];
     if (bold != 1) { bold = undefined; }
+    if (rev != 1) { rev = undefined; }
     if (key == '') { key = undefined; }
     if (key != undefined) {
       key = String.fromCharCode(key);
@@ -987,7 +994,7 @@ function old_pen_parsecookiestr(str)
       }
     }
     if (chr) {
-	saved_pens.push({'chr':chr, 'fg':fg, 'key':key, 'bold':bold});
+	saved_pens.push({'chr':chr, 'fg':fg, 'key':key, 'bold':bold, 'rev':rev});
 	bindable_key_remove(key);
     }
   }
@@ -1026,11 +1033,13 @@ function old_pen_cookiestr()
     var fg = saved_pens[i].fg;
     var bold = saved_pens[i].bold;
     var key = saved_pens[i].key;
+    var rev = saved_pens[i].rev;
     if (fg == undefined) { fg = "gray"; }
     if (bold == undefined) { bold = 0; }
+    if (rev == undefined) { rev = 0; }
     if (key == undefined) { key = ''; } else { key = key.charCodeAt(0); }
     if (i > 0) { str += ","; }
-    str += chr.charCodeAt(0) + "&" + fg + "&" + bold + "&" + key;
+    str += chr.charCodeAt(0) + "&" + fg + "&" + bold + "&" + key + '&' + rev;
   }
   return str;
 }
@@ -1070,13 +1079,13 @@ function pen_save()
   if (fg == undefined) { fg = "gray"; }
 
   for (i = 0; i < saved_pens.length; i++) {
-      if ((saved_pens[i].chr == pen.chr) && (saved_pens[i].fg == fg) && (saved_pens[i].bold == pen.bold)) {
+      if ((saved_pens[i].chr == pen.chr) && (saved_pens[i].fg == fg) && (saved_pens[i].bold == pen.bold) && (saved_pens[i].rev == pen.rev)) {
       exists = 1;
     }
   }
 
   if (!exists) {
-    saved_pens.push({'chr':pen.chr, 'fg':fg, 'bold':pen.bold});
+    saved_pens.push({'chr':pen.chr, 'fg':fg, 'bold':pen.bold, 'rev':pen.rev});
     show_saved_pens();
     createCookie(cookie_prefix + "saved_pens", old_pen_cookiestr(), 30);
   }
@@ -1287,7 +1296,7 @@ function get_saved_pens_popup(i)
       old_pen_assign_key(i, key);
     }
 
-    popup = "Pen quick selection<br>";
+    popup = "<span style='font-weight:normal;'>Pen quick selection<br>";
     if (key != undefined)
       popup += "Press '<b>" + key + "</b>' to select this pen.";
     else
@@ -1305,7 +1314,7 @@ function get_saved_pens_popup(i)
       popup += "<span class='button_disabled' onclick='old_pen_move("+i+",0);'>&gt;</span>";
     popup += " key:<input type='text' "+getkeyb_handler_string()+" size='1' id='old_pen_set_key_"+i+"'";
     if (key != undefined) popup += " value='"+key+"'";
-    popup += " onchange='old_pen_set_key("+i+");'>";
+    popup += " onchange='old_pen_set_key("+i+");'></span>";
     return popup;
 }
 
@@ -1375,10 +1384,10 @@ function show_current_pen()
 {
   var tmp = document.getElementById("current_pen");
   var txt = "Current pen: ";
-  txt += "<span class='pen_glyph " + datspanclass(pen) + "'>" + htmlentities(pen.chr) + "</span>";
+  txt += "<span class='pen_glyph " + datspanclass(pen, 1) + "'>" + htmlentities(pen.chr) + "</span>";
 
   txt += " with ctrl:";
-  txt += "<span class='pen_glyph " + datspanclass(ctrl_pen) + "'>" + htmlentities(ctrl_pen.chr) + "</span>";
+  txt += "<span class='pen_glyph " + datspanclass(ctrl_pen, 1) + "'>" + htmlentities(ctrl_pen.chr) + "</span>";
 
   tmp.innerHTML = txt;
 }
@@ -1441,14 +1450,14 @@ function update_pen_selection_popup()
     var i;
     var tmpen;
     for (i = 0; i < colors.length; i++) {
-	tmpen = {'chr':pen.chr, 'fg':colors[i], 'bold':pen.bold};
+	tmpen = {'chr':pen.chr, 'fg':colors[i], 'bold':pen.bold, 'rev':pen.rev};
 	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(tmpen) + "</span>";
     }
     txt += "<br><br>";
 
     var cnt = 0;
     for (var ch = ' '.charCodeAt(0); ch <= '~'.charCodeAt(0); ch++) {
-	tmpen = {'chr':String.fromCharCode(ch), 'fg':pen.fg, 'bold':pen.bold};
+	tmpen = {'chr':String.fromCharCode(ch), 'fg':pen.fg, 'bold':pen.bold, 'rev':pen.rev};
 	txt += "<span class='saved_pens' onclick='update_pen_selection_popup();'>" + penset_span(tmpen) + "</span>";
 	cnt++;
 	if (cnt > 15) { txt += '<br>'; cnt = 0; }
@@ -1513,6 +1522,13 @@ function buttonfunc_act(act)
       if (hovering_on_editpanel) {
 	  var dat = editpaneldata.get_data(current_pos_x, current_pos_y);
 	  if (dat.bold == 1) { dat.bold = undefined; } else { dat.bold = 1; }
+	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
+      }
+      break;
+  case 28:
+      if (hovering_on_editpanel) {
+	  var dat = editpaneldata.get_data(current_pos_x, current_pos_y);
+	  if (dat.rev == 1) { dat.rev = undefined; } else { dat.rev = 1; }
 	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
       }
       break;
@@ -1610,6 +1626,12 @@ function buttonfunc_act(act)
   case 91: show_pen_selection_popup(); break;
   case 92:
       if (pen.bold == 1) { pen.bold = undefined; } else { pen.bold = 1; }
+      show_current_pen();
+      color_selection();
+      char_selection();
+      break;
+  case 93:
+      if (pen.rev == 1) { pen.rev = undefined; } else { pen.rev = 1; }
       show_current_pen();
       color_selection();
       char_selection();
@@ -1993,6 +2015,7 @@ function strip_preview_panels()
 	      if (dat) {
 		  var chr = dat.chr;
 		  var bold = dat.bold;
+		  var rev = dat.rev;
 		  var fg  = dat.fg;
 		  if (!chr) chr = '.';
 		  else if (chr == '<') chr = '&lt;';
@@ -2000,7 +2023,11 @@ function strip_preview_panels()
 		  else if (chr == '&') chr = '&amp;';
 		  else if (chr == '~') chr = '&tilde;';
 		  if (fg && (fg != "gray")) {
-		      sclass += " f_"+fg;
+		      if (rev && (rev == 1)) {
+			  sclass += " f_black b_"+fg;
+		      } else {
+			  sclass += " f_"+fg;
+		      }
 		  }
 		  if (bold && (bold == 1)) sclass += " f_bold";
 	      }

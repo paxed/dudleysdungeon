@@ -671,6 +671,7 @@ function parse_comic_strip($lines)
 		switch ($attr) {
 		default: break;
 		case 'bold': $panels[$curr_panel]['panel'][$cx][$cy]['bold'] = 1;
+		case 'reverse': $panels[$curr_panel]['panel'][$cx][$cy]['rev'] = 1;
 		}
 	    }
 	} else if (preg_match('/^SETCOLORS: *All +\'(.)\' +are +"(.+)"$/', $line, $match)) {
@@ -750,13 +751,18 @@ function render_comic_strip($strip, $title=NULL)
 	      if (isset($strip[$i]['panel'][$dx][$dy])) {
 		  $chr = $strip[$i]['panel'][$dx][$dy]['chr'];
 		  $bold = (isset($strip[$i]['panel'][$dx][$dy]['bold']) ? $strip[$i]['panel'][$dx][$dy]['bold'] : 0);
+		  $rev = (isset($strip[$i]['panel'][$dx][$dy]['rev']) ? $strip[$i]['panel'][$dx][$dy]['rev'] : 0);
 		  $fg  = (isset($strip[$i]['panel'][$dx][$dy]['fg']) ? $strip[$i]['panel'][$dx][$dy]['fg'] : "gray");
 		  if (!isset($chr)) $chr = '.';
 		  else if ($chr == '<') $chr = '&lt;';
 		  else if ($chr == '>') $chr = '&gt;';
 		  else if ($chr == '&') $chr = '&amp;';
 		  $spann = null;
-		  if ($fg && ($fg != "gray")) $spann .= 'f_'.$fg;
+		  if ($rev == 1) {
+		      if ($fg && ($fg != "gray")) $spann .= 'f_black b_'.$fg;
+		  } else {
+		      if ($fg && ($fg != "gray")) $spann .= 'f_'.$fg;
+		  }
 		  if ($dx == $strip[$i]['cursor_x'] && $dy == $strip[$i]['cursor_y']) $spann .= ' f_cur';
 		  if ($bold == 1) $spann .= ' f_bold';
 

@@ -63,9 +63,11 @@ function Panel(wid, hei)
 	    var pf = panel.mapdata[i].fg;
 	    var tb = this.mapdata[i].bold;
 	    var pb = panel.mapdata[i].bold;
+	    var tr = this.mapdata[i].rev;
+	    var pr = panel.mapdata[i].rev;
 	    if (tf == undefined) tf = "gray";
 	    if (pf == undefined) pf = "gray";
-	    if ((tc != pc) || (tf != pf) || (tb != pb)) return false;
+	    if ((tc != pc) || (tf != pf) || (tb != pb) || (tr != pr)) return false;
 	}
 	return true;
     }
@@ -128,7 +130,7 @@ function Panel(wid, hei)
   this.set_data = function(x,y,dat)
     {
       if (this.inmap(x,y)) {
-	  this.mapdata[this.mapidx(x,y)] = {'chr':dat.chr, 'fg':dat.fg, 'bold':dat.bold};
+	  this.mapdata[this.mapidx(x,y)] = {'chr':dat.chr, 'fg':dat.fg, 'bold':dat.bold, 'rev':dat.rev};
       }
     };
 

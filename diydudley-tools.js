@@ -77,10 +77,15 @@ function pen_getcolor(color)
     return fg;
 }
 
-function datspanclass(dat)
+function datspanclass(dat, forcebg)
 {
     var sclass = '';
-    if (dat.fg == undefined) { sclass += " f_gray"; } else { sclass += " f_"+dat.fg; }
+    if (dat.rev == 1) {
+	if (dat.fg == undefined) { sclass += " f_black b_gray"; } else { sclass += " f_black b_"+dat.fg; }
+    } else {
+	if (dat.fg == undefined) { sclass += " f_gray";	} else { sclass += " f_"+dat.fg; }
+	if (forcebg == 1) sclass += ' b_black';
+    }
     if (dat.bold == 1) { sclass += " f_bold"; }
     if (dat.cur) { sclass += " f_cur"; }
     return sclass.trim();
