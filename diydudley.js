@@ -1,17 +1,17 @@
 
 function pen_clone(pen)
 {
-    return {'chr':pen.chr, 'fg':pen.fg, 'bold':pen.bold, 'rev':pen.rev};
+    return {'chr':pen.chr, 'fg':pen.fg, 'bold':pen.bold, 'rev':pen.rev, 'ul':pen.ul};
 }
 
 function pen_clone_nornd(pen)
 {
-    return {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold, 'rev':pen.rev};
+    return {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold, 'rev':pen.rev, 'ul':pen.ul};
 }
 
 function pen_equal(pen1, pen2)
 {
-    return ((pen1.chr == pen2.chr) && (pen1.fg == pen2.fg) && (pen1.bold == pen2.bold) && (pen1.rev == pen2.rev));
+    return ((pen1.chr == pen2.chr) && (pen1.fg == pen2.fg) && (pen1.bold == pen2.bold) && (pen1.rev == pen2.rev) && (pen1.ul == pen2.ul));
 }
 
 function pen_insert()
@@ -561,6 +561,7 @@ function panel_getcode(html)
 	  var attrs = new Array();
 	  if (dat.bold == 1) { attrs.push('bold'); }
 	  if (dat.rev == 1) { attrs.push('reverse'); }
+	  if (dat.ul == 1) { attrs.push('underline'); }
 	  if (attrs.length > 0) {
 	      txt += "SETATTR:("+x+","+y+"),"+attrs.join('&')+"\n";
 	  }
@@ -880,6 +881,8 @@ function parse_code(code_data)
 		  default: break;
 		  case 'bold': dat.bold = 1; break;
 		  case 'reverse': dat.rev = 1; break;
+		  case 'ul':
+		  case 'underline': dat.ul = 1; break;
 		  }
 	      }
 	      panels[(curr_map-1)].panel.set_data(cursor_x, cursor_y, dat);
@@ -989,8 +992,10 @@ function old_pen_parsecookiestr(str)
     var bold = tmp[2];
     var key = tmp[3];
     var rev = tmp[4];
+    var ul = tmp[5];
     if (bold != 1) { bold = undefined; }
     if (rev != 1) { rev = undefined; }
+    if (ul != 1) { ul = undefined; }
     if (key == '') { key = undefined; }
     if (key != undefined) {
       key = String.fromCharCode(key);
@@ -1002,7 +1007,7 @@ function old_pen_parsecookiestr(str)
       }
     }
     if (chr) {
-	saved_pens.push({'chr':chr, 'fg':fg, 'key':key, 'bold':bold, 'rev':rev});
+	saved_pens.push({'chr':chr, 'fg':fg, 'key':key, 'bold':bold, 'rev':rev, 'ul':ul});
 	bindable_key_remove(key);
     }
   }
@@ -1042,12 +1047,14 @@ function old_pen_cookiestr()
     var bold = saved_pens[i].bold;
     var key = saved_pens[i].key;
     var rev = saved_pens[i].rev;
+    var ul = saved_pens[i].ul;
     if (fg == undefined) { fg = "gray"; }
     if (bold == undefined) { bold = 0; }
     if (rev == undefined) { rev = 0; }
+    if (ul == undefined) { ul = 0; }
     if (key == undefined) { key = ''; } else { key = key.charCodeAt(0); }
     if (i > 0) { str += ","; }
-    str += chr.charCodeAt(0) + "&" + fg + "&" + bold + "&" + key + '&' + rev;
+    str += chr.charCodeAt(0) + "&" + fg + "&" + bold + "&" + key + '&' + rev + '&' + ul;
   }
   return str;
 }
@@ -1471,6 +1478,10 @@ function pen_selection_attr_checkboxes()
     txt += "<label>Rev<input type='checkbox' id='pen_selection_popup_checkbox_rev' onchange='pen_selection_popup_checkbox_check(\"rev\");'";
     if (pen.rev == 1) txt += " checked";
     txt += "></label></span>";
+
+    txt += "<label>Ul<input type='checkbox' id='pen_selection_popup_checkbox_ul' onchange='pen_selection_popup_checkbox_check(\"ul\");'";
+    if (pen.ul == 1) txt += " checked";
+    txt += "></label></span>";
     return txt;
 }
 
@@ -1573,6 +1584,13 @@ function buttonfunc_act(act)
 	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
       }
       break;
+  case 29:
+      if (hovering_on_editpanel) {
+	  var dat = editpaneldata.get_data(current_pos_x, current_pos_y);
+	  if (dat.ul == 1) { dat.ul = undefined; } else { dat.ul = 1; }
+	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
+      }
+      break;
 
 
   case 40: panel_downloadcode(); break;
@@ -1671,6 +1689,10 @@ function buttonfunc_act(act)
       break;
   case 93:
       if (pen.rev == 1) { pen.rev = undefined; } else { pen.rev = 1; }
+      pen_has_changed();
+      break;
+  case 94:
+      if (pen.ul == 1) { pen.ul = undefined; } else { pen.ul = 1; }
       pen_has_changed();
       break;
   }
@@ -2053,6 +2075,7 @@ function strip_preview_panels()
 		  var chr = dat.chr;
 		  var bold = dat.bold;
 		  var rev = dat.rev;
+		  var ul = dat.ul;
 		  var fg  = dat.fg;
 		  if (!chr) chr = '.';
 		  else if (chr == '<') chr = '&lt;';
@@ -2067,6 +2090,7 @@ function strip_preview_panels()
 		      }
 		  }
 		  if (bold && (bold == 1)) sclass += " f_bold";
+		  if (ul && (ul == 1)) sclass += " f_ul";
 	      }
 	      txt += '<span';
 	      if (sclass != '') txt += ' class="'+sclass+'"';

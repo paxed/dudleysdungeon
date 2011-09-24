@@ -87,6 +87,7 @@ function datspanclass(dat, forcebg)
 	if (forcebg == 1) sclass += ' b_black';
     }
     if (dat.bold == 1) { sclass += " f_bold"; }
+    if (dat.ul == 1) { sclass += " f_ul"; }
     if (dat.cur) { sclass += " f_cur"; }
     return sclass.trim();
 }

@@ -670,8 +670,10 @@ function parse_comic_strip($lines)
 		$attr = trim($attr);
 		switch ($attr) {
 		default: break;
-		case 'bold': $panels[$curr_panel]['panel'][$cx][$cy]['bold'] = 1;
-		case 'reverse': $panels[$curr_panel]['panel'][$cx][$cy]['rev'] = 1;
+		case 'bold': $panels[$curr_panel]['panel'][$cx][$cy]['bold'] = 1; break;
+		case 'reverse': $panels[$curr_panel]['panel'][$cx][$cy]['rev'] = 1; break;
+		case 'ul':
+		case 'underline': $panels[$curr_panel]['panel'][$cx][$cy]['ul'] = 1; break;
 		}
 	    }
 	} else if (preg_match('/^SETCOLORS: *All +\'(.)\' +are +"(.+)"$/', $line, $match)) {
@@ -752,6 +754,7 @@ function render_comic_strip($strip, $title=NULL)
 		  $chr = $strip[$i]['panel'][$dx][$dy]['chr'];
 		  $bold = (isset($strip[$i]['panel'][$dx][$dy]['bold']) ? $strip[$i]['panel'][$dx][$dy]['bold'] : 0);
 		  $rev = (isset($strip[$i]['panel'][$dx][$dy]['rev']) ? $strip[$i]['panel'][$dx][$dy]['rev'] : 0);
+		  $ul = (isset($strip[$i]['panel'][$dx][$dy]['ul']) ? $strip[$i]['panel'][$dx][$dy]['ul'] : 0);
 		  $fg  = (isset($strip[$i]['panel'][$dx][$dy]['fg']) ? $strip[$i]['panel'][$dx][$dy]['fg'] : "gray");
 		  if (!isset($chr)) $chr = '.';
 		  else if ($chr == '<') $chr = '&lt;';
@@ -765,6 +768,7 @@ function render_comic_strip($strip, $title=NULL)
 		  }
 		  if ($dx == $strip[$i]['cursor_x'] && $dy == $strip[$i]['cursor_y']) $spann .= ' f_cur';
 		  if ($bold == 1) $spann .= ' f_bold';
+		  if ($ul == 1) $spann .= ' f_ul';
 
 		  if ($spann) {
 		      $txt .= '<span class="'.$spann.'">'.$chr.'</span>';
