@@ -683,8 +683,8 @@ function panel_download_save()
   if (!tmp) return;
 
   if (USR_login == 0) {
-     txt += " Username: <input type='text' size='20' id='user_name'>";
-     txt += " Password: <input type='password' size='10' id='user_passwd'>";
+     txt += " Username: <input type='text' size='20' id='user_name'"+getkeyb_handler_string()+">";
+     txt += " Password: <input type='password' size='10' id='user_passwd'"+getkeyb_handler_string()+">";
   } else {
      txt += " You are logged in as <em><b>" + USR_name + "</b></em>";
   }
