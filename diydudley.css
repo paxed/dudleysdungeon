@@ -344,6 +344,7 @@ td.footnote {
     display: none;
 }
 
+#boxchar_selection_popup,
 #extchar_selection_popup,
 #pen_selection_popup {
     display: none;

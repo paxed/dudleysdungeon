@@ -238,5 +238,6 @@ Symbols: <label>NetHack:<input type="checkbox" id="nhsym_cbox" onchange="game_sy
 <div style="display:none" id="hidden_div"></div>
 <div style="display:none;position:absolute;" id="pen_selection_popup"></div>
 <div style="display:none;position:absolute;" id="extchar_selection_popup"></div>
+<div style="display:none;position:absolute;" id="boxchar_selection_popup"></div>
 </body>
 </html>

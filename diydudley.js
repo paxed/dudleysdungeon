@@ -739,7 +739,7 @@ function panel_getcode(html)
 	dat = panels[i].panel.get_data(x,y);
 	chr = dat.chr;
         if (!(chr >= ' ' && chr <= '~' && chr.length == 1)) {
-	    chr = chr.replace(/^&#([0-9a-fA-F]+);$/, "$1");
+	    chr = chr.replace(/^&#x([0-9a-fA-F]+);$/, "$1");
 	    txt += "SETCHAR:("+x+","+y+"),"+chr+"\n";
 	}
       }
@@ -1094,7 +1094,7 @@ function parse_code(code_data)
 	      var cursor_y = parseInt(tmp2[1]);
 	      var chr = tmp2[2];
 	      var dat = panels[(curr_map-1)].panel.get_data(cursor_x, cursor_y);
-	      dat.chr = '&#'+chr+';';
+	      dat.chr = '&#x'+chr+';';
 	      panels[(curr_map-1)].panel.set_data(cursor_x, cursor_y, dat);
 	  } else alert("ERROR parsing "+line);
       } else if (line.match(/^MAP:/)) {
@@ -1219,7 +1219,7 @@ function old_pen_parsecookiestr(str)
 	if (chr >= ' '.charCodeAt(0) && chr <= '~'.charCodeAt(0)) {
 	    chr = String.fromCharCode(chr);
 	} else {
-	    chr = '&#' + chrh + ';';
+	    chr = '&#x' + chrh + ';';
 	}
 	saved_pens.push({'chr':chr, 'fg':fg, 'key':key, 'bold':bold, 'rev':rev, 'ul':ul});
 	bindable_key_remove(key);
@@ -1270,8 +1270,8 @@ function old_pen_cookiestr()
     if (i > 0) { str += ","; }
     if (chr.length == 1) {
 	chr = chr.charCodeAt(0).toString(16);
-    } else if (chr.match(/^&#[0-9a-fA-F]+;$/)){
-	chr = chr.replace(/^&#([0-9a-fA-F]+);$/, "$1");
+    } else if (chr.match(/^&#x[0-9a-fA-F]+;$/)){
+	chr = chr.replace(/^&#x([0-9a-fA-F]+);$/, "$1");
     }
     str += chr + "&" + fg + "&" + bold + "&" + key + '&' + rev + '&' + ul;
   }
@@ -1767,7 +1767,7 @@ function update_extended_char_popup(adj)
     var cnt = 0;
     for (i = 0; i < 256; i++) {
 	var d = (i + dud_extended_char);
-	tmpen.chr = '&#'+'0000'.substr(d.toString().length)+d+';';
+	tmpen.chr = '&#x'+'0000'.substr(d.toString().length)+d+';';
 	txt += "<span class='saved_pens'>" + penset_span(tmpen) + "</span>";
 	cnt++;
 	if (cnt > 32) { txt += '<br>'; cnt = 0; }
@@ -1793,6 +1793,64 @@ function show_extended_char_popup(close)
 	return;
     }
     update_extended_char_popup();
+    elem.style.display = "block";
+    elem.style.left = (dudley_mouse_pos_x - Math.floor(elem.offsetWidth / 2)) + 'px';
+    elem.style.top = (dudley_mouse_pos_y - Math.floor(elem.offsetHeight / 2)) + 'px';
+}
+
+function update_box_char_popup()
+{
+    var elem = document.getElementById("boxchar_selection_popup");
+    if (!elem) return;
+
+    var boxchars = new Array('250c', '2500', '252c', '2500', '2510',
+			     '2502',  null,  '2502',  null,  '2502',
+			     '251c', '2500', '253c', '2500', '2524',
+			     '2502',  null,  '2502',  null,  '2502',
+			     '2514', '2500', '2534', '2500', '2518',
+
+			     '250f', '2501', '2533', '2501', '2513',
+			     '2503',  null,  '2503',  null,  '2503',
+			     '2523', '2501', '254b', '2501', '252b',
+			     '2503',  null,  '2503',  null,  '2503',
+			     '2517', '2501', '253b', '2501', '251b',
+
+			     '2554', '2550', '2566', '2550', '2557',
+			     '2551',  null,  '2551',  null,  '2551',
+			     '2560', '2550', '256c', '2550', '2563',
+			     '2551',  null,  '2551',  null,  '2551',
+			     '255a', '2550', '2569', '2550', '255d');
+
+    var txt = "";
+    var tmpen = pen_clone(pen);
+    var i;
+
+    for (i = 0; i < boxchars.length; i++) {
+	if (typeof boxchars[i] == 'string') {
+	    tmpen.chr = '&#x' + boxchars[i] + ';';
+	} else {
+	    tmpen.chr = ' ';
+	}
+	txt += "<span class='saved_pens'>" + penset_span(tmpen) + "</span>";
+	if (!((i+1) % 5)) { txt += '<br>'; }
+    }
+
+    elem.innerHTML = txt;
+}
+
+function show_boxdrawing_char_popup(close)
+{
+    var elem = document.getElementById("boxchar_selection_popup");
+    if (!elem) return;
+    if (close == 1) {
+	elem.style.display = "none";
+	return;
+    }
+    if (elem.style.display != "none") {
+	elem.style.display = "none";
+	return;
+    }
+    update_box_char_popup();
     elem.style.display = "block";
     elem.style.left = (dudley_mouse_pos_x - Math.floor(elem.offsetWidth / 2)) + 'px';
     elem.style.top = (dudley_mouse_pos_y - Math.floor(elem.offsetHeight / 2)) + 'px';
@@ -1963,6 +2021,7 @@ function buttonfunc_act(act)
       pen_has_changed();
       break;
   case 95: show_extended_char_popup(); break;
+  case 96: show_boxdrawing_char_popup(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2687,8 +2746,8 @@ function handle_keyb(e)
     if (e == 27) {
 	show_pen_selection_popup(1); // close it
 	show_extended_char_popup(1);
+	show_boxdrawing_char_popup(1);
     }
-
 }
 
 function set_checkbox_on(cbox)
