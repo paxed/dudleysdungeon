@@ -656,6 +656,9 @@ function parse_comic_strip($lines)
 	} else if (preg_match('/^PANELS: *([0-9]+) *, *([0-9]+)$/', $line, $match)) {
 	    $panels['strip_wid'] = $match[1];
 	    $panels['strip_hei'] = $match[2];
+	} else if (preg_match('/^PANELS: \( *([0-9]+) *, *([0-9]+) *\)$/', $line, $match)) {
+	    $panels['strip_wid'] = $match[1];
+	    $panels['strip_hei'] = $match[2];
 	} else if (preg_match('/^SETCOLOR: *\(([0-9]+) *, *([0-9]+)\) *, *\'(.)\' +is +"(.+)"$/', $line, $match)) {
 	    $cx = $match[1];
 	    $cy = $match[2];
@@ -702,7 +705,17 @@ function parse_comic_strip($lines)
 	    $panels[$curr_panel]['cursor_x'] = -1;
 	    $panels[$curr_panel]['cursor_y'] = -1;
 	    $in_map = 1;
+	} else if (preg_match('/^MAP: *\( *([0-9]+) *, *([0-9]+) *\)$/', $line, $match)) {
+	    $curr_panel++;
+	    $panels[$curr_panel]['wid'] = $match[1];
+	    $panels[$curr_panel]['hei'] = $match[2];
+	    $panels[$curr_panel]['cursor_x'] = -1;
+	    $panels[$curr_panel]['cursor_y'] = -1;
+	    $in_map = 1;
 	} else if (preg_match('/^CURSOR: *([0-9]+) *, *([0-9]+)$/', $line, $match)) {
+	    $panels[$curr_panel]['cursor_x'] = $match[1];
+	    $panels[$curr_panel]['cursor_y'] = $match[2];
+	} else if (preg_match('/^CURSOR: *\( *([0-9]+) *, *([0-9]+) *\)$/', $line, $match)) {
 	    $panels[$curr_panel]['cursor_x'] = $match[1];
 	    $panels[$curr_panel]['cursor_y'] = $match[2];
 	} else if (preg_match('/^TEXT:(.+)$/', $line, $match)) {

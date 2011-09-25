@@ -1,0 +1,60 @@
+AUTHOR:foo
+
+ Sets the strip author name. HTML is accepted.
+
+TEXT:foo
+
+ Sets the previous panel's text. HTML is allowed.
+
+FOOTNOTE:foo
+
+ Sets the strip footnote. HTML is allowed.
+
+PANELS: (wid, hei)
+
+ Sets the strip panel orientation. For example "PANELS: (3, 1)" would make
+ the strip 3 panels wide and 1 high.
+
+MAP: (wid, hei)
+ENDMAP
+
+ Creates a new panel, "wid" characters wide and "hei" characters high.
+ Lines between MAP and ENDMAP will be set in the panel.
+
+SETCOLOR: (x,y), 'c' is "color"
+
+ Sets the character's color at (x,y). The character at that location
+ must be c. Affects the previously defined MAP.
+
+SETCOLOR: (x,y), "color"
+
+ Sets the character's color at (x,y). Affects the previously defined MAP.
+
+SETCOLORS: All 'c' are "color"
+
+ Sets all characters 'c' in previous panel to "color".
+ Affects the previously defined MAP.
+
+SETCHAR: (x,y), nnnn
+
+ Sets the character at (x,y). "nnnn" is a 4-digit hexadecimal value
+ of the utf16 entity. Affects the previously defined MAP.
+
+SETATTR: (x,y), attributes
+
+ Sets character attributes at (x,y).
+ Valid attributes are "bold", "reverse" and "underline".
+ Attributes must be separated by ampersand.
+ Affects the previously defined MAP.
+ For example: SETATTR: (3,5), bold&underline
+
+CURSOR: (x,y)
+
+ Sets the previous panel's cursor to (x,y).
+
+
+Valid colors:
+
+black, red, green, brown, blue, magenta, cyan, gray, darkgray,
+orange, brightgreen, yellow, brightblue, brightmagenta, brightcyan, white
+

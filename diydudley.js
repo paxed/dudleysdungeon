@@ -553,11 +553,11 @@ function panel_getcode(html)
       htxt = htxt.replace("&", "&amp;");
       txt += "AUTHOR:"+htxt+"\n";
   }
-  txt += "PANELS:" + STRIP_WID + "," + STRIP_HEI + "\n";
+  txt += "PANELS: (" + STRIP_WID + "," + STRIP_HEI + ")\n";
 
   for (i = 0; i < (STRIP_HEI*STRIP_WID); i++) {
     if (panels[i] == undefined) continue;
-    txt += "MAP:"+panels[i].panel.WID+","+panels[i].panel.HEI+"\n";
+    txt += "MAP: ("+panels[i].panel.WID+","+panels[i].panel.HEI+")\n";
     for (y = 0; y < panels[i].panel.HEI; y++) {
       for (x = 0; x < panels[i].panel.WID; x++) {
 	dat = panels[i].panel.get_data(x,y);
@@ -597,7 +597,7 @@ function panel_getcode(html)
     }
 
     if (panels[i].panel.inmap(panels[i].panel.cursor.x,panels[i].panel.cursor.y)) {
-	txt += "CURSOR:"+panels[i].panel.cursor.x+","+panels[i].panel.cursor.y+"\n";
+	txt += "CURSOR: ("+panels[i].panel.cursor.x+","+panels[i].panel.cursor.y+")\n";
     }
     if (panels[i].text && (panels[i].text.length > 0)) {
       var htxt;
@@ -778,6 +778,19 @@ function panel_showcode()
   tmp.innerHTML = txt;
 }
 
+function parse_code_param_coords(prefix, line)
+{
+    var re = new RegExp('^' + prefix + ': *\\( *(\\d+) *, *(\\d+) *\\)$');
+    var tmp;
+    if (line.match(re)) {
+	tmp = line.replace(re, "$1,$2");
+    } else {
+	re = new RegExp('^' + prefix + ': *(\\d+) *, *(\\d+)$');
+	tmp = line.replace(re, "$1,$2");
+    }
+    return tmp;
+}
+
 function parse_code(code_data)
 {
   var code_textarea = document.getElementById("strip_code_textarea");
@@ -825,7 +838,7 @@ function parse_code(code_data)
       if (line.match(/^AUTHOR:/)) {
 	stripdata.author = line.replace("AUTHOR:", "");
       } else if (line.match(/^PANELS:/)) {
-	tmp = line.replace("PANELS:", "");
+	tmp = parse_code_param_coords('PANELS', line);
 	var tmp2 = tmp.split(',');
 	STRIP_WID = parseInt(tmp2[0]);
 	if (STRIP_WID < 1) STRIP_WID = 1;
@@ -898,7 +911,7 @@ function parse_code(code_data)
       } else if (line.match(/^FOOTNOTE:/)) {
 	stripdata.footnote = line.replace(/^FOOTNOTE:/, "");
       } else if (line.match(/^CURSOR:/)) {
-	  tmp = line.replace("CURSOR:", "");
+	  tmp = parse_code_param_coords('CURSOR', line);
 	  var tmp2 = tmp.split(',');
 	  var cursor_x = parseInt(tmp2[0]);
 	  var cursor_y = parseInt(tmp2[1]);
@@ -934,7 +947,7 @@ function parse_code(code_data)
 	      panels[(curr_map-1)].panel.set_data(cursor_x, cursor_y, dat);
 	  } else alert("ERROR parsing "+line);
       } else if (line.match(/^MAP:/)) {
-	tmp = line.replace("MAP:", "");
+	tmp = parse_code_param_coords('MAP', line);
 	var tmp2 = tmp.split(',');
 	var pwid = parseInt(tmp2[0]);
 	if (pwid < 3) pwid = 3;
