@@ -1767,7 +1767,7 @@ function update_extended_char_popup(adj)
     var cnt = 0;
     for (i = 0; i < 256; i++) {
 	var d = (i + dud_extended_char);
-	tmpen.chr = '&#x'+'0000'.substr(d.toString().length)+d+';';
+	tmpen.chr = '&#x'+'0000'.substr(d.toString(16).length)+d.toString(16)+';';
 	txt += "<span class='saved_pens'>" + penset_span(tmpen) + "</span>";
 	cnt++;
 	if (cnt > 32) { txt += '<br>'; cnt = 0; }
