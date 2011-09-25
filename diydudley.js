@@ -737,10 +737,12 @@ function panel_getcode(html)
     for (y = 0; y < panels[i].panel.HEI; y++) {
       for (x = 0; x < panels[i].panel.WID; x++) {
 	dat = panels[i].panel.get_data(x,y);
-	chr = dat.chr;
-        if (!(chr >= ' ' && chr <= '~' && chr.length == 1)) {
-	    chr = chr.replace(/^&#x([0-9a-fA-F]+);$/, "$1");
-	    txt += "SETCHAR:("+x+","+y+"),"+chr+"\n";
+	  var chrc = dat.chr;
+	  if ((chrc.length > 1)) {
+	      if (chrc.match(/^&#x[0-9a-fA-F]+;$/)) {
+		  chrc = chrc.replace(/^&#x([0-9a-fA-F]+);$/, "$1");
+		  txt += "SETCHAR:("+x+","+y+"),"+chrc+"\n";
+	      }
 	}
       }
     }
@@ -2775,11 +2777,13 @@ function update_editpanel_textarea(dir)
 	  var dat = editpaneldata.get_data(x,y);
 	  var chr = line.substr(x, 1);
 	  var fg = pen_getcolor(pen.fg);
-	  if (chr != undefined && chr != dat.chr) {
-	      if ((chr >= ' ') && (chr <= '~'))
+	  if (chr != undefined && chr != dat.chr && chr != '') {
+	      var chrc = chr.charCodeAt(0);
+	      if ((chr.length == 1) && (chr >= ' ') && (chr <= '~'))
 		  editpaneldata.set_data(x,y, {'chr':chr, 'fg':fg});
 	      else {
-		  editpaneldata.set_data(x,y, {'chr':htmlentities(chr), 'fg':fg});
+		  chr = '&#x'+'0000'.substr(chrc.toString(16).length)+chrc.toString(16)+';';
+		  editpaneldata.set_data(x,y, {'chr':chr, 'fg':fg});
 	      }
 	  }
 	}
