@@ -1,4 +1,6 @@
 
+-a button to grey out top two lines, if they're text lines?
+
 -diydudley: a line drawing mode, which also allows box drawing chars?
 
 -use PDO instead of pg_foo

@@ -1540,6 +1540,7 @@ var map_templates = new Array(
 	 {'from':{'chr':'@'}, 'to':{'chr':'@', 'fg':'blue'}, 'chance':1},
 	 {'from':{'chr':'Y'}, 'to':{'chr':'@', 'fg':'white'}},
 	 {'from':{'chr':'f'}, 'to':{'chr':'f', 'fg':'white'}},
+	 {'from':{'chr':'#'}, 'to':{'chr':'#', 'fg':'brown'}},
 	 {'from':{'chr':'{'}, 'to':{'chr':'{', 'fg':'blue'}},
 	 {'from':{'chr':'}'}, 'to':{'chr':'}', 'fg':'blue'}},
 	 {'from':{'chr':'+'}, 'to':{'chr':'+', 'fg':'brown'}},

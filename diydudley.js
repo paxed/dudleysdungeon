@@ -3066,7 +3066,7 @@ function maptemplate_panel_mouse_hover(x,y,on)
     if (w%2) wa = 0;
     if (h%2) ha = 0;
 
-    if (x + w2 >= curr_maptemplatedata.WID) x = curr_maptemplatedata.WID - w2 - 1;
+    if (x + w2 >= curr_maptemplatedata.WID) x = curr_maptemplatedata.WID - w2;
     else if (x - w2 < 0) x = w2;
     if (y + h2 >= curr_maptemplatedata.HEI) y = curr_maptemplatedata.HEI - h2 - 1;
     else if (y - h2 < 0) y = h2;
@@ -3087,7 +3087,7 @@ function maptemplate_panel_update(ev, x, y)
     var h2 = Math.floor(h/2);
     var i, j;
 
-    if (x + w2 >= curr_maptemplatedata.WID) x = curr_maptemplatedata.WID - w2 - 1;
+    if (x + w2 >= curr_maptemplatedata.WID) x = curr_maptemplatedata.WID - w2;
     else if (x - w2 < 0) x = w2;
     if (y + h2 >= curr_maptemplatedata.HEI) y = curr_maptemplatedata.HEI - h2 - 1;
     else if (y - h2 < 0) y = h2;
