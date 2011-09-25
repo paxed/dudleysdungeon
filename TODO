@@ -22,8 +22,6 @@
 
 -diydudley: allow filling an area with "shop items"
 
--document the comic strip format
-
 -diydudley: support for any html entity in panel.
 
 -css class "f_random" should switch between colors...

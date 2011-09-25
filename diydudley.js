@@ -1629,10 +1629,14 @@ function update_extended_char_popup(adj)
     elem.innerHTML = txt;
 }
 
-function show_extended_char_popup()
+function show_extended_char_popup(close)
 {
     var elem = document.getElementById("extchar_selection_popup");
     if (!elem) return;
+    if (close == 1) {
+	elem.style.display = "none";
+	return;
+    }
     if (elem.style.display != "none") {
 	elem.style.display = "none";
 	return;
@@ -2531,6 +2535,7 @@ function handle_keyb(e)
     /* ESC */
     if (e == 27) {
 	show_pen_selection_popup(1); // close it
+	show_extended_char_popup(1);
     }
 
 }
