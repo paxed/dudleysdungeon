@@ -126,13 +126,134 @@ function panel_draw_gravestone()
 	       " /    PEACE     \\ ",
 	       "/                \\",
 	       "|     Dudley     |",
-	       "|   killed  by   |",
+	       "|                |",
 	       "|                |",
 	       "|                |"];
-
+  var engraving_ypos = 5;
+  var engraving_linelen = 14;
+  var engraving_maxlines = 3;
   var oldx = cursor_x;
   var oldy = cursor_y;
   var txt = "";
+
+    var deathreasons = new Array(
+	"choked on a very rich meal",
+	"committed suicide",
+	"died of exhaustion",
+	"died of starvation",
+	"dissolved in molten lava",
+	"dragged downstairs by an iron ball",
+	"drowned in a moat",
+	"drowned in a pool of water",
+	"escaped (in celestial disgrace)",
+	"fell into a chasm",
+	"fell into a pit",
+	"fell into a pit of iron spikes",
+	"fell onto a sink",
+	"killed by a blast of acid",
+	"killed by a blast of disintegration",
+	"killed by a blast of fire",
+	"killed by a blast of frost",
+	"killed by a blast of lightning",
+	"killed by a blast of missiles",
+	"killed by a boiling potion",
+	"killed by a bolt of cold",
+	"killed by a bolt of fire",
+	"killed by a bolt of lightning",
+	"killed by a boomerang",
+	"killed by a boulder",
+	"killed by a burning book",
+	"killed by a burning potion of oil",
+	"killed by a burning scroll",
+	"killed by a cadaver",
+	"killed by a cursed throne",
+	"killed by a dagger",
+	"killed by a dart",
+	"killed by a death ray",
+	"killed by a falling object",
+	"killed by a falling rock",
+	"killed by a knight called Perseus",
+	"killed by a land mine",
+	"killed by a magic missile",
+	"killed by a magical explosion",
+	"killed by a mildly contaminated potion",
+	"killed by a poison dart",
+	"killed by a poisoned blast",
+	"killed by a poisoned needle",
+	"killed by a poisonous corpse",
+	"killed by a potion of acid",
+	"killed by a potion of holy water",
+	"killed by a potion of unholy water",
+	"killed by a riding accident",
+	"killed by a scroll of earth",
+	"killed by a scroll of fire",
+	"killed by a scroll of genocide",
+	"killed by a shattered potion",
+	"killed by a system shock",
+	"killed by a touch of death",
+	"killed by a tower of flame",
+	"killed by a wand",
+	"killed by a war hammer named Mjollnir",
+	"killed by an alchemic blast",
+	"killed by an exploding chest",
+	"killed by an exploding crystal ball",
+	"killed by an exploding large box",
+	"killed by an exploding ring",
+	"killed by an exploding rune",
+	"killed by an exploding wand",
+	"killed by an explosion",
+	"killed by an unrefrigerated sip of juice",
+	"killed by an unsuccessful polymorph",
+	"killed by axing a hard object",
+	"killed by boiling potions",
+	"killed by boiling water",
+	"killed by brainlessness",
+	"killed by bumping into a boulder",
+	"killed by bumping into a door",
+	"killed by bumping into a tree",
+	"killed by bumping into a wall",
+	"killed by burning scrolls",
+	"killed by colliding with the ceiling",
+	"killed by contaminated tap water",
+	"killed by contaminated water",
+	"killed by crashing into iron bars",
+	"killed by dangerous winds",
+	"killed by elementary chemistry",
+	"killed by exhaustion",
+	"killed by falling downstairs",
+	"killed by his own axe",
+	"killed by his own battle-axe",
+	"killed by his own dwarvish mattock",
+	"killed by his own pick-axe",
+	"killed by kicking the stairs",
+	"killed by sipping boiling water",
+	"killed by sitting in lava",
+	"killed by sitting on an iron spike",
+	"killed by sitting on lava",
+	"killed by strangulation",
+	"killed by wedging into a narrow crevice",
+	"killed himself by breaking a wand",
+	"killed himself with his bullwhip",
+	"killed while stuck in creature form",
+	"molten lava",
+	"petrified by a chickatrice",
+	"petrified by a chickatrice corpse",
+	"petrified by a cockatrice",
+	"petrified by a cockatrice corpse",
+	"petrified by a cockatrice egg",
+	"petrified by elementary physics",
+	"petrified by genocidal confusion",
+	"petrified by tasting chickatrice meat",
+	"petrified by tasting cockatrice meat",
+	"poisoned by a fall onto poison spikes",
+	"poisoned by a poison dart",
+	"poisoned by a poisoned blast",
+	"poisoned by a poisoned needle",
+	"slipped while mounting a saddled horse",
+	"squished under a boulder",
+	"turned into green slime",
+	"went to heaven prematurely"
+    );
 
   editpaneldata.save_undopoint();
 
@@ -150,6 +271,33 @@ function panel_draw_gravestone()
     if (s != undefined)
       panel_write_string(s);
   }
+
+    var engraving_ok = 1;
+    var engrarr = undefined;
+    var cnt = 0;
+    var wrappedengr;
+    do {
+	var engravetxt = deathreasons[Math.floor(Math.random() * deathreasons.length)];
+	wrappedengr = wordwrap(engravetxt, engraving_linelen);
+	engrarr = wrappedengr.split("\n");
+	if (engrarr.length > engraving_maxlines) {
+	    engraving_ok = 0;
+	} else {
+	    for (var i = 0; i < engrarr.length; i++)
+		if (engrarr[i].length > engraving_linelen) {
+		    engraving_ok = 0;
+		    break;
+		}
+	}
+	cnt++;
+    } while ((engraving_ok == 0) && (cnt < 10));
+
+    for (i = 0; i < engrarr.length; i++) {
+	var txt = engrarr[i].trim();
+	cursor_y = editpaneldata.HEI - stone.length + engraving_ypos + i - 1;
+	cursor_x = Math.floor((editpaneldata.WID/2 - txt.length/2));
+	panel_write_string(txt);
+    }
 
   var tmp = "";
   for (i = 0; i < editpaneldata.WID; i++)
