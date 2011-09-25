@@ -258,6 +258,7 @@ function panel_draw_gravestone()
   editpaneldata.save_undopoint();
 
   editpaneldata.fill({'chr':' ', 'fg':"gray"});
+  editpaneldata.set_cursor(-1, -1);
 
   cursor_x = 0;
   cursor_y = 0;

@@ -61,16 +61,12 @@
 -list all comments by user 'foo'
 -page for listing links to a year's worth of comics (12 month tables)
 -paginate comments, if there's lots of them.
--< Dentarthur> paxed: Also when changing the text of one panel
- and trying to switch to another, it jumps back to the panel you were
- just editing.
 -improve the color encoding, so that if there's lots of green # and one grey #,
  don't list all of the green #'s separately...
 -crawl/angband specific stuff: glyphs and generators
 -some more OOP would be nice.
 -settings: remove cookies, verify panel changes, default author, scatter #, ...
 -fix the random level generator #6 ("corridors")
--reverse colors (hilite_pet)
 -lock characters, lock colors -checkboxes, if checked, cannot change
  char/color...
  (or maybe []use char, []use color) checkboxes, next to the pen?)
