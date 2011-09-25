@@ -2775,8 +2775,13 @@ function update_editpanel_textarea(dir)
 	  var dat = editpaneldata.get_data(x,y);
 	  var chr = line.substr(x, 1);
 	  var fg = pen_getcolor(pen.fg);
-	  if ((chr != undefined) && (chr != dat.chr) && (chr >= ' ') && (chr <= '~'))
-	    editpaneldata.set_data(x,y, {'chr':chr, 'fg':fg});
+	  if (chr != undefined && chr != dat.chr) {
+	      if ((chr >= ' ') && (chr <= '~'))
+		  editpaneldata.set_data(x,y, {'chr':chr, 'fg':fg});
+	      else {
+		  editpaneldata.set_data(x,y, {'chr':htmlentities(chr), 'fg':fg});
+	      }
+	  }
 	}
       }
     }
@@ -2791,7 +2796,7 @@ function update_editpanel_textarea(dir)
       }
       if (y < (editpaneldata.HEI-1)) str += "\n";
     }
-    tmp.value = str;
+    tmp.innerHTML = str;
   }
 }
 

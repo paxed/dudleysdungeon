@@ -1,4 +1,6 @@
 
+-diydudley: a line drawing mode, which also allows box drawing chars?
+
 -use PDO instead of pg_foo
 
 -Add user's voting "history" to duduser.php
