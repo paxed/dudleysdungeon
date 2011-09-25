@@ -1380,11 +1380,14 @@ function char_selection()
   var txt = "";
   var i;
 
+  var fg = pen.fg;
+  if (fg == undefined) fg = "gray";
+
   txt += "Chars: ";
   txt += "<span class='charselection'>";
   for (i = ' '.charCodeAt(0); i <= '~'.charCodeAt(0); i++) {
       var c = String.fromCharCode(i);
-      txt += "<span class='"+datspanclass(pen)+"' onclick='pen_set_fg_chr(event, \""+pen.fg+"\",\""+escape(c)+"\");'>" + c + "</span>";
+      txt += "<span class='"+datspanclass(pen)+"' onclick='pen_set_fg_chr(event, \""+fg+"\",\""+escape(c)+"\");'>" + c + "</span>";
   }
   txt += "</span>";
   tmp.innerHTML = txt;
