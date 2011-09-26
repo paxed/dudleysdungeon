@@ -626,7 +626,7 @@ function panel_getdiv()
       p_cursor_y = editpaneldata.cursor.y;
   }
 
-  txt += "<div class='panelborder'>";
+  txt += "<div class='panelborder' id='editpanel_container'>";
   txt += "<pre class='panel'>";
   for (y = 0; y < editpaneldata.HEI; y++) {
     for (x = 0; x < editpaneldata.WID; x++) {
@@ -2799,7 +2799,7 @@ function set_checkbox_on(cbox)
 
 function update_editpanel_textarea(dir)
 {
-  tmp = document.getElementById("editpanel_textarea");
+  var tmp = document.getElementById("editpanel_textarea");
   if (tmp == undefined) return;
   if (dir == 1) { /* textarea -> editpanel */
     var str = tmp.value;
@@ -2830,6 +2830,11 @@ function update_editpanel_textarea(dir)
     editpaneldata.check_undopoint();
     panel_redraw();
   } else { /* editpanel -> textarea */
+      var elem = document.getElementById("editpanel_container");
+      if (elem) {
+	  tmp.style.width = (elem.offsetWidth+2)+'px';
+	  tmp.style.height = elem.offsetHeight+'px';
+      }
     str = "";
     for (y = 0; y < editpaneldata.HEI; y++) {
       for (x = 0; x < editpaneldata.WID; x++) {
