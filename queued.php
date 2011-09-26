@@ -137,6 +137,9 @@ if ($mode == 'view') {
 		print '<input type="Submit" value="deapprove" name="action">';
 	    }
 
+	    print ' | '.mk_url('diydudley.php?edit='.$dat['stripid'],'Edit strip');
+	    print ' | '.mk_url('view_code.php?id='.$dat['stripid'],'View code');
+
 	    print '<br>';
 	    print 'News:';
 	    if (isset($news) && isset($news['newsid']))
@@ -153,9 +156,6 @@ if ($mode == 'view') {
 
 	    print '</form>';
 
-	    print '<br>';
-	    print mk_url('diydudley.php?edit='.$dat['stripid'],'Edit strip');
-	    print ' | '.mk_url('view_code.php?id='.$dat['stripid'],'View code');
 	    print '<hr>';
 	}
     } else {
