@@ -1,6 +1,5 @@
 <?php
 
-/*include_once "../nhinclude.php";*/
 include_once "dudleyinclude.php";
 
 session_start();
