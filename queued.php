@@ -155,6 +155,7 @@ if ($mode == 'view') {
 
 	    print '<br>';
 	    print mk_url('diydudley.php?edit='.$dat['stripid'],'Edit strip');
+	    print ' | '.mk_url('view_code.php?id='.$dat['stripid'],'View code');
 	    print '<hr>';
 	}
     } else {
