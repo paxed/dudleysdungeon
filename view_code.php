@@ -52,7 +52,7 @@ print render_comic_strip($strip, date("M jS, Y", $dat['epoch']));
 
 print '<h3>Code</h3>';
 
-print '<pre class="strip_code">'.$dat['stripdata'].'</pre>';
+print '<pre class="strip_code">'.htmlentities($dat['stripdata']).'</pre>';
 
 print '</center>';
 
