@@ -1746,7 +1746,7 @@ var map_templates = new Array(
 );
 
 
-var cookie_prefix = "dudley_diy_";
+var dud_cookie_prefix = "dudley_diy_";
 
 var default_quick_pen_keys = "1234567890";
 var quick_pen_keys = default_quick_pen_keys;

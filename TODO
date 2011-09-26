@@ -1,4 +1,8 @@
 
+-OPTIONS:table_panels
+ if used, each map char is inside a td.
+ used when eg. using ext. chars so the chars will align properly.
+
 -a button to grey out top two lines, if they're text lines?
 
 -diydudley: a line drawing mode, which also allows box drawing chars?

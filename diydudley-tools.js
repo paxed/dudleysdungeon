@@ -32,7 +32,7 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 
-/* cookie functions from quirksmode.org */
+/* cookie functions from quirksmode.org, with tiny modifications */
 function createCookie(name,value,days) {
   if (days) {
     var date = new Date();
@@ -40,11 +40,11 @@ function createCookie(name,value,days) {
     var expires = "; expires="+date.toGMTString();
   }
   else var expires = "";
-  document.cookie = name+"="+value+expires+"; path=/";
+  document.cookie = dud_cookie_prefix + name+"="+value+expires+"; path=/";
 }
 
 function readCookie(name) {
-  var nameEQ = name + "=";
+  var nameEQ = dud_cookie_prefix + name + "=";
   var ca = document.cookie.split(';');
   for(var i=0;i < ca.length;i++) {
     var c = ca[i];
@@ -55,7 +55,7 @@ function readCookie(name) {
 }
 
 function eraseCookie(name) {
-  createCookie(name,"",-1);
+  createCookie(dud_cookie_prefix + name,"",-1);
 }
 
 

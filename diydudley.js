@@ -58,18 +58,18 @@ function pen_swap_ctrl()
 
 function pens_save()
 {
-    createCookie(cookie_prefix + "current_pen", pen_to_string(pen), 30);
-    createCookie(cookie_prefix + "current_ctrl_pen", pen_to_string(ctrl_pen), 30);
+    createCookie("current_pen", pen_to_string(pen), 30);
+    createCookie("current_ctrl_pen", pen_to_string(ctrl_pen), 30);
 }
 
 function pens_load()
 {
-    var str = readCookie(cookie_prefix + 'current_pen');
+    var str = readCookie('current_pen');
     if (!(str == undefined || str == null)) {
 	var tmpen = string_to_pen(str);
 	if (tmpen != undefined) { pen = tmpen; }
     }
-    str = readCookie(cookie_prefix + 'current_ctrl_pen');
+    str = readCookie('current_ctrl_pen');
     if (!(str == undefined || str == null)) {
 	var tmpen = string_to_pen(str);
 	if (tmpen != undefined) { ctrl_pen = tmpen; }
@@ -1280,7 +1280,7 @@ function saved_pens_restore()
     quick_pen_keys = default_quick_pen_keys;
     assign_keys_to_pens();
     show_saved_pens();
-    eraseCookie(cookie_prefix + "saved_pens");
+    eraseCookie("saved_pens");
 }
 
 function pen_to_string(pen)
@@ -1319,7 +1319,7 @@ function old_pen_remove(i)
 {
   saved_pens.remove(i);
   show_saved_pens();
-  createCookie(cookie_prefix + "saved_pens", old_pen_cookiestr(), 30);
+  createCookie("saved_pens", old_pen_cookiestr(), 30);
 }
 
 function old_pen_move(i, dir)
@@ -1338,7 +1338,7 @@ function old_pen_move(i, dir)
     saved_pens[x] = tmpi;
     saved_pens[i] = tmpx;
     show_saved_pens();
-    createCookie(cookie_prefix + "saved_pens", old_pen_cookiestr(), 30);
+    createCookie("saved_pens", old_pen_cookiestr(), 30);
   }
 }
 
@@ -1358,7 +1358,7 @@ function pen_save()
   if (!exists) {
     saved_pens.push(tmpen);
     show_saved_pens();
-    createCookie(cookie_prefix + "saved_pens", old_pen_cookiestr(), 30);
+    createCookie("saved_pens", old_pen_cookiestr(), 30);
   }
 }
 
@@ -1541,7 +1541,7 @@ function nethacksym_selection(searchstr)
 function old_pen_assign_key(i, key)
 {
   saved_pens[i].key = key;
-  createCookie(cookie_prefix + "saved_pens", old_pen_cookiestr(), 30);
+  createCookie("saved_pens", old_pen_cookiestr(), 30);
   if (key.length != 1) return;
   var idx = quick_pen_keys.indexOf(key);
   if (idx >= 0) {
@@ -2867,7 +2867,7 @@ function get_buttonfunc_act_desc(act)
 
 function keybindings_clear()
 {
-    eraseCookie(cookie_prefix + "keybindings");
+    eraseCookie("keybindings");
     keybindings = default_keybindings;
 }
 
@@ -2879,13 +2879,13 @@ function keybindings_save()
 	txt += keybindings[i].key.charCodeAt(0)+":"+keybindings[i].act;
 	if (i < keybindings.length - 1) { txt += ","; }
     }
-    createCookie(cookie_prefix + "keybindings", txt, 365);
+    createCookie("keybindings", txt, 365);
 }
 
 
 function keybindings_load()
 {
-    var str = readCookie(cookie_prefix + "keybindings");
+    var str = readCookie("keybindings");
     if (str) {
 	var i;
 	var arr = str.split(",");
@@ -3243,7 +3243,7 @@ function pageload_init()
   code_checkbox = document.getElementById("code_cbox");
   preview_checkbox = document.getElementById("preview_cbox");
 
-  old_pen_parsecookiestr(readCookie(cookie_prefix + "saved_pens"));
+  old_pen_parsecookiestr(readCookie("saved_pens"));
   pens_load();
   keybindings_load();
 
