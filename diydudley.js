@@ -2062,6 +2062,8 @@ function buttonfunc_act(act)
       break;
   case 95: show_extended_char_popup(); break;
   case 96: show_boxdrawing_char_popup(); break;
+  case 97: strip_movepanel_left(); break;
+  case 98: strip_movepanel_right(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2152,6 +2154,11 @@ function show_buttons()
   txt = "";
   txt += "<a class='button' onclick='return buttonfunc_act(64);' href='#'>&lt;-prev</a>";
   txt += "<a class='button' onclick='return buttonfunc_act(65);' href='#'>next-&gt;</a>";
+
+  txt += " | Move: ";
+  txt += "<a class='button' onclick='return buttonfunc_act(97);' href='#'>&lt;-</a>";
+  txt += "<a class='button' onclick='return buttonfunc_act(98);' href='#'>-&gt;</a>";
+
   tmp.innerHTML = txt;
 }
 
@@ -2276,6 +2283,34 @@ function strip_prevpanel()
   editpaneldata = panels[editpanel_strippanel].panel;
   panel_redraw();
   show_panel_number();
+}
+
+function strip_movepanel_left()
+{
+    if ((STRIP_WID*STRIP_HEI) < 2) return;
+    var other = (editpanel_strippanel - 1);
+    if (other < 0) { other = (STRIP_WID*STRIP_HEI) - 1; }
+    var tmppanel = panels[editpanel_strippanel];
+    panels[editpanel_strippanel] = panels[other];
+    panels[other] = tmppanel;
+    editpaneldata = panels[editpanel_strippanel].panel;
+    strip_prevpanel();
+    panel_redraw();
+    show_edit_panel_text();
+}
+
+function strip_movepanel_right()
+{
+    if ((STRIP_WID*STRIP_HEI) < 2) return;
+    var other = (editpanel_strippanel + 1);
+    if (other >= (STRIP_WID*STRIP_HEI)) { other = 0; }
+    var tmppanel = panels[editpanel_strippanel];
+    panels[editpanel_strippanel] = panels[other];
+    panels[other] = tmppanel;
+    editpaneldata = panels[editpanel_strippanel].panel;
+    strip_nextpanel();
+    panel_redraw();
+    show_edit_panel_text();
 }
 
 function strip_editpanel(i)

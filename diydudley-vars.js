@@ -1275,6 +1275,8 @@ var buttonfunc_act_desc = new Array(
     {'act':63, 'desc': "Undo panel changes"},
     {'act':64, 'desc': "Go to previous panel"},
     {'act':65, 'desc': "Go to next panel"},
+    {'act':97, 'desc': "Move current panel left"},
+    {'act':98, 'desc': "Move current panel right"},
     {'act':42, 'desc': "Parse comic code"},
     {'act':40, 'desc': "Download comic strip"},
     {'act':41, 'desc': "Submit comic strip to the database (login required)"},
