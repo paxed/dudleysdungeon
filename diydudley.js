@@ -4,7 +4,7 @@ function popup_save_position(elem, x, y)
     createCookie(elem.id, x+","+y, 30);
 }
 
-function popup_create(id, title, contents)
+function popup_create(id, title, contents, hidden)
 {
     var elem = document.getElementById(id + "_widget");
     if (!elem) {
@@ -21,6 +21,10 @@ function popup_create(id, title, contents)
 	nod.innerHTML = txt;
 
 	document.body.appendChild(nod);
+
+	if ((hidden != undefined) && (hidden == 1)) {
+	    nod.style.visibility = 'hidden';
+	}
 
 	nod.style.display = "block";
 
@@ -41,6 +45,10 @@ function popup_create(id, title, contents)
 	nod.style.left = lft + 'px';
 	nod.style.top = top + 'px';
 
+	if ((hidden != undefined) && (hidden == 1)) {
+	    nod.style.display = 'none';
+	}
+
 	var drg = DragHandler.attach(nod);
 	drg.dragEnd = popup_save_position;
 
@@ -58,6 +66,7 @@ function popup_show(id, toggle)
     } else {
 	elem.style.display = (elem.style.display == "block") ? "none" : "block";
     }
+    elem.style.visibility = 'visible';
 }
 
 function popup_hide(id)
@@ -1574,11 +1583,9 @@ function nethacksym_searchstr()
   nethacksym_selection(str);
 }
 
-function mk_nethacksym_selection()
+function get_nethacksym_selection_contents()
 {
-  var tmp = document.getElementById("game_symbols_popup");
   var txt = "";
-  if (!tmp) return;
   txt += "Symbols: <label>NetHack:<input type='checkbox' id='nhsym_cbox' onchange='game_symbols_update();return false;'></label>"+
 	"<label>Angband:<input type='checkbox' id='angsym_cbox' onchange='game_symbols_update();return false;'></label>"+
 	"<div id='gamesymselection'>";
@@ -1587,7 +1594,18 @@ function mk_nethacksym_selection()
   txt += "<a class='button' onclick='return buttonfunc_act(45);' href='#'>random monster</a>";
   txt += '<div class="gamesymselection" id="gamesymselection_pens"></div>';
   txt += "</div>";
-  tmp.innerHTML = txt;
+  return txt;
+}
+
+
+function show_gamesym_popup(close)
+{
+    if (close == 1) {
+	popup_show('gamesym_selection_popup', 1);
+	return;
+    } else {
+	popup_show('gamesym_selection_popup');
+    }
 }
 
 function nethacksym_selection(searchstr)
@@ -1868,7 +1886,6 @@ function show_pen_selection_popup(close)
     } else {
 	popup_show('pen_selection_popup');
     }
-    popup_create('pen_selection_popup', 'Pen Selection', get_pen_selection_popup_contents());
 }
 
 
@@ -1911,7 +1928,6 @@ function show_extended_char_popup(close)
     } else {
 	popup_show('extchar_selection_popup');
     }
-    popup_create('extchar_selection_popup', 'Extended Chars', get_extended_char_popup_contents());
 }
 
 function get_box_char_popup_contents()
@@ -1964,7 +1980,6 @@ function show_boxdrawing_char_popup(close)
     } else {
 	popup_show('boxchar_selection_popup');
     }
-    popup_create('boxchar_selection_popup', 'Boxes', get_box_char_popup_contents());
 }
 
 function buttonfunc_act(act)
@@ -2135,6 +2150,7 @@ function buttonfunc_act(act)
   case 96: show_boxdrawing_char_popup(); break;
   case 97: strip_movepanel_left(); break;
   case 98: strip_movepanel_right(); break;
+  case 99: show_gamesym_popup(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2892,6 +2908,7 @@ function handle_keyb(e)
 	show_pen_selection_popup(1); // close it
 	show_extended_char_popup(1);
 	show_boxdrawing_char_popup(1);
+	show_gamesym_popup(1);
     }
 }
 
@@ -3367,6 +3384,12 @@ function pageload_init()
   } else {
      editpaneldata.draw_random();
   }
+
+  popup_create('gamesym_selection_popup', 'Game Symbols', get_nethacksym_selection_contents(), 1);
+  popup_create('pen_selection_popup', 'Pen Selection', get_pen_selection_popup_contents(), 1);
+  popup_create('extchar_selection_popup', 'Extended Chars', get_extended_char_popup_contents(), 1);
+  popup_create('boxchar_selection_popup', 'Boxes', get_box_char_popup_contents(), 1);
+
   panel_redraw();
   update_toolbar();
   show_buttons();
@@ -3374,7 +3397,6 @@ function pageload_init()
   show_saved_pens();
   color_selection();
   char_selection();
-  mk_nethacksym_selection();
   game_symbols_update();
   output_strip_data_edit();
   panel_showcode();
