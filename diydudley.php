@@ -184,6 +184,12 @@ print 'var USR_dudley_root_url="'.$dudley_root_url."\";\n";
 
 <a id="help" class="button" onclick="return buttonfunc_act(74);" href="#">HELP</a>
 <a id="configbtn" class="button" onclick="return buttonfunc_act(79);" href="#">Config</a>
+<span id="windowsbtn" class="button withtooltip">Windows<span class="tooltip">
+    <span class="button" onclick="buttonfunc_act(95);">Extended&nbsp;Chars</span><br>
+    <span class="button" onclick="buttonfunc_act(96);">Box&nbsp;Drawing&nbsp;Chars</span><br>
+<span class="button" onclick="buttonfunc_act(91);">Pen&nbsp;Selection&nbsp;Chars</span><br>
+<span class="button" onclick="buttonfunc_act(99);">Game&nbsp;Symbol&nbsp;Chars</span><br>
+</span></span>
 <h1><a href="<?php echo $dudley_root_url; ?>">Dudley</a> D-I-Y</h1>
 
 <div id="poststatusdiv"></div>

@@ -238,6 +238,7 @@ a.withtooltip:hover {
 .tooltip .button_disabled:hover {
 }
 
+#windowsbtn,
 #configbtn,
 #help {
   float:right;
