@@ -348,16 +348,47 @@ td.footnote {
     display: none;
 }
 
-#boxchar_selection_popup,
-#extchar_selection_popup,
-#pen_selection_popup {
+.widget {
     display: none;
     position: absolute;
-    padding: 0.5em;
-    z-index: 100;
-    border: 1px solid black;
-    background-color: white;
+    padding: 0;
+    margin: 0;
     -moz-box-shadow: 2px 2px 2px rgba(68,68,68,0.6);
     -webkit-box-shadow: 2px 2px 2px rgba(68,68,68,0.6);
     box-shadow: 2px 2px 2px rgba(68,68,68,0.6);
+    z-index: 100;
+}
+
+.widget_title {
+    font-weight: bold;
+    background-color:orange;
+    padding:0.5em;
+    margin:0;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+.widget_close {
+    float:right;
+    cursor: pointer;
+    padding:0.2em;
+    position:relative;
+    top:-0.2em;
+    text-align:center;
+}
+.widget_close:hover {
+    background-color: black;
+    color: orange;
+    border-radius:1em;
+}
+
+.widget_contents {
+    padding: 0.5em;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    background-color: white;
+}
+.widget_draggable_handle {
+    cursor:move;
 }

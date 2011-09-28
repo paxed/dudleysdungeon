@@ -174,6 +174,7 @@ print 'var USR_dudley_root_url="'.$dudley_root_url."\";\n";
 ?>
 </script>
 
+<script src="dragndrop.js" type="text/javascript"></script>
 <script src="diydudley-vars.js" type="text/javascript"></script>
 <script src="diydudley-tools.js" type="text/javascript"></script>
 <script src="Panel.js" type="text/javascript"></script>
@@ -236,8 +237,5 @@ Symbols: <label>NetHack:<input type="checkbox" id="nhsym_cbox" onchange="game_sy
 <noscript><p><b>Sorry, this page requires javascript.</b></p></noscript>
 
 <div id="hidden_div"></div>
-<div id="pen_selection_popup"></div>
-<div id="extchar_selection_popup"></div>
-<div id="boxchar_selection_popup"></div>
 </body>
 </html>
