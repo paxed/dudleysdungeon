@@ -213,9 +213,8 @@ print 'var USR_dudley_root_url="'.$dudley_root_url."\";\n";
 <div id="charselection"></div>
 </div>
 
-Symbols: <label>NetHack:<input type="checkbox" id="nhsym_cbox" onchange="game_symbols_update();return false;"></label>
- <label>Angband:<input type="checkbox" id="angsym_cbox" onchange="game_symbols_update();return false;"></label>
-<div id="gamesymselection"></div>
+<div id="game_symbols_popup">
+</div>
 
 <label>Strip data:<input type="checkbox" checked id="stripinfo_cbox" onchange="toggle_preview('stripinfo_cbox', 'strip_data_edit');output_strip_data_edit();return false;"></label>
 <div id="strip_data_edit"></div>

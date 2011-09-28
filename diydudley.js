@@ -1574,23 +1574,33 @@ function nethacksym_searchstr()
   nethacksym_selection(str);
 }
 
+function mk_nethacksym_selection()
+{
+  var tmp = document.getElementById("game_symbols_popup");
+  var txt = "";
+  if (!tmp) return;
+  txt += "Symbols: <label>NetHack:<input type='checkbox' id='nhsym_cbox' onchange='game_symbols_update();return false;'></label>"+
+	"<label>Angband:<input type='checkbox' id='angsym_cbox' onchange='game_symbols_update();return false;'></label>"+
+	"<div id='gamesymselection'>";
+  txt += '<span id="nethacksymselbox"></span>';
+  //txt += '<input type="text" id="nethacksymsearchbox" onchange="nethacksym_searchstr();" '+getkeyb_handler_string()+' value="">';
+  txt += "<a class='button' onclick='return buttonfunc_act(45);' href='#'>random monster</a>";
+  txt += '<div class="gamesymselection" id="gamesymselection_pens"></div>';
+  txt += "</div>";
+  tmp.innerHTML = txt;
+}
+
 function nethacksym_selection(searchstr)
 {
-  var tmp = document.getElementById("gamesymselection");
+  var tmp = document.getElementById("gamesymselection_pens");
   var txt = "";
   var i;
   var linelen = 0;
 
+  if (!tmp) return;
+
   if (searchstr == undefined) searchstr = '';
 
-  txt += "";
-
-  txt += '<span id="nethacksymselbox"></span>';
-  //txt += '<input type="text" id="nethacksymsearchbox" onchange="nethacksym_searchstr();" value="'+((searchstr == '') ? 'Search' : searchstr)+'">';
-
-  txt += "<a class='button' onclick='return buttonfunc_act(45);' href='#'>random monster</a>";
-
-  txt += '<div class="gamesymselection">';
   for (i = 0; i < nethack_symbols.length; i++) {
     var fg = nethack_symbols[i].fg;
     var fgx = nethack_symbols[i].fg;
@@ -1609,7 +1619,6 @@ function nethacksym_selection(searchstr)
     if (linelen > 40) { txt += "<br>"; linelen = 0; }
 
   }
-  txt += "</div>";
   tmp.innerHTML = txt;
   nethacksym_selectbox();
 }
@@ -2224,23 +2233,29 @@ function show_buttons()
   tmp.innerHTML = txt;
 }
 
+var prev_shown_gamesyms;
+
 function game_symbols_update()
 {
     var gamesyms = 0;
 
     var nhsym_cbox = document.getElementById("nhsym_cbox");
     var angsym_cbox = document.getElementById("angsym_cbox");
-    var nhsymselection = document.getElementById("gamesymselection");
 
-    if (nhsym_cbox && nhsym_cbox.checked) gamesyms = (gamesyms | 1);
-    if (angsym_cbox && angsym_cbox.checked) gamesyms = (gamesyms | 2);
+    if ((nhsym_cbox != undefined) && nhsym_cbox.checked) gamesyms = (gamesyms | 1);
+    if ((angsym_cbox != undefined) && angsym_cbox.checked) gamesyms = (gamesyms | 2);
+    if (gamesyms < 1) {
+	gamesyms = 1;
+	set_checkbox_on("nhsym_cbox");
+    }
 
-    nhsymselection.innerHTML = "";
-    delete nethack_symbols;
-    nethack_symbols = new Array();
-
-    fix_nethacksym_list(gamesyms);
-    nethacksym_selection();
+    if (prev_shown_gamesyms != gamesyms) {
+	prev_shown_gamesyms = gamesyms;
+	delete nethack_symbols;
+	nethack_symbols = new Array();
+	fix_nethacksym_list(gamesyms);
+	nethacksym_selection();
+    }
 }
 
 function fix_nethacksym_list(gamesyms)
@@ -2251,13 +2266,6 @@ function fix_nethacksym_list(gamesyms)
   var prev = 1;
   var text = "";
   var newarray = new Array();
-
-  if ((gamesyms == undefined) || (gamesyms < 1)) {
-      gamesyms = 1;
-      set_checkbox_on("nhsym_cbox");
-      var nhsym_cbox = document.getElementById("nhsym_cbox");
-      if (nhsym_cbox) { nhsym_cbox.checked = true; }
-  }
 
   game_symbols_orig = new Array();
 
@@ -2889,8 +2897,9 @@ function handle_keyb(e)
 
 function set_checkbox_on(cbox)
 {
-  if (cbox != undefined) {
-    cbox.selected = 'true';
+  var elem = document.getElementById(cbox);
+  if (elem != undefined) {
+    elem.checked = true;
   }
 }
 
@@ -3349,9 +3358,6 @@ function pageload_init()
   pens_load();
   keybindings_load();
 
-  game_symbols_update();
-  /*fix_nethacksym_list();*/
-
   strip_init();
 
   strip_editpanel(-1);
@@ -3368,7 +3374,8 @@ function pageload_init()
   show_saved_pens();
   color_selection();
   char_selection();
-  nethacksym_selection();
+  mk_nethacksym_selection();
+  game_symbols_update();
   output_strip_data_edit();
   panel_showcode();
   panel_download_save();
