@@ -1,7 +1,8 @@
 
 function popup_save_position(elem, x, y)
 {
-    createCookie(elem.id, x+","+y, 30);
+    var vis = ((elem.style.display != "none" && elem.style.visibility != "hidden") ? 1 : 0);
+    createCookie(elem.id, x+","+y+","+vis, 30);
 }
 
 function popup_isvisible(id)
@@ -30,19 +31,20 @@ function popup_create(id, title, contents, hidden)
 
 	document.body.appendChild(nod);
 
-	if ((hidden != undefined) && (hidden == 1)) {
-	    nod.style.visibility = 'hidden';
-	}
+	if (hidden == undefined) hidden = 0;
+
+	if (hidden == 1) nod.style.visibility = 'hidden';
 
 	nod.style.display = "block";
 
 	var lft;
 	var top;
 	var oldpos = readCookie(id + '_widget');
-	if (oldpos != undefined && oldpos.match(/^\d+,\d+$/)) {
+	if (oldpos != undefined && oldpos.match(/^\d+,\d+,[01]$/)) {
 	    var tmp = oldpos.split(",");
 	    lft = parseInt(tmp[0]);
 	    top = parseInt(tmp[1]);
+	    if (parseInt(tmp[2]) == 0) { hidden = 1; } else { hidden = 0; }
 	} else {
 	    lft = (dudley_mouse_pos_x - Math.floor(nod.offsetWidth / 2));
 	    top = (dudley_mouse_pos_y - Math.floor(nod.offsetHeight / 2));
@@ -53,8 +55,10 @@ function popup_create(id, title, contents, hidden)
 	nod.style.left = lft + 'px';
 	nod.style.top = top + 'px';
 
-	if ((hidden != undefined) && (hidden == 1)) {
+	if (hidden == 1) {
 	    nod.style.display = 'none';
+	} else {
+	    nod.style.visibility = 'visible';
 	}
 
 	var drg = DragHandler.attach(nod);
@@ -75,6 +79,7 @@ function popup_show(id, toggle)
 	elem.style.display = (elem.style.display == "block") ? "none" : "block";
     }
     elem.style.visibility = 'visible';
+    popup_save_position(elem, parseInt(elem.style.left), parseInt(elem.style.top));
 }
 
 function popup_hide(id)
@@ -82,6 +87,7 @@ function popup_hide(id)
     var elem = document.getElementById(id + "_widget");
     if (!elem) return;
     elem.style.display = "none";
+    popup_save_position(elem, parseInt(elem.style.left), parseInt(elem.style.top));
 }
 
 function popup_set_contents(id, contents)
@@ -91,6 +97,40 @@ function popup_set_contents(id, contents)
     elem.innerHTML = contents;
 }
 
+var widget_popups = new Array(
+    {'title':'Game Symbols',    'id':'gamesyms', 'getcontents':get_nethacksym_selection_contents},
+    {'title':'Pen Selection',   'id':'penchars', 'getcontents':get_pen_selection_popup_contents},
+    {'title':'Extended Chars',  'id':'extchars', 'getcontents':get_extended_char_popup_contents},
+    {'title':'Boxes',           'id':'boxchars', 'getcontents':get_box_char_popup_contents}
+);
+
+function create_widgets()
+{
+    var i;
+    for (i = 0; i < widget_popups.length; i++) {
+	var wp = widget_popups[i];
+	popup_create(wp.id, wp.title, wp.getcontents(), 1);
+    }
+}
+
+function show_widget(num, close)
+{
+    if (close == 1) {
+	popup_show(widget_popups[num].id, 1);
+    } else {
+	popup_show(widget_popups[num].id);
+    }
+}
+
+function isvisible_widget(num)
+{
+    return popup_isvisible(widget_popups[num].id);
+}
+
+function widget_set_contents(num, txt)
+{
+    popup_set_contents(widget_popups[num].id, txt);
+}
 
 function pen_clone(pen)
 {
@@ -1606,15 +1646,6 @@ function get_nethacksym_selection_contents()
 }
 
 
-function show_gamesym_popup(close)
-{
-    if (close == 1) {
-	popup_show('gamesym_selection_popup', 1);
-	return;
-    } else {
-	popup_show('gamesym_selection_popup');
-    }
-}
 
 function nethacksym_selection(searchstr)
 {
@@ -1883,18 +1914,8 @@ function get_pen_selection_popup_contents()
 
 function update_pen_selection_popup()
 {
-    if (!popup_isvisible('pen_selection_popup')) return;
-    popup_set_contents('pen_selection_popup', get_pen_selection_popup_contents());
-}
-
-function show_pen_selection_popup(close)
-{
-    if (close == 1) {
-	popup_show('pen_selection_popup', 1);
-	return;
-    } else {
-	popup_show('pen_selection_popup');
-    }
+    if (!isvisible_widget(1)) return;
+    widget_set_contents(1, get_pen_selection_popup_contents());
 }
 
 
@@ -1926,19 +1947,10 @@ function update_extended_char_popup(adj)
 	dud_extended_char += adj;
 	if (dud_extended_char < 256) dud_extended_char = 256;
     }
-    if (!popup_isvisible('extchar_selection_popup')) return;
-    popup_set_contents('extchar_selection_popup', get_extended_char_popup_contents());
+    if (!isvisible_widget(2)) return;
+    widget_set_contents(2, get_extended_char_popup_contents());
 }
 
-function show_extended_char_popup(close)
-{
-    if (close == 1) {
-	popup_show('extchar_selection_popup', 1);
-	return;
-    } else {
-	popup_show('extchar_selection_popup');
-    }
-}
 
 function get_box_char_popup_contents()
 {
@@ -1979,18 +1991,8 @@ function get_box_char_popup_contents()
 
 function update_box_char_popup()
 {
-    if (!popup_isvisible('boxchar_selection_popup')) return;
-    popup_set_contents('boxchar_selection_popup', get_box_char_popup_contents());
-}
-
-function show_boxdrawing_char_popup(close)
-{
-    if (close == 1) {
-	popup_show('boxchar_selection_popup', 1);
-	return;
-    } else {
-	popup_show('boxchar_selection_popup');
-    }
+    if (!isvisible_widget(3)) return;
+    widget_set_contents(3, get_box_char_popup_contents());
 }
 
 function buttonfunc_act(act)
@@ -2144,7 +2146,7 @@ function buttonfunc_act(act)
   case 88: generate_random_shop('*'); break;
   case 89: generate_random_shop('['); break;
   case 90: generate_random_shop(')'); break;
-  case 91: show_pen_selection_popup(); break;
+  case 91: show_widget(1); break;
   case 92:
       if (pen.bold == 1) { pen.bold = undefined; } else { pen.bold = 1; }
       pen_has_changed();
@@ -2157,11 +2159,11 @@ function buttonfunc_act(act)
       if (pen.ul == 1) { pen.ul = undefined; } else { pen.ul = 1; }
       pen_has_changed();
       break;
-  case 95: show_extended_char_popup(); break;
-  case 96: show_boxdrawing_char_popup(); break;
+  case 95: show_widget(2); break;
+  case 96: show_widget(3); break;
   case 97: strip_movepanel_left(); break;
   case 98: strip_movepanel_right(); break;
-  case 99: show_gamesym_popup(); break;
+  case 99: show_widget(0); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2916,10 +2918,8 @@ function handle_keyb(e)
 
     /* ESC */
     if (e == 27) {
-	show_pen_selection_popup(1); // close it
-	show_extended_char_popup(1);
-	show_boxdrawing_char_popup(1);
-	show_gamesym_popup(1);
+	for (var widget = 0; widget < widget_popups.length; widget++)
+	    show_widget(widget, 1); // close it
     }
 }
 
@@ -3396,10 +3396,7 @@ function pageload_init()
      editpaneldata.draw_random();
   }
 
-  popup_create('gamesym_selection_popup', 'Game Symbols', get_nethacksym_selection_contents(), 1);
-  popup_create('pen_selection_popup', 'Pen Selection', get_pen_selection_popup_contents(), 1);
-  popup_create('extchar_selection_popup', 'Extended Chars', get_extended_char_popup_contents(), 1);
-  popup_create('boxchar_selection_popup', 'Boxes', get_box_char_popup_contents(), 1);
+  create_widgets();
 
   panel_redraw();
   update_toolbar();
