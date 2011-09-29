@@ -841,6 +841,46 @@ function panel_get_colornotes(panelnum)
   return txt;
 }
 
+var update_temp_stripcode = 0;
+
+function save_temp_stripcode(turnoff)
+{
+    if (update_temp_stripcode != 1) return;
+    if (turnoff == 1) update_temp_stripcode = 0;
+    var txt = escape(panel_getcode(0));
+    txt = txt.replace(/\n/g, "\\\\n");
+
+    var i = 0;
+    do {
+	createCookie("tmp_strip"+i, txt.substr(0,512), 30);
+	txt = txt.substr(512);
+	i = i + 1;
+    } while (txt.length > 0);
+    createCookie("tmp_strip_parts", i, 30);
+}
+
+function load_temp_stripcode(turnoff)
+{
+    if (update_temp_stripcode != 1) return;
+    var txt = "";
+    var i = 0;
+    var len = parseInt(readCookie("tmp_strip_parts"));
+    for (i = 0; i < len; i++) {
+	txt += readCookie("tmp_strip"+i);
+    }
+    txt = txt.replace(/\\\\n/g, "\n");
+    if (turnoff == 1) update_temp_stripcode = 0;
+    if (txt) { parse_code(unescape(txt)); return 1; }
+    return 0;
+}
+
+function erase_temp_stripcode()
+{
+    var len = parseInt(readCookie("tmp_strip_parts"));
+    eraseCookie("tmp_strip_parts");
+    for (i = 0; i < len; i++) { eraseCookie("tmp_strip"+i); }
+}
+
 function panel_getcode(html)
 {
   var x,y, i;
@@ -1026,6 +1066,7 @@ function panel_submitcode()
   tmp2.submit();
 
   tmp.innerHTML = '';
+  erase_temp_stripcode();
 }
 
 function panel_download_save()
@@ -1065,6 +1106,8 @@ function panel_showcode()
   var code_edit = document.getElementById("code_edit_cbox");
   var txt = "";
   var btn = "";
+
+  save_temp_stripcode();
 
   if (code_checkbox.checked != true) return;
 
@@ -3384,8 +3427,12 @@ function pageload_init()
 
   if (typeof POST_comicstrip == "string") {
      parse_code(POST_comicstrip);
+     erase_temp_stripcode();
   } else {
-     editpaneldata.draw_random();
+     update_temp_stripcode = 1;
+     if (!load_temp_stripcode(1)) {
+	 editpaneldata.draw_random();
+     }
   }
 
   create_widgets();
@@ -3423,4 +3470,6 @@ function pageload_init()
   document.onkeyup = handle_keyb;
 
   document.addEventListener('mousemove', record_mouse_cursor_pos, false);
+
+  update_temp_stripcode = 1;
 }
