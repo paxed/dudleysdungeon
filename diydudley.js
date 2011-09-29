@@ -846,8 +846,6 @@ function panel_getcode(html)
   var x,y, i;
   var txt = "";
 
-  if (code_checkbox.checked != true) return "";
-
   //txt += "TITLE:"+stripdata.title+"\n";
   if (html)
     txt += "AUTHOR:"+htmlentities(stripdata.author)+"\n";
