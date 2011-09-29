@@ -847,7 +847,7 @@ function save_temp_stripcode(turnoff)
 {
     if (update_temp_stripcode != 1) return;
     if (turnoff == 1) update_temp_stripcode = 0;
-    var txt = escape(panel_getcode(0));
+    var txt = escape(panel_getcode(1));
     txt = txt.replace(/\n/g, "\\\\n");
 
     var i = 0;
@@ -869,8 +869,14 @@ function load_temp_stripcode(turnoff)
 	txt += readCookie("tmp_strip"+i);
     }
     txt = txt.replace(/\\\\n/g, "\n");
+    txt = unescape(txt);
+
+    txt = txt.replace(/&lt;/g, "<");
+    txt = txt.replace(/&gt;/g, ">");
+    txt = txt.replace(/&amp;/g, "&");
+
     if (turnoff == 1) update_temp_stripcode = 0;
-    if (txt) { parse_code(unescape(txt)); return 1; }
+    if (txt) { parse_code(txt); return 1; }
     return 0;
 }
 

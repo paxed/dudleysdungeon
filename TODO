@@ -1,6 +1,7 @@
 
--bug: if bold/rev/underline is on pen, clicking on any saved pens
- does not clear those attrs.
+
+-the current pen and ctrl_pen should have a popup, which shows checkboxes
+ for attrs, which can be turned on or off.
 
 -extended char popup should have text input field for choosing
  the address which to display instead of just the hexnumber...
