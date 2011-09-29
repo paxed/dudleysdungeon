@@ -2437,6 +2437,7 @@ function strip_movepanel_left()
     strip_prevpanel();
     panel_redraw();
     show_edit_panel_text();
+    get_panel_text();
 }
 
 function strip_movepanel_right()
@@ -2451,6 +2452,7 @@ function strip_movepanel_right()
     strip_nextpanel();
     panel_redraw();
     show_edit_panel_text();
+    get_panel_text();
 }
 
 function strip_editpanel(i)
