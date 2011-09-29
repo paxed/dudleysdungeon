@@ -1675,7 +1675,7 @@ function nethacksym_searchstr()
 function get_nethacksym_selection_contents()
 {
   var txt = "";
-  txt += "Symbols: <label>NetHack:<input type='checkbox' id='nhsym_cbox' onchange='game_symbols_update();return false;'></label>"+
+  txt += "<label>NetHack:<input type='checkbox' id='nhsym_cbox' onchange='game_symbols_update();return false;'></label>"+
 	"<label>Angband:<input type='checkbox' id='angsym_cbox' onchange='game_symbols_update();return false;'></label>"+
 	"<div id='gamesymselection'>";
   txt += '<span id="nethacksymselbox"></span>';
