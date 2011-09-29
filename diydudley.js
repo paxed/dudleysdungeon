@@ -1322,7 +1322,9 @@ function pen_set_sym(sym)
 
 function pen_set_str(event, str)
 {
-    pen_set_sym(string_to_pen(str));
+    var tmp = string_to_pen(str);
+    delete tmp.key;
+    pen_set_sym(tmp);
 }
 
 function pen_random()
