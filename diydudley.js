@@ -1320,17 +1320,9 @@ function pen_set_sym(sym)
   pen_has_changed();
 }
 
-function pen_set_fg_chr(event, clr, chr)
+function pen_set_str(event, str)
 {
-  if (event != undefined) {
-    if (event.ctrlKey)
-	pen = pen_clone(ctrl_pen);
-  }
-
-  if (clr != undefined)
-    pen.fg = clr;
-  pen.chr = unescape(chr);
-  pen_has_changed();
+    pen_set_sym(string_to_pen(str));
 }
 
 function pen_random()
@@ -1429,6 +1421,7 @@ function pen_to_string(pen)
     if (rev == undefined) { rev = 0; }
     if (ul == undefined) { ul = 0; }
     if (key == undefined) { key = ''; } else { key = key.charCodeAt(0); }
+    if (chr == undefined) { chr = ' '; }
     if (chr.length == 1) {
 	chr = chr.charCodeAt(0).toString(16);
     } else if (chr.match(/^&#x[0-9a-fA-F]+;$/)){
@@ -1521,7 +1514,7 @@ function color_selection()
 function penset_escaped_func(pen)
 {
   if (pen.fg == undefined) pen.fg = "gray";
-  return "pen_set_fg_chr(event, \""+pen.fg+"\",\""+escape(pen.chr)+"\");";
+    return "pen_set_str(event, \""+pen_to_string(pen)+"\");";
 }
 
 function penset_span(pen, desc)
@@ -1547,15 +1540,14 @@ function char_selection()
   var tmp = document.getElementById("charselection");
   var txt = "";
   var i;
-
-  var fg = pen.fg;
-  if (fg == undefined) fg = "gray";
+  var tmpen = pen_clone(pen);
+  if (tmpen.fg == undefined) tmpen.fg = "gray";
 
   txt += "Chars: ";
   txt += "<span class='charselection'>";
   for (i = ' '.charCodeAt(0); i <= '~'.charCodeAt(0); i++) {
-      var c = String.fromCharCode(i);
-      txt += "<span class='"+datspanclass(pen)+"' onclick='pen_set_fg_chr(event, \""+fg+"\",\""+escape(c)+"\");'>" + c + "</span>";
+      tmpen.chr = String.fromCharCode(i);
+      txt += "<span class='"+datspanclass(tmpen)+"' onclick='pen_set_str(event, \""+pen_to_string(tmpen)+"\");'>" + tmpen.chr + "</span>";
   }
   txt += "</span>";
   tmp.innerHTML = txt;
@@ -1567,7 +1559,7 @@ function pen_set_by_text(text)
   for (i = 0; i < game_symbols_orig.length; i++) {
     if (game_symbols_orig[i].chr == undefined) { continue; }
     if (text == game_symbols_orig[i].text) {
-      pen_set_fg_chr(undefined, game_symbols_orig[i].fg, escape(game_symbols_orig[i].chr));
+      pen_set_str(undefined, pen_to_string(game_symbols_orig[i]));
       return;
     }
   }
@@ -2904,7 +2896,7 @@ function handle_keyb(e)
     /* is it a saved pen quick key? */
     for (i = 0; i < saved_pens.length; i++) {
       if ((saved_pens[i].key != undefined) && (str == saved_pens[i].key)) {
-	  pen_set_fg_chr(undefined, saved_pens[i].fg, escape(saved_pens[i].chr));
+	  pen_set_str(undefined, pen_to_string(saved_pens[i]));
 	  return;
       }
     }
