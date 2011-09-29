@@ -4,6 +4,14 @@ function popup_save_position(elem, x, y)
     createCookie(elem.id, x+","+y, 30);
 }
 
+function popup_isvisible(id)
+{
+    var elem = document.getElementById(id + "_widget");
+    if (!elem) return false;
+    if (elem.style.display == "none" || elem.style.visibility == "hidden") return false;
+    return true;
+}
+
 function popup_create(id, title, contents, hidden)
 {
     var elem = document.getElementById(id + "_widget");
@@ -1875,6 +1883,7 @@ function get_pen_selection_popup_contents()
 
 function update_pen_selection_popup()
 {
+    if (!popup_isvisible('pen_selection_popup')) return;
     popup_set_contents('pen_selection_popup', get_pen_selection_popup_contents());
 }
 
@@ -1917,6 +1926,7 @@ function update_extended_char_popup(adj)
 	dud_extended_char += adj;
 	if (dud_extended_char < 256) dud_extended_char = 256;
     }
+    if (!popup_isvisible('extchar_selection_popup')) return;
     popup_set_contents('extchar_selection_popup', get_extended_char_popup_contents());
 }
 
@@ -1969,6 +1979,7 @@ function get_box_char_popup_contents()
 
 function update_box_char_popup()
 {
+    if (!popup_isvisible('boxchar_selection_popup')) return;
     popup_set_contents('boxchar_selection_popup', get_box_char_popup_contents());
 }
 
