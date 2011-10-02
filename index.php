@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stripid = $_POST['stripid'];
     if (!isset($stripid) || (!preg_match('/^[0-9]+$/', $stripid))) $errorstr .= "<p>Strip ID is weird.";
 
-    $commentid = $_POST['commentid'];
+    $commentid = (isset($_POST['commentid']) ? $_POST['commentid'] : NULL);
     if (isset($commentid) && (!preg_match('/^[0-9]+$/', $commentid))) $errorstr .= "<p>Comment ID is weird.";
 
     $sql = "select approved from strip where stripid='".$stripid."' and approved=true";
