@@ -6,6 +6,8 @@ include_once "dudleyinclude.php";
 session_start();
 is_autologin();
 
+$errorstr = NULL;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $passwd = $_POST['password'];
@@ -15,7 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!isset($errorstr)) {
 
-	if (!log_in_user($username, $passwd, $_POST['remember'])) $errorstr .= '<p>Something went wrong when logging in. Wrong username/password?';
+	$remember = (isset($_POST['remember']) ? $_POST['remember'] : 0);
+
+	if (!log_in_user($username, $passwd, $remember)) $errorstr .= '<p>Something went wrong when logging in. Wrong username/password?';
 	else {
 	    header('Location: '.$dudley_root_url);
 	    exit;

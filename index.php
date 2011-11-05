@@ -165,6 +165,8 @@ $dudmenu = get_dudmenu();
 
 print '<p>'.$dudmenu;
 
+$pagecontrols = '';
+
 if (!isset($strip_data['stripid'])) {
     print '</div>';
 
@@ -181,8 +183,6 @@ if (!isset($strip_data['stripid'])) {
     $lines = preg_split("/\n/", $strip_data['stripdata']);
 
     $pagecontrols = get_pagecontrols($strip_data['epoch']);
-
-    //print $pagecontrols;
 
     print '</div>';
 
