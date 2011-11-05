@@ -3,6 +3,11 @@
 error_reporting(E_ALL);
 ini_set('display_errors','On');
 
+if (!file_exists('config.php')) {
+    header("Location: install.php");
+    exit;
+}
+
 include_once "utils.php";
 include_once "dudleyinclude.php";
 

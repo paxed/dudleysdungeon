@@ -6,8 +6,23 @@ This is the code that http://alt.org/nethack/dudley/ uses.
 
 Requires: PHP 5, postgres
 
+First create the postgres user, eg.
 
-Remember to edit config.php and utils.php!
+# su - postgres
+# psql
+postgres=# create user dudley with password 'dudley';
+postgres=# create database dudleydb;
+postgres=# grant all privileges on database dudleydb to dudley;
+postgres=# \q
+
+Then browse to the directory where you put the dudley files, and enter the
+settings in the install script.  The script creates the database and the
+admin user you specify.
+
+Another way is to manually edit or create config.php, and create the
+database and the admin user yourself.
+
+Remember to edit utils.php!
 
 To generate the RSS feed, run cronjob.sh, eg. via cron.
 
