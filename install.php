@@ -64,8 +64,8 @@ if (isset($_POST['submit'])) {
 	    die('dudley_db_schema.sql does not exist.');
 	}
 	db_exec(file_get_contents('dudley_db_schema.sql'));
-	$pw = crypt($_POST['admin_passwd'], substr($passwd, 0, 2));
-	db_exec('insert into duduser (username, registertime, password, userlevel) values ("'.db_escape_string($_POST['admin_user']).'", "NOW", "'.db_escape_string($pw).'", 1);');
+	$pw = crypt($_POST['admin_passwd'], substr($_POST['admin_passwd'], 0, 2));
+	db_exec("insert into duduser (username, registertime, password, userlevel) values ('".db_escape_string($_POST['admin_user'])."', 'NOW', '".db_escape_string($pw)."', 1);");
 
 	header("Location: index.php");
 	exit;

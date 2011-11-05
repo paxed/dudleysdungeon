@@ -24,13 +24,13 @@ CREATE TABLE strip (
 	viewed integer
 );
 CREATE TABLE duduser (
-        userid integer,
+        userid serial primary key,
 	username text,
 	registertime timestamp,
 	lastlogin timestamp,
 	password text,
 	s_keybnav boolean,
-	userlevel integer
+	userlevel integer not null default 0
 );
 CREATE TABLE vote (
         voteid serial primary key,
