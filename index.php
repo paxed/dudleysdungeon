@@ -126,7 +126,12 @@ if (preg_match('/login/i', $qact)) {
 }
 
 if (isset($_GET['f'])) {
-    if (preg_match('/^([0-9][0-9][0-9][0-9])[-.]([0-9]?[0-9])[-.]([0-9]?[0-9])$/', $_GET['f'], $match)) {
+    if ($_GET['f'] == 'first') {
+	$tmp = db_get_strip_first();
+	if (isset($tmp['stripid'])) {
+	    $show_strip_id = $tmp['stripid'];
+	}
+    } else if (preg_match('/^([0-9][0-9][0-9][0-9])[-.]?([0-9]?[0-9])[-.]?([0-9]?[0-9])$/', $_GET['f'], $match)) {
 	$find_strip_tstamp = mktime(0,0,0, $match[2], $match[3], $match[1]);
 	$anythat = 'that';
 	if ($find_strip_tstamp > time()) {
