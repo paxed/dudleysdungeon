@@ -393,3 +393,23 @@ td.footnote {
 .widget_draggable_handle {
     cursor:move;
 }
+
+
+#preview_strip .comic .txt {
+    position:relative;
+}
+
+.comic .txt .controls {
+    position:absolute;
+    top: 0.2em;
+    right: 0.2em;
+    float:right;
+    display:none;
+    background-color:lightgrey;
+    border:1px solid red;
+    color:red;
+    padding:0.25em;
+}
+.comic .txt:hover .controls {
+    display:inline;
+}

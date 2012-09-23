@@ -1780,6 +1780,17 @@ function show_saved_pens()
   tmp.innerHTML = txt;
 }
 
+function rm_panel_text(pnl)
+{
+    strip_editpanel(pnl);
+    var tmp = document.getElementById("editpanel_text");
+    panels[editpanel_strippanel].text = '';
+    tmp.value = '';
+    panel_redraw();
+    strip_preview_panels();
+    panel_showcode();
+}
+
 function set_panel_text()
 {
   var tmp = document.getElementById("editpanel_text");
@@ -2632,6 +2643,9 @@ function strip_preview_panels()
 	if (panels[i].text) {
 	  var txtlines = panels[i].text.split(/\n/);
 	  txt += '<div class="txt">';
+	  txt += '<span class="controls">';
+	  txt += '<a class="button" onclick="rm_panel_text('+i+');return false;" href="#">[X]</a>';
+	  txt += '</span>';
 	  for (tl = 0; tl < txtlines.length; tl++) {
 	    txt += '<p>'+txtlines[tl];
 	  }
