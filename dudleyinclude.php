@@ -180,6 +180,7 @@ function nhquestion_validate($data)
 
     $qid = $data['nhquestionid'];
     $qanswer = $data['nhquestionanswer'];
+    $errstr = NULL;
 
     if (strlen($qanswer) == 1) {
 	if (!preg_match('/^[0-9]+$/',$qid) || ($qid > count($nethack_questions)-1))
