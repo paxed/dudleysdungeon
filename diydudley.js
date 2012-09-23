@@ -2741,10 +2741,15 @@ function set_strip_author()
   panel_showcode();
 }
 
-function set_strip_footnote()
+function set_strip_footnote(txt)
 {
   var tmp = document.getElementById("strip_footnote_text");
-  stripdata.footnote = new String(tmp.value);
+  if (typeof(txt) != 'undefined') {
+      stripdata.footnote = new String(txt);
+      tmp.value = txt;
+  } else {
+      stripdata.footnote = new String(tmp.value);
+  }
   strip_preview_panels();
   panel_showcode();
 }
@@ -2895,6 +2900,7 @@ function output_strip_data_edit()
   txt += '<br>';
   txt += "Footnote: ";
   txt += '<input '+getkeyb_handler_string()+' type="text" id="strip_footnote_text" size="80" onchange="set_strip_footnote();" value="'+foot+'">';
+  txt += '<a class="button" onclick="set_strip_footnote(\'\');return false;" href="#">[X]</a>';
 
   txt += '<br>';
   txt += "Strip panel size:";
