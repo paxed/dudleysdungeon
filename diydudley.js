@@ -209,9 +209,14 @@ function pens_load()
     }
 }
 
-function getkeyb_handler_string()
+function getkeyb_handler_string(elem)
 {
-  return " onfocus='document.onkeyup=null' onblur='document.onkeyup=handle_keyb' ";
+  if (typeof(elem) == 'undefined') {
+    return " onfocus='document.onkeyup=null' onblur='document.onkeyup=handle_keyb' ";
+  } else {
+      elem.onFocus='document.onkeyup=null';
+      elem.onBlur='document.onkeyup=handle_keyb';
+  }
 }
 
 function bindable_key_get()
@@ -1811,13 +1816,18 @@ function get_panel_text()
 
 function show_edit_panel_text()
 {
-  var tmp = document.getElementById("editpanel_text_div");
-  var txt = "";
-  txt += '<br>';
-  txt += '<textarea id="editpanel_text" '+getkeyb_handler_string()+' cols="80" rows="4" onchange="set_panel_text();"></textarea>';
-  txt += "<a class='button' onclick='return buttonfunc_act(48);' href='#'>insert pen</a>";
-  txt += '<br>';
-  tmp.innerHTML = txt;
+  var e = document.getElementById("editpanel_text");
+  if (!e) {
+    var tmp = document.getElementById("editpanel_text_div");
+    var txt = "";
+    txt += '<br>';
+    txt += '<textarea id="editpanel_text" '+getkeyb_handler_string()+' cols="80" rows="4" onchange="set_panel_text();"></textarea>';
+    txt += "<a class='button' onclick='return buttonfunc_act(48);' href='#'>insert pen</a>";
+    txt += '<br>';
+    tmp.innerHTML = txt;
+  } else {
+      getkeyb_handler_string(e);
+  }
 }
 
 function show_edit_panel()
