@@ -753,8 +753,8 @@ function parse_comic_text_tags($text)
 			       'ent' => array('start' => '/\\\\ent\((entity=)?"(.+?)"\)/', 'end' => '&$2;', 'param' => 2),
 			       'comic' => array('start' => '/\\\\comic\("?(.+?)"?\)\s*\{(.+?)\}/', 'end' => '<a href="index.php?f=$1">$2</a>', 'param' => 2),
 			       'link' => array('start' => '/\\\\link\("?(.+?)"?\)\s*\{(.+?)\}/', 'end' => '<a href="http://$1">$2</a>', 'param' => 2),
-			       'mail2' => array('start' => '/\\\\mail\("?(.+?)"?\)\s*\{(.+?)\}/', 'end' => '<a href="mailto:$1">$2</a>', 'param' => 2),
-			       'mail1' => array('start' => '/\\\\mail\("?(.+?)"?\)/', 'end' => '<a href="mailto:$1">$1</a>', 'param' => 2),
+			       'mail1' => array('start' => '/\\\\mail\("([^"]+)"\)\s*\{(.+?)\}/', 'end' => '<a href="mailto:$1">$2</a>', 'param' => 2),
+			       'mail2' => array('start' => '/\\\\mail\("([^"]+)"\)/', 'end' => '<a href="mailto:$1">$1</a>', 'param' => 2),
 			       'color' => array('start' => '/\\\\color\("?(.+?)"?\)\s*\{(.+?)\}/', 'end' => '<span style="color:$1">$2</span>', 'param' => 2),
 
 			       );
