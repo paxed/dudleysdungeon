@@ -1,4 +1,7 @@
 
+-when hovering mouse over panel text, show a [X] -button, clocking on it will remove
+ that panel's text.
+
 
 -larger tombstone:
 

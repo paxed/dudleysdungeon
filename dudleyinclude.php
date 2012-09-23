@@ -730,6 +730,88 @@ function parse_comic_strip($lines)
 }
 
 
+function parse_comic_text_tags($text)
+{
+    $allowed_text_tags = array('i' => array('start' => '<i>', 'end' => '</i>', 'param' => 1),
+			       'u' => array('start' => '<u>', 'end' => '</u>', 'param' => 1),
+			       'b' => array('start' => '<b>', 'end' => '</b>', 'param' => 1),
+			       'tt' => array('start' => '<tt>', 'end' => '</tt>', 'param' => 1),
+			       'sup' => array('start' => '<sup>', 'end' => '</sup>', 'param' => 1),
+			       'sub' => array('start' => '<sub>', 'end' => '</sub>', 'param' => 1),
+			       'small' => array('start' => '<small>', 'end' => '</small>', 'param' => 1),
+			       'sc' => array('start' => '<span class="smallcaps">', 'end' => '</span>', 'param' => 1),
+			       'left' => array('start' => '<div class="left_text">', 'end' => '</div>', 'param' => 1),
+			       'right' => array('start' => '<div class="right_text">', 'end' => '</div>', 'param' => 1),
+			       'dead' => array('start' => '<span class="f_gray">', 'end' => '</span>', 'param' => 1),
+
+			       'br' => array('start' => '<br>', 'end' => '', 'param' => 0),
+			       'mdash' => array('start' => '&mdash;', 'end' => '', 'param' => 0),
+			       'gt' => array('start' => '&gt;', 'end' => '', 'param' => 0),
+			       'lt' => array('start' => '&lt;', 'end' => '', 'param' => 0),
+			       'amp' => array('start' => '&amp;', 'end' => '', 'param' => 0),
+
+			       'ent' => array('start' => '/\\\\ent\((entity=)?"(.+?)"\)/', 'end' => '&$2;', 'param' => 2),
+			       'comic' => array('start' => '/\\\\comic\("?(.+?)"?\)\s*\{(.+?)\}/', 'end' => '<a href="index.php?f=$1">$2</a>', 'param' => 2),
+			       'link' => array('start' => '/\\\\link\("?(.+?)"?\)\s*\{(.+?)\}/', 'end' => '<a href="http://$1">$2</a>', 'param' => 2),
+			       'mail2' => array('start' => '/\\\\mail\("?(.+?)"?\)\s*\{(.+?)\}/', 'end' => '<a href="mailto:$1">$2</a>', 'param' => 2),
+			       'mail1' => array('start' => '/\\\\mail\("?(.+?)"?\)/', 'end' => '<a href="mailto:$1">$1</a>', 'param' => 2),
+			       'color' => array('start' => '/\\\\color\("?(.+?)"?\)\s*\{(.+?)\}/', 'end' => '<span style="color:$1">$2</span>', 'param' => 2),
+
+			       );
+
+    if (preg_match('/(.*?)\\\\nocode\\\\(.*?)\\\\nocode\\\\(.*)$/', $text, $matches)) {
+	return parse_comic_text_tags($matches[1]) . $matches[2] . parse_comic_text_tags($matches[3]);
+    }
+
+
+    do {
+	$match = 0;
+	foreach ($allowed_text_tags as $key => $val) {
+	    switch ($val['param']) {
+	    case 2:
+		$text = preg_replace($val['start'], $val['end'], $text);
+		break;
+	    case 1:
+		if (preg_match('/^(.*)\\\\'.$key.'\{([^}]+)\}(.*)$/', $text, $matches)) {
+		    $prefix = $matches[1];
+		    $param = $matches[2];
+		    $suffix = $matches[3];
+		    if (is_array($val)) {
+			$stag = $val['start'];
+			$etag = $val['end'];
+		    } else {
+			$stag = '<'.$val.'>';
+			$etag = '</'.$val.'>';
+		    }
+		    $text = $prefix . $stag . $param . $etag . $suffix;
+		    $match = 1;
+		}
+		break;
+	    case 0:
+		if (preg_match('/^(.*)\\\\'.$key.'\b\\\\?(.*)$/', $text, $matches)) {
+		    $prefix = $matches[1];
+		    $suffix = $matches[2];
+		    if (is_array($val)) {
+			$stag = $val['start'];
+			$etag = $val['end'];
+		    } else {
+			$stag = '<'.$val.'>';
+			$etag = '</'.$val.'>';
+		    }
+		    $text = $prefix . $stag . $etag . $suffix;
+		    $match = 1;
+		}
+		break;
+	    default:
+		break;
+	    }
+	}
+    } while ($match);
+
+    return $text;
+}
+
+
 function render_comic_strip($strip, $title=NULL)
 {
     global $dudley_root_url;
@@ -806,9 +888,7 @@ function render_comic_strip($strip, $title=NULL)
       $txt .= '</pre>';
       if (isset($strip[$i]['text'])) {
           $txt .= '<div class="txt">';
-	  foreach ($strip[$i]['text'] as $tl) {
-	      $txt .= '<p>' . $tl;
-          }
+	  $txt .= parse_comic_text_tags(join('<p>', $strip[$i]['text']));
           $txt .= '</div>';
       }
       $txt .= '</div>';
@@ -826,7 +906,7 @@ function render_comic_strip($strip, $title=NULL)
 
   $txt .= '<tr>';
   $txt .= '<td class="footnote" colspan="3">';
-  if (isset($strip['footnote'])) { $txt .= $strip['footnote']; }
+  if (isset($strip['footnote'])) { $txt .= parse_comic_text_tags($strip['footnote']); }
   $txt .= '</td>';
   $txt .= '</tr>';
 

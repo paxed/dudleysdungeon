@@ -121,3 +121,13 @@ td.footnote {
   font-size:smaller;
   text-align:left;
 }
+
+.comic .smallcaps {
+    font-variant:small-caps;
+}
+.comic .left_text {
+    text-align:left;
+}
+.comic .right_text {
+    text-align:right;
+}
