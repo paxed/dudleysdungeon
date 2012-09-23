@@ -58,6 +58,21 @@ function eraseCookie(name) {
   createCookie(dud_cookie_prefix + name,"",-1);
 }
 
+function setStorageData(name,value) {
+    if (typeof(localStorage) == 'undefined') return;
+    localStorage.setItem(dud_cookie_prefix + name, value);
+}
+
+function getStorageData(name) {
+    if (typeof(localStorage) == 'undefined') return null;
+    return localStorage.getItem(dud_cookie_prefix + name);
+}
+
+function eraseStorageData(name) {
+    if (typeof(localStorage) == 'undefined') return;
+    localStorage.removeItem(dud_cookie_prefix + name);
+}
+
 
 function insertAtCursor(elem, addval)
 {
