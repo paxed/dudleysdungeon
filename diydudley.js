@@ -2606,6 +2606,14 @@ function strip_preview_panels()
 
 	txt += '<div>';
 	txt += '<pre id="comicpanel'+i+'">';
+
+	txt += '<span class="controls">';
+	txt += '<a class="button" onclick="strip_editpanel('+i+'); strip_addpanel(); panel_redraw();return false;" href="#">[+]</a>';
+	txt += '<a class="button" onclick="strip_editpanel('+i+'); strip_deletepanel(); panel_redraw();return false;" href="#">[-]</a>';
+	txt += '<a class="button" onclick="strip_editpanel('+i+'); strip_movepanel_left(); panel_redraw();return false;" href="#">[&lt;]</a>';
+	txt += '<a class="button" onclick="strip_editpanel('+i+'); strip_movepanel_right(); panel_redraw();return false;" href="#">[&gt;]</a>';
+	txt += '</span>';
+
 	for (dy = 0; dy < panels[i].panel.HEI; dy++) {
 	  for (dx = 0; dx < panels[i].panel.WID; dx++) {
 	      var sclass = '';

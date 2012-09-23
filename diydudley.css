@@ -395,10 +395,12 @@ td.footnote {
 }
 
 
+#preview_strip .comic pre,
 #preview_strip .comic .txt {
     position:relative;
 }
 
+.comic pre .controls,
 .comic .txt .controls {
     position:absolute;
     top: 0.2em;
@@ -410,6 +412,7 @@ td.footnote {
     color:red;
     padding:0.25em;
 }
+.comic pre:hover .controls,
 .comic .txt:hover .controls {
     display:inline;
 }
