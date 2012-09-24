@@ -2589,16 +2589,20 @@ function strip_preview_panels()
   var x,y, dx,dy, i;
 
   var txt = "";
+  var wo = '';
 
   var popup = document.getElementById("preview_popup_cbox");
 
-  var popup_txt = '';
 /*
   if (preview_window && (preview_window.closed() == false) && popup && (popup.checked != true)) {
 	preview_window.document.close();
   }
 */
   if ((preview_checkbox.checked != true) && (popup && (popup.checked != true))) return;
+
+  if (popup && popup.checked) {
+      wo = 'window.opener.';
+  }
 
   txt += '<table cellspacing="0" cellpadding="0" align="center">';
   txt += '<tbody>';
@@ -2618,7 +2622,7 @@ function strip_preview_panels()
       if ((panels[i] == undefined) || (i > panels.length)) {
 	continue;
       }
-      txt += '<td class="comic xlink" id="comicpanel'+i+'" valign="top" onClick="strip_editpanel('+i+');">';
+      txt += '<td class="comic xlink" id="comicpanel'+i+'" valign="top" onClick="'+wo+'strip_editpanel('+i+');">';
       if (panels[i].panel != undefined) {
 
 	  if (panels[i].panel.cursor != undefined) {
@@ -2632,10 +2636,10 @@ function strip_preview_panels()
 	txt += '<pre id="comicpanel'+i+'">';
 
 	txt += '<span class="controls">';
-	txt += '<a class="button" onclick="strip_editpanel('+i+'); strip_addpanel(); panel_redraw();return false;" href="#">[+]</a>';
-	txt += '<a class="button" onclick="strip_editpanel('+i+'); strip_deletepanel(); panel_redraw();return false;" href="#">[-]</a>';
-	txt += '<a class="button" onclick="strip_editpanel('+i+'); strip_movepanel_left(); panel_redraw();return false;" href="#">[&lt;]</a>';
-	txt += '<a class="button" onclick="strip_editpanel('+i+'); strip_movepanel_right(); panel_redraw();return false;" href="#">[&gt;]</a>';
+	txt += '<a class="button" onclick="'+wo+'strip_editpanel('+i+'); '+wo+'strip_addpanel(); '+wo+'panel_redraw();return false;" href="#">[+]</a>';
+	txt += '<a class="button" onclick="'+wo+'strip_editpanel('+i+'); '+wo+'strip_deletepanel(); '+wo+'panel_redraw();return false;" href="#">[-]</a>';
+	txt += '<a class="button" onclick="'+wo+'strip_editpanel('+i+'); '+wo+'strip_movepanel_left(); '+wo+'panel_redraw();return false;" href="#">[&lt;]</a>';
+	txt += '<a class="button" onclick="'+wo+'strip_editpanel('+i+'); '+wo+'strip_movepanel_right(); '+wo+'panel_redraw();return false;" href="#">[&gt;]</a>';
 	txt += '</span>';
 
 	for (dy = 0; dy < panels[i].panel.HEI; dy++) {
@@ -2676,7 +2680,7 @@ function strip_preview_panels()
 	  var txtlines = panels[i].text.split(/\n/);
 	  txt += '<div class="txt">';
 	  txt += '<span class="controls">';
-	  txt += '<a class="button" onclick="rm_panel_text('+i+');return false;" href="#">[X]</a>';
+	  txt += '<a class="button" onclick="'+wo+'rm_panel_text('+i+');return false;" href="#">[X]</a>';
 	  txt += '</span>';
 	  for (tl = 0; tl < txtlines.length; tl++) {
 	    txt += '<p>'+txtlines[tl];
@@ -2714,7 +2718,6 @@ function strip_preview_panels()
   }
 
   if (popup && (popup.checked == true)) {
-    txt = txt.replace(/ onClick=.strip_editpanel/g, ' onClick="window.opener.strip_editpanel');
     if (preview_window == undefined || preview_window.closed) {
 	preview_window = window.open('', null, 'width=600, height=400, resizeable=yes,scrollbars=yes');
 	preview_window.document.open("text/html","replace");
