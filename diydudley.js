@@ -1967,7 +1967,7 @@ function update_pen_selection_popup()
 }
 
 
-var dud_extended_char = 256;
+var dud_extended_char = 0;
 
 function get_extended_char_popup_contents()
 {
@@ -1975,17 +1975,19 @@ function get_extended_char_popup_contents()
     var txt = "";
     var i;
     var cnt = 0;
+    txt += "<div><a class='button' href='#' onclick='update_extended_char_popup(-256); return false;'>&lt;--</a>";
+    txt += "<a class='button' href='#' onclick='update_extended_char_popup(256); return false;'>--&gt;</a>";
+    txt += "<span style='padding:0 2em'>"+('0000'.substr(dud_extended_char.toString(16).length)+dud_extended_char.toString(16))+"</span>";
+    txt += "</div>";
+    txt += "<br>";
     for (i = 0; i < 256; i++) {
 	var d = (i + dud_extended_char);
+	if (d < 32 || d == 127) d = 32;
 	tmpen.chr = '&#x'+'0000'.substr(d.toString(16).length)+d.toString(16)+';';
 	txt += "<span class='saved_pens'>" + penset_span(tmpen) + "</span>";
 	cnt++;
 	if (cnt > 32) { txt += '<br>'; cnt = 0; }
     }
-    txt += "<br>";
-    txt += "<div><a class='button' href='#' onclick='update_extended_char_popup(-256); return false;'>&lt;--</a>";
-    txt += "<span style='padding:0 2em'>"+('0000'.substr(dud_extended_char.toString(16).length)+dud_extended_char.toString(16))+"</span>";
-    txt += "<span style='float:right'><a class='button' href='#' onclick='update_extended_char_popup(256); return false;'>--&gt;</a></span></div>";
     return txt;
 }
 
@@ -1993,7 +1995,7 @@ function update_extended_char_popup(adj)
 {
     if (adj != undefined) {
 	dud_extended_char += adj;
-	if (dud_extended_char < 256) dud_extended_char = 256;
+	if (dud_extended_char < 0) dud_extended_char = 0;
     }
     if (!isvisible_widget(2)) return;
     widget_set_contents(2, get_extended_char_popup_contents());
