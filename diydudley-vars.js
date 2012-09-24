@@ -1285,7 +1285,8 @@ var buttonfunc_act_desc = new Array(
     {'act':91, 'desc': "Show or hide Pen symbol selection popup"},
     {'act':95, 'desc': "Show or hide Extended char selection popup"},
     {'act':96, 'desc': "Show or hide Box Drawing char selection popup"},
-    {'act':99, 'desc': "Show or hide Game Symbols char selection popup"}
+    {'act':99, 'desc': "Show or hide Game Symbols char selection popup"},
+    {'act':100, 'desc': "Reset comic strip"}
 );
 
 var default_keybinding_keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

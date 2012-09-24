@@ -2045,8 +2045,11 @@ function update_box_char_popup()
     widget_set_contents(3, get_box_char_popup_contents());
 }
 
-function buttonfunc_act(act)
+function buttonfunc_act(act, confirmstr)
 {
+  if (typeof(confirmstr)=='string') {
+      if (!confirm(confirmstr)) return false;
+  }
   if (act < 40) {
     editpaneldata.save_undopoint();
   }
@@ -2214,6 +2217,7 @@ function buttonfunc_act(act)
   case 97: strip_movepanel_left(); break;
   case 98: strip_movepanel_right(); break;
   case 99: show_widget(0); break;
+  case 100: pageload_init(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2297,6 +2301,7 @@ function show_buttons()
   txt += "<a class='button' onclick='return buttonfunc_act(63);' href='#' id='undo_btn'>undo</a>";
 
   txt += " | <a class='button' onclick='return buttonfunc_act(80);' href='#'>map template</a>";
+  txt += " | <a class='button' onclick='return buttonfunc_act(100,\"Really reset strip data?\");' href='#'>reset strip</a>";
 
   tmp.innerHTML = txt;
 
@@ -2392,7 +2397,7 @@ function fix_nethacksym_list(gamesyms)
   nethack_symbols = newarray;
 }
 
-function strip_init()
+function strip_init(hardreset)
 {
   var i;
   var pnl;
@@ -2400,6 +2405,13 @@ function strip_init()
   var dat;
   delete panels;
   delete stripdata;
+  if (typeof(hardreset) == 'number' && (hardreset == 1)) {
+      STRIP_WID = 3;
+      STRIP_HEI = 1;
+      FORCE_STRIP_WID = 0;
+      PANEL_WID = 20;
+      PANEL_HEI = 9;
+  }
   for (i = 0; i < (STRIP_WID*STRIP_HEI); i++) {
     editpaneldata = new Panel(PANEL_WID, PANEL_HEI);
     //panel_init();
@@ -3455,7 +3467,7 @@ function pageload_init()
   pens_load();
   keybindings_load();
 
-  strip_init();
+  strip_init(1);
 
   strip_editpanel(-1);
 
