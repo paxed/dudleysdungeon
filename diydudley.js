@@ -2647,15 +2647,14 @@ function strip_preview_panels()
 	      var sclass = '';
 	      var chr = '#';
 	      var dat = panels[i].panel.get_data(dx,dy);
-	      if (p_cursor_x == dx && p_cursor_y == dy) { sclass = "f_cur"; }
 	      if (dat) {
 		  var chr = dat.chr;
 		  var bold = dat.bold;
 		  var rev = dat.rev;
 		  var ul = dat.ul;
 		  var fg  = dat.fg;
-		  if (!chr) chr = '.';
 		  if (!fg) fg = 'gray';
+		  if (!chr) chr = '.';
 		  else if (chr == '<') chr = '&lt;';
 		  else if (chr == '>') chr = '&gt;';
 		  else if (chr == '&') chr = '&amp;';
@@ -2665,6 +2664,7 @@ function strip_preview_panels()
 		  } else {
 		      if (fg && (fg != "gray")) { sclass += "f_"+fg; }
 		  }
+		  if (p_cursor_x == dx && p_cursor_y == dy) sclass += " f_cur";
 		  if (bold && (bold == 1)) sclass += " f_bold";
 		  if (ul && (ul == 1)) sclass += " f_ul";
 	      }
