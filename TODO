@@ -1,4 +1,8 @@
 
+-add a button to move the panel text into the panel itself,
+ so it looks like the top statuslines text. Consider word
+ wrapping, etc.
+
 -larger tombstone:
 
                ----------

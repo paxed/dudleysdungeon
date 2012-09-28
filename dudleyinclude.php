@@ -684,6 +684,7 @@ function parse_comic_strip($lines)
 		$attr = trim($attr);
 		switch ($attr) {
 		default: break;
+		case 'italic': $panels[$curr_panel]['panel'][$cx][$cy]['ita'] = 1; break;
 		case 'bold': $panels[$curr_panel]['panel'][$cx][$cy]['bold'] = 1; break;
 		case 'reverse': $panels[$curr_panel]['panel'][$cx][$cy]['rev'] = 1; break;
 		case 'ul':
@@ -861,6 +862,7 @@ function render_comic_strip($strip, $title=NULL)
 		  $bold = (isset($strip[$i]['panel'][$dx][$dy]['bold']) ? $strip[$i]['panel'][$dx][$dy]['bold'] : 0);
 		  $rev = (isset($strip[$i]['panel'][$dx][$dy]['rev']) ? $strip[$i]['panel'][$dx][$dy]['rev'] : 0);
 		  $ul = (isset($strip[$i]['panel'][$dx][$dy]['ul']) ? $strip[$i]['panel'][$dx][$dy]['ul'] : 0);
+		  $ita = (isset($strip[$i]['panel'][$dx][$dy]['ita']) ? $strip[$i]['panel'][$dx][$dy]['ita'] : 0);
 		  $fg  = (isset($strip[$i]['panel'][$dx][$dy]['fg']) ? $strip[$i]['panel'][$dx][$dy]['fg'] : "gray");
 		  if (!isset($fg)) $fg = 'gray';
 		  if (!isset($chr)) $chr = '.';
@@ -876,6 +878,7 @@ function render_comic_strip($strip, $title=NULL)
 		  if ($dx == $strip[$i]['cursor_x'] && $dy == $strip[$i]['cursor_y']) $spann .= ' f_cur';
 		  if ($bold == 1) $spann .= ' f_bold';
 		  if ($ul == 1) $spann .= ' f_ul';
+		  if ($ita == 1) $spann .= ' f_ita';
 
 		  if ($spann) {
 		      $txt .= '<span class="'.$spann.'">'.$chr.'</span>';

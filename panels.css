@@ -4,6 +4,7 @@
 
 .f_ul { text-decoration: underline; }
 .f_bl { text-decoration: blink; }
+.f_ita { font-style: italic; }
 
 .f_black         { color: #000000; }
 .f_red           { color: #aa0000; }

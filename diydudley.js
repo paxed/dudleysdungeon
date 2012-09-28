@@ -134,17 +134,17 @@ function widget_set_contents(num, txt)
 
 function pen_clone(pen)
 {
-    return {'chr':pen.chr, 'fg':pen.fg, 'bold':pen.bold, 'rev':pen.rev, 'ul':pen.ul};
+    return {'chr':pen.chr, 'fg':pen.fg, 'bold':pen.bold, 'rev':pen.rev, 'ul':pen.ul, 'ita':pen.ita};
 }
 
 function pen_clone_nornd(pen)
 {
-    return {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold, 'rev':pen.rev, 'ul':pen.ul};
+    return {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold, 'rev':pen.rev, 'ul':pen.ul, 'ita':pen.ita};
 }
 
 function pen_equal(pen1, pen2)
 {
-    return ((pen1.chr == pen2.chr) && (pen1.fg == pen2.fg) && (pen1.bold == pen2.bold) && (pen1.rev == pen2.rev) && (pen1.ul == pen2.ul));
+    return ((pen1.chr == pen2.chr) && (pen1.fg == pen2.fg) && (pen1.bold == pen2.bold) && (pen1.rev == pen2.rev) && (pen1.ul == pen2.ul) && (pen1.ita == pen2.ita));
 }
 
 function pen_htmlchr(pen)
@@ -915,6 +915,7 @@ function panel_getcode(html)
       for (x = 0; x < panels[i].panel.WID; x++) {
 	dat = panels[i].panel.get_data(x,y);
 	  var attrs = new Array();
+	  if (dat.ita == 1) { attrs.push('italic'); }
 	  if (dat.bold == 1) { attrs.push('bold'); }
 	  if (dat.rev == 1) { attrs.push('reverse'); }
 	  if (dat.ul == 1) { attrs.push('underline'); }
@@ -1272,6 +1273,7 @@ function parse_code(code_data)
 	      for (var tmpa = 0; tmpa < attrs.length; tmpa++) {
 		  switch (attrs[tmpa]) {
 		  default: break;
+		  case 'italic': dat.ita = 1; break;
 		  case 'bold': dat.bold = 1; break;
 		  case 'reverse': dat.rev = 1; break;
 		  case 'ul':
@@ -1382,9 +1384,11 @@ function string_to_pen(str)
     var key = tmp[3];
     var rev = tmp[4];
     var ul = tmp[5];
+    var ita = tmp[6];
     if (bold != 1) { bold = undefined; }
     if (rev != 1) { rev = undefined; }
     if (ul != 1) { ul = undefined; }
+    if (ita != 1) { ita = undefined; }
     if (key == '') { key = undefined; }
     if (key != undefined) {
       key = String.fromCharCode(key);
@@ -1401,7 +1405,7 @@ function string_to_pen(str)
 	} else {
 	    chr = '&#x' + chrh + ';';
 	}
-	return {'chr':chr, 'fg':fg, 'key':key, 'bold':bold, 'rev':rev, 'ul':ul};
+	return {'chr':chr, 'fg':fg, 'key':key, 'bold':bold, 'rev':rev, 'ul':ul, 'ita':ita};
     }
     return undefined;
 }
@@ -1456,10 +1460,12 @@ function pen_to_string(pen)
     var key = pen.key;
     var rev = pen.rev;
     var ul = pen.ul;
+    var ita = pen.ita;
     if (fg == undefined) { fg = "gray"; }
     if (bold == undefined) { bold = 0; }
     if (rev == undefined) { rev = 0; }
     if (ul == undefined) { ul = 0; }
+    if (ita == undefined) { ita = 0; }
     if (key == undefined) { key = ''; } else { key = key.charCodeAt(0); }
     if (chr == undefined) { chr = ' '; }
     if (chr.length == 1) {
@@ -1467,7 +1473,7 @@ function pen_to_string(pen)
     } else if (chr.match(/^&#x[0-9a-fA-F]+;$/)){
 	chr = chr.replace(/^&#x([0-9a-fA-F]+);$/, "$1");
     }
-    return chr + "&" + fg + "&" + bold + "&" + key + '&' + rev + '&' + ul;
+    return chr + "&" + fg + "&" + bold + "&" + key + '&' + rev + '&' + ul + '&' + ita;
 }
 
 function old_pen_cookiestr()
@@ -1924,6 +1930,11 @@ function pen_selection_attr_checkboxes()
     if (pen.bold == 1) txt += " checked";
     txt += "></label>";
 
+    txt += "<label>Ita<input type='checkbox' id='pen_selection_popup_checkbox_ita' onchange='pen_selection_popup_checkbox_check(\"ita\");'";
+    if (pen.ita == 1) txt += " checked";
+    txt += "></label>";
+
+
     txt += "<label>Rev<input type='checkbox' id='pen_selection_popup_checkbox_rev' onchange='pen_selection_popup_checkbox_check(\"rev\");'";
     if (pen.rev == 1) txt += " checked";
     txt += "></label>";
@@ -2108,6 +2119,13 @@ function buttonfunc_act(act, confirmstr)
 	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
       }
       break;
+  case 30:
+      if (hovering_on_editpanel) {
+	  var dat = editpaneldata.get_data(current_pos_x, current_pos_y);
+	  if (dat.ita == 1) { dat.ita = undefined; } else { dat.ita = 1; }
+	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
+      }
+      break;
 
 
   case 40: panel_downloadcode(); break;
@@ -2218,6 +2236,10 @@ function buttonfunc_act(act, confirmstr)
   case 98: strip_movepanel_right(); break;
   case 99: show_widget(0); break;
   case 100: pageload_init(); break;
+  case 101:
+      if (pen.ita == 1) { pen.ita = undefined; } else { pen.ita = 1; }
+      pen_has_changed();
+      break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2653,6 +2675,7 @@ function strip_preview_panels()
 		  var rev = dat.rev;
 		  var ul = dat.ul;
 		  var fg  = dat.fg;
+		  var ita = dat.ita;
 		  if (!fg) fg = 'gray';
 		  if (!chr) chr = '.';
 		  else if (chr == '<') chr = '&lt;';
@@ -2667,6 +2690,7 @@ function strip_preview_panels()
 		  if (p_cursor_x == dx && p_cursor_y == dy) sclass += " f_cur";
 		  if (bold && (bold == 1)) sclass += " f_bold";
 		  if (ul && (ul == 1)) sclass += " f_ul";
+		  if (ita && (ita == 1)) sclass += " f_ita";
 	      }
 	      txt += '<span';
 	      if (sclass != '') txt += ' class="'+sclass+'"';
