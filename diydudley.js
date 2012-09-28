@@ -1926,7 +1926,7 @@ function pen_selection_attr_checkboxes()
 
     txt += "<label>Rev<input type='checkbox' id='pen_selection_popup_checkbox_rev' onchange='pen_selection_popup_checkbox_check(\"rev\");'";
     if (pen.rev == 1) txt += " checked";
-    txt += "></label></span>";
+    txt += "></label>";
 
     txt += "<label>Ul<input type='checkbox' id='pen_selection_popup_checkbox_ul' onchange='pen_selection_popup_checkbox_check(\"ul\");'";
     if (pen.ul == 1) txt += " checked";
