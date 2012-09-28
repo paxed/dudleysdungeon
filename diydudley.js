@@ -2655,16 +2655,15 @@ function strip_preview_panels()
 		  var ul = dat.ul;
 		  var fg  = dat.fg;
 		  if (!chr) chr = '.';
+		  if (!fg) fg = 'gray';
 		  else if (chr == '<') chr = '&lt;';
 		  else if (chr == '>') chr = '&gt;';
 		  else if (chr == '&') chr = '&amp;';
 		  else if (chr == '~') chr = '&tilde;';
-		  if (fg && (fg != "gray")) {
-		      if (rev && (rev == 1)) {
-			  sclass += " f_black b_"+fg;
-		      } else {
-			  sclass += " f_"+fg;
-		      }
+		  if (rev && (rev == 1)) {
+		      sclass += "f_black b_"+fg;
+		  } else {
+		      if (fg && (fg != "gray")) { sclass += "f_"+fg; }
 		  }
 		  if (bold && (bold == 1)) sclass += " f_bold";
 		  if (ul && (ul == 1)) sclass += " f_ul";

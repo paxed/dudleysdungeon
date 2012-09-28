@@ -863,12 +863,13 @@ function render_comic_strip($strip, $title=NULL)
 		  $ul = (isset($strip[$i]['panel'][$dx][$dy]['ul']) ? $strip[$i]['panel'][$dx][$dy]['ul'] : 0);
 		  $fg  = (isset($strip[$i]['panel'][$dx][$dy]['fg']) ? $strip[$i]['panel'][$dx][$dy]['fg'] : "gray");
 		  if (!isset($chr)) $chr = '.';
+		  if (!isset($fg)) $fg = 'gray';
 		  else if ($chr == '<') $chr = '&lt;';
 		  else if ($chr == '>') $chr = '&gt;';
 		  else if ($chr == '&') $chr = '&amp;';
 		  $spann = null;
 		  if ($rev == 1) {
-		      if ($fg && ($fg != "gray")) $spann .= 'f_black b_'.$fg;
+		      $spann .= 'f_black b_'.$fg;
 		  } else {
 		      if ($fg && ($fg != "gray")) $spann .= 'f_'.$fg;
 		  }
