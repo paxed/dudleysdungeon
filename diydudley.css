@@ -226,7 +226,7 @@ a.withtooltip:hover {
  border: 2px outset darkgray;
  margin: 0.25em;
  line-height: 1.5em;
- cursor: pointer;
+ cursor: default;
  text-decoration:none;
  color:black;
 }

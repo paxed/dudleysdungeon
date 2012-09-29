@@ -94,6 +94,27 @@ function insertAtCursor(elem, addval)
     }
 }
 
+
+function button(text, onclick, usespan, hreffi, disable)
+{
+    if (!hreffi) hreffi = '#';
+    if (usespan == undefined) {
+	usespan = 'a';
+    } else {
+	usespan = 'span';
+    }
+    var txt = "<"+usespan+" class='button"+((disable && (disable==1))?"_disabled":"")+"'";
+    if (usespan == 'a') " href='"+hreffi+"'";
+    if (onclick && !disable) txt += " onclick='" + onclick + "'";
+    txt += ">"+text+"</"+usespan+">";
+    return txt;
+}
+
+function button_disabled(text, onclick, usespan, hreffi)
+{
+    return button(text, onclick, usespan, hreffi, 1);
+}
+
 function pen_getcolor(color)
 {
     var fg = color;

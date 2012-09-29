@@ -257,7 +257,7 @@ function bindable_key_isfree(key)
 
 function panel_write_character(ch, spen)
 {
-    var sym;
+    var sym = {};
     if (spen != undefined) sym = pen_clone(spen);
     sym.chr = ch;
 
@@ -465,7 +465,7 @@ function panel_draw_gravestone()
     tmp += grass.substr(Math.floor(Math.random() * grass.length), 1);
   cursor_x = 0;
   cursor_y = editpaneldata.HEI - 1;
-  panel_write_string(tmp, "green");
+    panel_write_string(tmp, {'fg':'green'});
 
   cursor_x = oldx;
   cursor_y = oldy;
@@ -990,7 +990,7 @@ function show_POST_status()
 {
   var tmp = document.getElementById("poststatusdiv");
   if (tmp == undefined) return;
-  var btn = "<br><a class='button' href='javascript:hide_POST_status();'>OK</a>";
+    var btn = "<br>" + button('OK', 'hide_POST_status(); return false;');
 
   if (typeof POST_success == "string") {
     var str = POST_success + btn;
@@ -1082,14 +1082,17 @@ function panel_download_save()
   }
   txt += "<br>You can:<ul>";
 
-  txt += "<li><a href='#' class='button' onclick='return buttonfunc_act(40);'>Download</a> the comic strip code to your own computer, or";
+  txt += "<li>"+button('Download', 'return buttonfunc_act(40);')+" the comic strip code to your own computer, or";
 
-  txt += "<li><a href='#' class='button' onclick='return buttonfunc_act(41);'>";
+  var submittxt = 'Submit';
+  var intodb = 'to';
   if (USR_strip_in_queue == 1) {
-      txt += "Update</a> this comic in the database";
-  } else {
-      txt += "Submit</a> this comic to the database";
+      submittxt = 'Update';
+      intodb = 'in';
   }
+
+  txt += "<li>"+button(submittxt, 'return buttonfunc_act(41);');
+  txt += " this comic "+intodb+" the database";
   if (USR_login == 0) {
       txt += " <em><small>(requires login)</small></em>";
   }
@@ -1114,7 +1117,7 @@ function panel_showcode()
     txt += "<textarea id='strip_code_textarea' "+getkeyb_handler_string()+" rows='50' cols='80'>";
     txt += panel_getcode(0);
     txt += "</textarea>";
-    txt += "<a href='#' class='button' onclick='return buttonfunc_act(42);'>parse</a>";
+    txt += button('parse', 'return buttonfunc_act(42);');
   } else {
     txt += "<pre>";
     txt += panel_getcode(1);
@@ -1546,9 +1549,8 @@ function color_selection()
   if (!(pen.chr == " ")) chr = pen_htmlchr(pen);
 
   txt += "<span class='colorselection_title'>Colors: </span>";
-  txt += "<a class='button' onclick='return buttonfunc_act(43);' href='#'>no color</a>";
-  /*txt += "<a class='button' onclick='pen_set_fgcolor(colors[Math.floor(Math.random()*(colors.length-1))+1]);return false;' href='#'>random</a>";*/
-  txt += "<a class='button' onclick='return buttonfunc_act(44);' href='#'>random</a>";
+    txt += button('no color', 'return buttonfunc_act(43);');
+    txt += button('random', 'return buttonfunc_act(44);');
   txt += "<span class='colorselection'>";
   for (i = 1; i < colors.length; i++) {
       tmpen.fg = colors[i];
@@ -1678,7 +1680,7 @@ function get_nethacksym_selection_contents()
 	"<div id='gamesymselection'>";
   txt += '<span id="nethacksymselbox"></span>';
   //txt += '<input type="text" id="nethacksymsearchbox" onchange="nethacksym_searchstr();" '+getkeyb_handler_string()+' value="">';
-  txt += "<a class='button' onclick='return buttonfunc_act(45);' href='#'>random monster</a>";
+    txt += button('random monster', 'return buttonfunc_act(45);');
   txt += '<div class="gamesymselection" id="gamesymselection_pens"></div>';
   txt += "</div>";
   return txt;
@@ -1757,16 +1759,16 @@ function get_saved_pens_popup(i)
     else
       popup += "<em>Sorry, no key set for this saved pen.</em>";
     popup += "<br>";
-    popup += "<span class='button' onclick='old_pen_remove("+i+");'>remove</span>";
+    popup += button('remove', 'old_pen_remove('+i+');', 1);
     if (i > 0)
-      popup += "<span class='button' onclick='old_pen_move("+i+",-1);'>&lt;</span>";
+	popup += button('&lt;', 'old_pen_move('+i+',-1);', 1);
     else
-      popup += "<span class='button_disabled' onclick='old_pen_move("+i+",0);'>&lt;</span>";
+	popup += button_disabled('&lt;', 'old_pen_move('+i+',0);', 1);
     popup += "move";
     if (i < saved_pens.length-1)
-      popup += "<span class='button' onclick='old_pen_move("+i+",1);'>&gt;</span>";
+	popup += button('&gt;','old_pen_move('+i+',1);', 1);
     else
-      popup += "<span class='button_disabled' onclick='old_pen_move("+i+",0);'>&gt;</span>";
+	popup += button_disabled('&gt;','old_pen_move('+i+',0);', 1);
     popup += " key:<input type='text' "+getkeyb_handler_string()+" size='1' id='old_pen_set_key_"+i+"'";
     if (key != undefined) popup += " value='"+key+"'";
     popup += " onchange='old_pen_set_key("+i+");'></span>";
@@ -1780,8 +1782,8 @@ function show_saved_pens()
   var txt;
   var ldir, rdir;
 
-  txt = "pen: <a class='button' onclick='return buttonfunc_act(46);' href='#'>save</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(47);' href='#'>random</a> - ";
+    txt = "pen: "+button('save', 'return buttonfunc_act(46);');
+    txt += button('random', 'return buttonfunc_act(47);') + ' - ';
 
   for (i = 0; i < saved_pens.length; i++) {
     txt += "<span class='saved_pens'>";
@@ -1887,8 +1889,8 @@ function show_edit_panel_text()
     var txt = "";
     txt += '<br>';
     txt += '<textarea id="editpanel_text" '+getkeyb_handler_string()+' cols="80" rows="4" onchange="set_panel_text();"></textarea>';
-    txt += "<a class='button' onclick='return buttonfunc_act(48);' href='#'>insert pen</a>";
-    txt += "<a class='button' onclick='return buttonfunc_act(102);' href='#'>text to panel</a>";
+      txt += button('insert pen', 'return buttonfunc_act(48);');
+      txt += button('text to panel', 'return buttonfunc_act(102);');
     txt += '<br>';
     tmp.innerHTML = txt;
   } else {
@@ -1940,14 +1942,13 @@ function show_editmode()
   var txt = "";
   txt += '<b>' + editmode_str[editmode] + '</b> ';
 
-  txt += "<a class='"+(editmode==0 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(50);' href='#'>draw</a>";
-  txt += "<a class='"+(editmode==1 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(51);' href='#'>colorpicker</a>";
-  txt += "<a class='"+(editmode==3 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(53);' href='#'>floodfill</a>";
-  txt += "<a class='"+(editmode==4 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(54);' href='#'>lines</a>";
-  txt += "<a class='"+(editmode==5 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(55);' href='#'>rect</a>";
-  txt += "<a class='"+(editmode==6 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(56);' href='#'>fillrect</a>";
-  txt += "<a class='"+(editmode==7 ? "button_disabled" : "button")+"' onclick='return buttonfunc_act(57);' href='#'>roomrect</a>";
-
+    txt += button('draw', 'return buttonfunc_act(50);', undefined, undefined, (editmode==0));
+    txt += button('colorpicker', 'return buttonfunc_act(51);', undefined, undefined, (editmode==1));
+    txt += button('floodfill', 'return buttonfunc_act(53);', undefined, undefined, (editmode==3));
+    txt += button('lines', 'return buttonfunc_act(54);', undefined, undefined, (editmode==4));
+    txt += button('rect', 'return buttonfunc_act(55);', undefined, undefined, (editmode==5));
+    txt += button('fillrect', 'return buttonfunc_act(56);', undefined, undefined, (editmode==6));
+    txt += button('roomrect', 'return buttonfunc_act(57);', undefined, undefined, (editmode==7));
   tmp.innerHTML = txt;
 }
 
@@ -2046,8 +2047,8 @@ function get_extended_char_popup_contents()
     var txt = "";
     var i;
     var cnt = 0;
-    txt += "<div><a class='button' href='#' onclick='update_extended_char_popup(-256); return false;'>&lt;--</a>";
-    txt += "<a class='button' href='#' onclick='update_extended_char_popup(256); return false;'>--&gt;</a>";
+    txt += "<div>"+button('&lt;--', 'update_extended_char_popup(-256); return false;');
+    txt += button('--&gt;', 'update_extended_char_popup(256); return false;');
     txt += "<span style='padding:0 2em'>"+('0000'.substr(dud_extended_char.toString(16).length)+dud_extended_char.toString(16))+"</span>";
     txt += "</div>";
     txt += "<br>";
@@ -2328,74 +2329,75 @@ function show_buttons()
   var txt ="Actions:<br>";
 
   var popup = "";
-  popup += "<span class='button' onclick='return buttonfunc_act(5);' href='#'>random</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(6);' href='#'>dungeon room</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(7);' href='#'>field</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(8);' href='#'>splatterfield</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(9);' href='#'>reverse splatterfield</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(10);' href='#'>dug randwalk</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(11);' href='#'>mines</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(12);' href='#'>maze</span><br>";
-
+    popup += button('random','return buttonfunc_act(5);',1)+"<br>";
+    popup += button('dungeon room','return buttonfunc_act(6);',1)+"<br>";
+    popup += button('field','return buttonfunc_act(7);',1)+"<br>";
+    popup += button('splatterfield','return buttonfunc_act(8);',1)+"<br>";
+    popup += button('reverse splatterfield','return buttonfunc_act(9);',1)+"<br>";
+    popup += button('dug randwalk','return buttonfunc_act(10);',1)+"<br>";
+    popup += button('mines','return buttonfunc_act(11);',1)+"<br>";
+    popup += button('maze','return buttonfunc_act(12);',1)+"<br>";
   popup += "Shops: ";
     for (i = 0; i < nethack_shop_types.length; i++)
-	popup += "<span class='button' onclick='generate_random_shop("+i+");'>&nbsp;"+htmlentities(nethack_shop_types[i])+"&nbsp;</span> ";
+	popup += button("&nbsp;"+htmlentities(nethack_shop_types[i])+"&nbsp;", "generate_random_shop("+i+");", 1)+' ';
 
   txt += "panel: <span class='button withtooltip'>generate<span class='tooltip'>"+popup+"</span></span>";
-  txt += "<a class='button' onclick='return buttonfunc_act(2);' href='#'>remove colors</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(0);' href='#'>fill</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(1);' href='#'>clear</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(3);' href='#'>replace</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(4);' href='#'>scatter</a>";
 
+    txt += button('remove colors', 'return buttonfunc_act(2);');
+    txt += button('fill', 'return buttonfunc_act(0);');
+    txt += button('clear', 'return buttonfunc_act(1);');
+    txt += button('replace', 'return buttonfunc_act(3);');
+    txt += button('scatter', 'return buttonfunc_act(4);');
 
   var popup = "";
-  popup += "<span style='margin-left:2em;' class='button' onclick='return buttonfunc_act(13);' href='#'>&nbsp;up&nbsp;</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(14);' href='#'>left</span>";
+    popup += "<span style='margin-left:2em;'>"+button('&nbsp;up&nbsp;', 'return buttonfunc_act(13);', 1)+"</span><br>";
+    popup += button('left', 'return buttonfunc_act(14);', 1);
   popup += "+";
-  popup += "<span class='button' onclick='return buttonfunc_act(15);' href='#'>right</span><br>";
-  popup += "<span style='margin-left:2em;' class='button' onclick='return buttonfunc_act(16);' href='#'>down</span>";
+    popup += button('right', 'return buttonfunc_act(15);', 1)+"<br>";
+    popup += "<span style='margin-left:2em;'>"+button('down', 'return buttonfunc_act(16);', 1)+"</span><br>";
 
   txt += "<span class='button withtooltip'>shift<span class='tooltip'>"+popup+"</span></span>";
 
 
-  popup = "<span class='button' onclick='return buttonfunc_act(17);'>to cursor</span>";
-  popup += "&nbsp;<span class='button' onclick='return buttonfunc_act(18);'>randomly</span><br>";
-  popup += "&nbsp;&nbsp;&nbsp;<span class='button' onclick='return buttonfunc_act(19);'>&nbsp;up&nbsp;</span><br>";
-  popup += "<span class='button' onclick='return buttonfunc_act(21);'>left</span>+";
-  popup += "<span class='button' onclick='return buttonfunc_act(22);'>right</span><br>";
-  popup += "&nbsp;&nbsp;&nbsp;<span class='button' onclick='return buttonfunc_act(20);'>down</span>";
+    popup = button('to cursor', 'return buttonfunc_act(17);', 1);
+    popup += "&nbsp;"+button('randomly', 'return buttonfunc_act(18);', 1)+"<br>";
+    popup += "&nbsp;&nbsp;&nbsp;"+button('&nbsp;up&nbsp;', 'return buttonfunc_act(19);', 1)+"<br>";
+    popup += button('left','return buttonfunc_act(21);',1)+"+";
+    popup += button('right','return buttonfunc_act(22);',1)+"<br>";
+    popup += "&nbsp;&nbsp;&nbsp;"+button('down', 'return buttonfunc_act(20);', 1);
 
   txt += "<span class='button withtooltip'>move syms<span class='tooltip'>"+popup+"</span></span>";
 
 
   txt += " | ";
-  txt += "<a class='button' onclick='return buttonfunc_act(23);' href='#'>maze</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(24);' href='#'>wallify</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(25);' href='#'>gravestone</a>";
+    txt += button('maze', 'return buttonfunc_act(23);');
+    txt += button('wallify', 'return buttonfunc_act(24);');
+    txt += button('gravestone', 'return buttonfunc_act(25);');
   txt += " | ";
-  txt += "<a class='button' onclick='return buttonfunc_act(60);' href='#'>copy</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(26);' href='#'>paste</a>";
+    txt += button('copy', 'return buttonfunc_act(60);');
+    txt += button('paste', 'return buttonfunc_act(26);');
   txt += " | ";
-  txt += "<a class='button' onclick='return buttonfunc_act(61);' href='#'>add</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(62);' href='#'>del</a>";
+    txt += button('add', 'return buttonfunc_act(61);');
+    txt += button('del', 'return buttonfunc_act(62);');
 
   txt += " | ";
   txt += "<a class='button' onclick='return buttonfunc_act(63);' href='#' id='undo_btn'>undo</a>";
 
-  txt += " | <a class='button' onclick='return buttonfunc_act(80);' href='#'>map template</a>";
-  txt += " | <a class='button' onclick='return buttonfunc_act(100,\"Really reset strip data?\");' href='#'>reset strip</a>";
+  txt += " | ";
+  txt += button('map template', 'return buttonfunc_act(80);');
+  txt += " | ";
+    txt += button('reset strip', 'return buttonfunc_act(100,"Really reset strip data?");');
 
   tmp.innerHTML = txt;
 
   tmp = document.getElementById("panel_selection_buttons");
   txt = "";
-  txt += "<a class='button' onclick='return buttonfunc_act(64);' href='#'>&lt;-prev</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(65);' href='#'>next-&gt;</a>";
+    txt += button('&lt;-prev', 'return buttonfunc_act(64);');
+    txt += button('next-&gt;', 'return buttonfunc_act(65);');
 
   txt += " | Move: ";
-  txt += "<a class='button' onclick='return buttonfunc_act(97);' href='#'>&lt;-</a>";
-  txt += "<a class='button' onclick='return buttonfunc_act(98);' href='#'>-&gt;</a>";
+    txt += button('&lt;-', 'return buttonfunc_act(97);');
+    txt += button('-&gt;', 'return buttonfunc_act(98);');
 
   tmp.innerHTML = txt;
 }
@@ -2719,10 +2721,10 @@ function strip_preview_panels()
 	txt += '<pre id="comicpanel'+i+'">';
 
 	txt += '<span class="controls">';
-	txt += '<a class="button" onclick="'+wo+'strip_editpanel('+i+'); '+wo+'strip_addpanel(); '+wo+'panel_redraw();return false;" href="#">[+]</a>';
-	txt += '<a class="button" onclick="'+wo+'strip_editpanel('+i+'); '+wo+'strip_deletepanel(); '+wo+'panel_redraw();return false;" href="#">[-]</a>';
-	txt += '<a class="button" onclick="'+wo+'strip_editpanel('+i+'); '+wo+'strip_movepanel_left(); '+wo+'panel_redraw();return false;" href="#">[&lt;]</a>';
-	txt += '<a class="button" onclick="'+wo+'strip_editpanel('+i+'); '+wo+'strip_movepanel_right(); '+wo+'panel_redraw();return false;" href="#">[&gt;]</a>';
+	  txt += button('[+]', wo+'strip_editpanel('+i+');'+wo+'strip_addpanel();'+wo+'panel_redraw();return false;');
+	  txt += button('[-]', wo+'strip_editpanel('+i+');'+wo+'strip_deletepanel();'+wo+'panel_redraw();return false;');
+	  txt += button('[&lt;]', wo+'strip_editpanel('+i+');'+wo+'strip_movepanel_left();'+wo+'panel_redraw();return false;');
+	  txt += button('[&gt;]', wo+'strip_editpanel('+i+');'+wo+'strip_movepanel_right();'+wo+'panel_redraw();return false;');
 	txt += '</span>';
 
 	for (dy = 0; dy < panels[i].panel.HEI; dy++) {
@@ -2764,7 +2766,7 @@ function strip_preview_panels()
 	  var txtlines = panels[i].text.split(/\n/);
 	  txt += '<div class="txt">';
 	  txt += '<span class="controls">';
-	  txt += '<a class="button" onclick="'+wo+'rm_panel_text('+i+');return false;" href="#">[X]</a>';
+	    txt += button('[X]', wo+'rm_panel_text('+i+');return false;');
 	  txt += '</span>';
 	  for (tl = 0; tl < txtlines.length; tl++) {
 	    txt += '<p>'+txtlines[tl];
@@ -2956,8 +2958,8 @@ function change_panels_size()
     '(<input '+getkeyb_handler_string()+' type="text" maxlength="4" size="4" name="change_level_wid" id="change_level_wid" value="' + editpaneldata.WID + '">, ' +
     '<input '+getkeyb_handler_string()+' type="text" maxlength="4" size="4" name="change_level_hei" id="change_level_hei" value="' + editpaneldata.HEI + '">)' +
     '<label><input type="checkbox" name="resize_all_panels" id="resize_all_panels">Resize all panels</label>' +
-    '<a class="button" onclick="accept_new_panels_size();return false;" href="#">OK</a>'+
-    '<a class="button" onclick="output_strip_data_edit();return false;" href="#">cancel</a>';
+	button('OK', 'accept_new_panels_size();return false;') +
+	button('cancel', 'output_strip_data_edit();return false;');
 }
 
 function accept_new_force_strip_width()
@@ -2990,8 +2992,8 @@ function change_force_strip_width()
   var tmp = document.getElementById("change_force_strip_width");
   tmp.innerHTML =
     '<input '+getkeyb_handler_string()+' type="text" maxlength="4" size="4" name="change_force_strip_wid" id="change_force_strip_wid" value="' + FORCE_STRIP_WID + '">' +
-    '<a class="button" onclick="accept_new_force_strip_width();return false;" href="#">OK</a>'+
-    '<a class="button" onclick="output_strip_data_edit();return false;" href="#">cancel</a>';
+	button('OK', 'accept_new_force_strip_width();return false;') +
+	button('cancel', 'output_strip_data_edit();return false;');
 }
 
 function output_strip_data_edit()
@@ -3011,11 +3013,11 @@ function output_strip_data_edit()
   txt += '<br>';
   txt += "Footnote: ";
   txt += '<input '+getkeyb_handler_string()+' type="text" id="strip_footnote_text" size="80" onchange="set_strip_footnote();" value="'+foot+'">';
-  txt += '<a class="button" onclick="set_strip_footnote(\'\');return false;" href="#">[X]</a>';
+    txt += button('[X]', 'set_strip_footnote("");return false;');
 
   txt += '<br>';
   txt += "Strip panel size:";
-  txt += '<span id="change_panels_size"><b>(' + PANEL_WID + ', ' + PANEL_HEI + ')</b>&nbsp;<a class="button" onclick="change_panels_size();return false;" href="#">change</a></span>';
+    txt += '<span id="change_panels_size"><b>(' + PANEL_WID + ', ' + PANEL_HEI + ')</b>&nbsp;'+button('change', 'change_panels_size();return false;')+'</span>';
 
   txt += '<br>';
   txt += "Strip width: ";
@@ -3026,7 +3028,7 @@ function output_strip_data_edit()
   } else {
     txt += 'Automatic';
   }
-  txt += '</b>&nbsp;<a class="button" onclick="change_force_strip_width();return false;" href="#">change</a></span>';
+    txt += '</b>&nbsp;'+button('change', 'change_force_strip_width();return false;')+'</span>';
 
   tmp.innerHTML = txt;
 }
@@ -3221,7 +3223,7 @@ function get_keybind_table_tr(i, key, act, notr)
     if (!notr) { txt += "<tr id='keybind_table_row_"+i+"'>"; }
     txt += "<td><input type='text' size='1' maxlength='1' id='keybind_key_"+i+"' value='" +key + "' onkeyup='window.opener.config_keybind_input_error(this);'></td>";
     txt += "<td>" + mk_buttonfunc_desc_select(i, act) + "</td>";
-    txt += "<td><span class='button' onClick='window.opener.config_window_keybind_delbtn("+i+");'>del</span></td>";
+    txt += "<td>"+button('del', 'window.opener.config_window_keybind_delbtn('+i+');',1)+"</td>";
     if (!notr) { txt += "</tr>"; }
     return txt;
 }
@@ -3352,7 +3354,7 @@ function config_window()
 	    txt += "<tr>";
 	    txt += "<td><input type='text' size='1' maxlength='1' id='pen_quick_key_"+i+"' value='" + saved_pens[i].key + "'></td>";
 	    txt += "<td>Set Pen to <span class='saved_pens'>" + penset_span_noclick(saved_pens[i]) + "</span></td>";
-	    txt += "<td><span class='button' onClick='window.opener.saved_pens["+i+"].del=1; this.parentNode.parentNode.style.display=\"none\";'>del</span></td>";
+	    txt += '<td>'+button('del', 'window.opener.saved_pens['+i+'].del=1; this.parentNode.parentNode.style.display="none";', 1)+'</td>';
 	    txt += "</tr>";
 	    saved_pens[i].del=0;
 	}
@@ -3363,13 +3365,13 @@ function config_window()
     }
     txt += "</table>";
 
-    txt += "<span class='button' onClick='window.opener.keybindings_add();'>Add</span>";
+    txt += button('Add', 'window.opener.keybindings_add();', 1);
 
     txt += "<hr>";
 
-    txt += "<a class='button' onClick='window.opener.config_window_save();window.close(); return false;' href='#'>Save</a>";
-    txt += " | <a class='button' onClick='window.opener.config_window_nosave();window.close(); return false;' href='#'>Close without saving</a>";
-    txt += " | <a class='button' onClick='window.opener.config_window_reset();window.close(); return false;' href='#'>Reset to defaults</a>";
+    txt += button('Save', 'window.opener.config_window_save();window.close(); return false;');
+    txt += " | "+button('Close without saving', 'window.opener.config_window_nosave();window.close(); return false;');
+    txt += " | "+button('Reset to defaults', 'window.opener.config_window_reset();window.close(); return false;');
 
     var cw = window.open('', null, 'width=800, height=800, resizeable=yes,scrollbars=yes');
     cw.document.open("text/html", "replace");
@@ -3529,7 +3531,7 @@ function maptemplate_window()
     txt += "<div id='map_template_display_div'></div>";
 
     txt += "<hr>";
-    txt += "<a class='button' onClick='window.close(); return false;' href='#'>Close</a>";
+    txt += button('Close', 'window.close(); return false;');
 
     var cw = window.open('', null, 'width=800, height=800, resizeable=yes,scrollbars=yes');
     cw.document.open("text/html", "replace");
