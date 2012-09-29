@@ -255,10 +255,11 @@ function bindable_key_isfree(key)
     return false;
 }
 
-function panel_write_character(ch, fg)
+function panel_write_character(ch, spen)
 {
-  sym = {'chr':ch};
-  if (fg != undefined) sym.fg = fg;
+    var sym;
+    if (spen != undefined) sym = pen_clone(spen);
+    sym.chr = ch;
 
   editpaneldata.set_data(cursor_x, cursor_y, sym);
   cursor_x++;
@@ -271,9 +272,9 @@ function panel_write_character(ch, fg)
   }
 }
 
-function panel_write_string(str,fg)
+function panel_write_string(str,tmppen)
 {
-  for (i = 0; i < str.length; i++) panel_write_character(str.substr(i,1), fg);
+  for (i = 0; i < str.length; i++) panel_write_character(str.substr(i,1), tmppen);
 }
 
 
@@ -1820,6 +1821,64 @@ function get_panel_text()
   }
 }
 
+
+function write_panel_text_to_panel(clr2eol)
+{
+    var tmp = document.getElementById("editpanel_text");
+    if (!tmp) return;
+    var rawtext = tmp.value;
+    var oldx = cursor_x;
+    var oldy = cursor_y;
+
+    cursor_x = 0;
+    cursor_y = 0;
+
+    var div = document.createElement('div');
+    div.innerHTML = rawtext;
+
+    for (var i = 0; i < div.childNodes.length; i++) {
+	var spen = pen_clone({'fg':'gray'});
+
+	var nod = div.childNodes[i];
+	var ih = nod.textContent;
+	if (nod.nodeValue) {
+	    panel_write_string(nod.nodeValue, spen);
+	} else if (ih) {
+	    var classstr = nod.getAttribute('class');
+	    var classes = classstr.split(' ');
+	    for (var k = 0; k < classes.length; k++) {
+		var kc = classes[k];
+		if (kc == 'f_bold') spen.bold = 1;
+		else if (kc == 'f_ul') spen.ul = 1;
+		else if (kc == 'f_ita') spen.ita = 1;
+		else if (kc.match(/^b_/)) {
+		    var bc = kc.substr(2);
+		    for (var j = 0; j < colors.length; j++) {
+			if (colors[j] == bc) {
+			    spen.bg = colors[j];
+			}
+		    }
+		} else if (kc.match(/^f_/)) {
+		    var bc = kc.substr(2);
+		    for (var j = 0; j < colors.length; j++) {
+			if (colors[j] == bc) {
+			    spen.fg = colors[j];
+			}
+		    }
+		}
+	    }
+	    panel_write_string(ih, spen);
+	}
+    }
+
+    if (clr2eol) {
+	do { panel_write_character(' ', pen_clone({'fg':'gray'})); } while (cursor_x > 0);
+    }
+
+    cursor_x = oldx;
+    cursor_y = oldy;
+}
+
 function show_edit_panel_text()
 {
   var e = document.getElementById("editpanel_text");
@@ -1829,6 +1888,7 @@ function show_edit_panel_text()
     txt += '<br>';
     txt += '<textarea id="editpanel_text" '+getkeyb_handler_string()+' cols="80" rows="4" onchange="set_panel_text();"></textarea>';
     txt += "<a class='button' onclick='return buttonfunc_act(48);' href='#'>insert pen</a>";
+    txt += "<a class='button' onclick='return buttonfunc_act(102);' href='#'>text to panel</a>";
     txt += '<br>';
     tmp.innerHTML = txt;
   } else {
@@ -2240,6 +2300,7 @@ function buttonfunc_act(act, confirmstr)
       if (pen.ita == 1) { pen.ita = undefined; } else { pen.ita = 1; }
       pen_has_changed();
       break;
+  case 102: write_panel_text_to_panel(1); panel_redraw(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
