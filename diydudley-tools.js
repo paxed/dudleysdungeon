@@ -118,6 +118,9 @@ function button_disabled(text, onclick, usespan, hreffi)
 function pen_getcolor(color)
 {
     var fg = color;
+    if (Object.prototype.toString.call(color) === '[object Array]') {
+	fg = color[Math.floor(Math.random() * color.length)];
+    }
     if (fg == "random")
 	fg = colors[Math.floor(Math.random() * (colors.length-1))+1];
     return fg;

@@ -1699,16 +1699,16 @@ var map_templates = new Array(
 	 {'from':{'chr':'['}, 'to':{'chr':'[', 'fg':'random'}, 'chance':5},
 	 {'from':{'chr':'%'}, 'to':{'chr':'%', 'fg':'brown'}},
 	 {'from':{'chr':'%'}, 'to':{'chr':'%', 'fg':'random'}, 'chance':5},
-	 {'from':{'chr':'O'}, 'to':{'chr':'O', 'fg':'magenta'}},
+	 {'from':{'chr':'O'}, 'to':{'chr':'O', 'fg':['brown','magenta']}},
 	 {'from':{'chr':'N'}, 'to':{'chr':'N', 'fg':'random'}},
 	 {'from':{'chr':'X'}, 'to':{'chr':'X', 'fg':'brown'}},
-	 {'from':{'chr':'L'}, 'to':{'chr':'L', 'fg':'magenta'}},
+	 {'from':{'chr':'L'}, 'to':{'chr':'L', 'fg':['brown','red','magenta']}},
 	 {'from':{'chr':'R'}, 'to':{'chr':'R', 'fg':'blue'}},
-	 {'from':{'chr':'T'}, 'to':{'chr':'T', 'fg':'white'}},
+	 {'from':{'chr':'T'}, 'to':{'chr':'T', 'fg':['brown', 'white', 'cyan', 'blue', 'magenta']}},
 	 {'from':{'chr':'E'}, 'to':{'chr':'E', 'fg':'brightblue'}},
 	 {'from':{'chr':'M'}, 'to':{'chr':'M', 'fg':'brown'}},
 	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':'green'}},
-	 {'from':{'chr':'H'}, 'to':{'chr':'H', 'fg':'yellow'}}
+	 {'from':{'chr':'H'}, 'to':{'chr':'H', 'fg':['gray','cyan','yellow','white','blue','brown']}}
      )
     },
     {'name':'Valley of the Dead', 'map':
@@ -1736,18 +1736,12 @@ var map_templates = new Array(
 	 {'from':{'chr':'@'}, 'to':{'chr':'@', 'fg':'white'}},
 	 {'from':{'chr':'^'}, 'to':{'chr':'^', 'fg':'random'}},
 	 {'from':{'chr':'W'}, 'to':{'chr':'W', 'fg':'darkgray'}},
-	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':'white'}},
-	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':'brown'}, 'chance':10},
-	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':'green'}, 'chance':10},
-	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':'grey'}, 'chance':10},
-	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':'red'}, 'chance':10},
+	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':['white','brown','green','grey','red']}},
 	 {'from':{'chr':'M'}, 'to':{'chr':'M', 'fg':'brown'}},
-	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':'red'}, 'chance':15},
-	 {'from':{'chr':'Z'}, 'to':{'chr':'Z', 'fg':'green'}, 'chance':15},
-	 {'from':{'chr':'V'}, 'to':{'chr':'V', 'fg':'red'}},
-	 {'from':{'chr':'B'}, 'to':{'chr':'B', 'fg':'darkgray'}},
+	 {'from':{'chr':'V'}, 'to':{'chr':'V', 'fg':['red','blue']}},
+	 {'from':{'chr':'B'}, 'to':{'chr':'B', 'fg':['darkgray','brown']}},
 	 {'from':{'chr':'&'}, 'to':{'chr':'&', 'fg':'red'}, 'chance':50},
-	 {'from':{'chr':'L'}, 'to':{'chr':'L', 'fg':'magenta'}}
+	 {'from':{'chr':'L'}, 'to':{'chr':'L', 'fg':['brown','red','magenta']}}
      )
     },
     {'name':'Fort Ludios', 'map':
@@ -1774,17 +1768,16 @@ var map_templates = new Array(
      'replaces':new Array(
 	 {'from':{'chr':'+'}, 'to':{'chr':'+', 'fg':'brown'}},
 	 {'from':{'chr':'}'}, 'to':{'chr':'}', 'fg':'blue'}},
-	 {'from':{'chr':';'}, 'to':{'chr':';', 'fg':'blue'}},
-	 {'from':{'chr':';'}, 'to':{'chr':';', 'fg':'brightblue'}, 'chance':50},
+	 {'from':{'chr':';'}, 'to':{'chr':';', 'fg':['blue','brightblue']}},
 	 {'from':{'chr':'D'}, 'to':{'chr':'D', 'fg':'random'}},
 	 {'from':{'chr':'@'}, 'to':{'chr':'@', 'fg':'red'}, 'chance':8},
 	 {'from':{'chr':'@'}, 'to':{'chr':'@', 'fg':'green'}, 'chance':8},
-	 {'from':{'chr':'z'}, 'to':{'chr':'o', 'fg':'yellow'}, 'chance':30},
+	 {'from':{'chr':'z'}, 'to':{'chr':'o', 'fg':['yellow','blue','magenta']}, 'chance':20},
 	 {'from':{'chr':'z'}, 'to':{'chr':'D', 'fg':'random'}, 'chance':30},
-	 {'from':{'chr':'z'}, 'to':{'chr':'H', 'fg':'gray'}, 'chance':30},
-	 {'from':{'chr':'z'}, 'to':{'chr':'G', 'fg':'blue'}, 'chance':30},
-	 {'from':{'chr':'z'}, 'to':{'chr':'T', 'fg':'brown'}, 'chance':30},
-	 {'from':{'chr':'z'}, 'to':{'chr':'h', 'fg':'brown'}},
+	 {'from':{'chr':'z'}, 'to':{'chr':'H', 'fg':['gray','cyan','yellow','white','blue','brown']}, 'chance':35},
+	 {'from':{'chr':'z'}, 'to':{'chr':'G', 'fg':['blue','brown','magenta']}, 'chance':40},
+	 {'from':{'chr':'z'}, 'to':{'chr':'T', 'fg':['brown', 'white', 'cyan', 'blue', 'magenta']}, 'chance':40},
+	 {'from':{'chr':'z'}, 'to':{'chr':'h', 'fg':['brown','blue','red','green','magenta']}},
 	 {'from':{'chr':'^'}, 'to':{'chr':'^', 'fg':'red'}},
 	 {'from':{'chr':'^'}, 'to':{'chr':'^', 'fg':'darkgray', 'chance':45}},
 	 {'from':{'chr':'X'}, 'to':{'chr':'^', 'fg':'brightmagenta'}},
@@ -1814,8 +1807,7 @@ var map_templates = new Array(
   "....................................}}....}}................................",
      'replaces':new Array(
 	 {'from':{'chr':'}'}, 'to':{'chr':'}', 'fg':'blue'}},
-	 {'from':{'chr':';'}, 'to':{'chr':';', 'fg':'blue'}},
-	 {'from':{'chr':';'}, 'to':{'chr':';', 'fg':'brightblue'}, 'chance':50},
+	 {'from':{'chr':';'}, 'to':{'chr':';', 'fg':['blue', 'brightblue']}},
 	 {'from':{'chr':'O'}, 'to':{'chr':'O', 'fg':'brown'}},
 	 {'from':{'chr':'@'}, 'to':{'chr':'@', 'fg':'white'}},
 	 {'from':{'chr':'+'}, 'to':{'chr':'+', 'fg':'brown'}},
@@ -1851,9 +1843,9 @@ var map_templates = new Array(
 	 {'from':{'chr':'&'}, 'to':{'chr':'&', 'fg':'magenta'}},
 	 {'from':{'chr':'@'}, 'to':{'chr':'@', 'fg':'white'}},
 	 {'from':{'chr':'+'}, 'to':{'chr':'+', 'fg':'brown'}},
-	 {'from':{'chr':'L'}, 'to':{'chr':'L', 'fg':'brown'}},
+	 {'from':{'chr':'L'}, 'to':{'chr':'L', 'fg':['brown', 'red', 'magenta']}},
 	 {'from':{'chr':'D'}, 'to':{'chr':'D', 'fg':'random'}},
-	 {'from':{'chr':'V'}, 'to':{'chr':'V', 'fg':'red'}}
+	 {'from':{'chr':'V'}, 'to':{'chr':'V', 'fg':['red', 'blue']}}
      )
     }
 
