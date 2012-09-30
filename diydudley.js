@@ -1141,6 +1141,42 @@ function parse_code_param_coords(prefix, line)
     return tmp;
 }
 
+function parse_oldstyle_comic(data)
+{
+    var lines = data.split(/\n/);
+    var i, z;
+    var tmp;
+    var tmp1;
+    var tmp2;
+    var x,y;
+
+    stripdata.author = lines[0];
+    tmp = lines[1].split('x');
+    STRIP_WID = parseInt(tmp[0]);
+    STRIP_HEI = parseInt(tmp[1]);
+
+    z = 2;
+    for (i = 0; i < (STRIP_WID * STRIP_HEI); i++) {
+	var pnl = new Panel(20, 9);
+	panels[i] = {'panel':pnl};
+
+	for (y = 0; y < 9; y++) {
+	    for (x = 0; x < 20; x++) {
+		var dat = {'chr':' '};
+		dat.chr = lines[z+y].substr(x, 1);
+		if (dat.chr == undefined || dat.chr.length != 1 || dat.chr < ' ' || dat.chr > '~') dat.chr = ' ';
+		panels[i].panel.set_data(x, y, dat);
+
+	    }
+	}
+	z += 9;
+
+	panels[i].text = lines[z];
+	z++;
+    }
+    stripdata.footnote = lines[z];
+}
+
 function parse_code(code_data)
 {
   var code_textarea = document.getElementById("strip_code_textarea");
@@ -1166,6 +1202,14 @@ function parse_code(code_data)
   n_panels = 0;
 
   delete panels;
+
+  if (!data.match(/ENDMAP/)) {
+      parse_oldstyle_comic(data);
+      strip_editpanel(-1);
+      panel_redraw();
+      output_strip_data_edit();
+      return;
+  }
 
   for (i = 0; i < lines.length; i++) {
     var line = lines[i].replace(/\x0d/g, '');
