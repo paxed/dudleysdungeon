@@ -1,14 +1,10 @@
 AUTHOR:foo
 
- Sets the strip author name. HTML is accepted.
-
-TEXT:foo
-
- Sets the previous panel's text. HTML is allowed.
+ Sets the strip author name. HTML is allowed.
 
 FOOTNOTE:foo
 
- Sets the strip footnote. HTML is allowed.
+ Sets the strip footnote. HTML is allowed. Can also use special markup.
 
 PANELS: (wid, hei)
 
@@ -20,6 +16,11 @@ ENDMAP
 
  Creates a new panel, "wid" characters wide and "hei" characters high.
  Lines between MAP and ENDMAP will be set in the panel.
+
+TEXT:foo
+
+ Sets the panel's text. HTML is allowed. Can also use special markup.
+
 
 SETCOLOR: (x,y), 'c' is "color"
 
@@ -43,7 +44,7 @@ SETCHAR: (x,y), nnnn
 SETATTR: (x,y), attributes
 
  Sets character attributes at (x,y).
- Valid attributes are "bold", "reverse" and "underline".
+ Valid attributes are "bold", "italic", "reverse" and "underline".
  Attributes must be separated by ampersand.
  Affects the previously defined MAP.
  For example: SETATTR: (3,5), bold&underline
@@ -57,4 +58,33 @@ Valid colors:
 
 black, red, green, brown, blue, magenta, cyan, gray, darkgray,
 orange, brightgreen, yellow, brightblue, brightmagenta, brightcyan, white
+
+
+
+Special markup:
+
+\i{text}		Italic text
+\u{text}		Underlined text
+\b{text}		Bold text
+\tt{text}		Teletype (fixed-width) text
+\sup{text}		Superscript text
+\sub{text}		Subscript text
+\small{text}		Small font text
+\sc{text}		Small-caps text
+\left{text}		Left-aligned text
+\right{text}		Right-aligned text
+\dead{text}		Shows text as if it was spoken by a ghost (light gray color)
+\br			Line break
+\mdash			The em-dash HTML entity
+\gt			The greater-than sign
+\lt			The lesser-than sign
+\amp			The ampersand
+\ent{"foo"}		Show HTML entity named 'foo'
+\ent{entity="foo"}	Show HTML entity named 'foo'
+\comic{date}{text}	Link to comic strip shown on 'date'
+\link{url}{text}	Link to any URL
+\mail{email}		MailTo-link to email address
+\mail{email}{text}	MailTo-link to email address, shown with text
+\color{clr}{text}	Show text with color clr. You can use either a hex colors, or named ones.
+\nocode\text\nocode\	Prevent special markup in text
 
