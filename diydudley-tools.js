@@ -95,7 +95,7 @@ function insertAtCursor(elem, addval)
 }
 
 
-function button(text, onclick, usespan, hreffi, disable)
+function button(text, onclick, usespan, hreffi, disable, id)
 {
     if (!hreffi) hreffi = '#';
     if (usespan == undefined) {
@@ -106,6 +106,7 @@ function button(text, onclick, usespan, hreffi, disable)
     var txt = "<"+usespan+" class='button"+((disable && (disable==1))?"_disabled":"")+"'";
     if (usespan == 'a') " href='"+hreffi+"'";
     if (onclick && !disable) txt += " onclick='" + onclick + "'";
+    if (id) txt += " id='"+id+"'";
     txt += ">"+text+"</"+usespan+">";
     return txt;
 }
@@ -113,6 +114,22 @@ function button(text, onclick, usespan, hreffi, disable)
 function button_disabled(text, onclick, usespan, hreffi)
 {
     return button(text, onclick, usespan, hreffi, 1);
+}
+
+function togglebutton(text, onclick, usespan, hreffi, disable, id)
+{
+    if (!hreffi) hreffi = '#';
+    if (usespan == undefined) {
+	usespan = 'a';
+    } else {
+	usespan = 'span';
+    }
+    var txt = "<"+usespan+" class='togglebutton"+((disable && (disable==1))?"_on":"_off")+"'";
+    if (usespan == 'a') " href='"+hreffi+"'";
+    if (onclick) txt += " onclick='" + onclick + "'";
+    if (id) txt += " id='"+id+"'";
+    txt += ">"+text+"</"+usespan+">";
+    return txt;
 }
 
 function pen_getcolor(color)

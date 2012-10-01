@@ -7,6 +7,8 @@ function Panel(wid, hei)
   this.mapdata = new Array(this.WID * this.HEI);
   this.cursor = {'x':-1, 'y':-1};
 
+  this.charlock = 0;
+
   this.set_cursor = function(x,y)
       {
 	  this.cursor = {'x':x, 'y':y};
@@ -134,6 +136,7 @@ function Panel(wid, hei)
   this.set_data = function(x,y,dat)
     {
       if (this.inmap(x,y)) {
+	  if (this.charlock) dat.chr = this.mapdata[this.mapidx(x,y)].chr;
 	  this.mapdata[this.mapidx(x,y)] = {'chr':dat.chr, 'fg':dat.fg, 'bold':dat.bold, 'rev':dat.rev, 'ul':dat.ul, 'ita':dat.ita};
       }
     };

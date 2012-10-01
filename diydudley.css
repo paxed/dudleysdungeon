@@ -239,6 +239,35 @@ a.withtooltip:hover {
 .tooltip .button_disabled:hover {
 }
 
+.togglebutton_on {
+ font-weight:bold;
+ padding: 0 0.2em;
+ color:#000000;
+ background-color:#c0c0c0;
+ border: 2px inset black;
+ margin: 0.25em;
+ line-height: 1.5em;
+ cursor: pointer;
+ text-decoration:none;
+}
+.togglebutton_off {
+ font-weight:bold;
+ padding: 0 0.2em;
+ color:#000000;
+ background-color:#c0c0c0;
+ border: 2px outset black;
+ margin: 0.25em;
+ line-height: 1.5em;
+ cursor: pointer;
+ text-decoration:none;
+}
+.togglebutton_on:after {
+    content:" \2611";
+}
+.togglebutton_off:after {
+    content:" \2610";
+}
+
 #windowsbtn,
 #configbtn,
 #help {

@@ -1271,6 +1271,7 @@ var buttonfunc_act_desc = new Array(
     {'act':76, 'desc': "Editmode: Toggle between flood fill and draw mode"},
     {'act':77, 'desc': "Editmode: Toggle between lines and draw mode"},
     {'act':78, 'desc': "Editmode: Toggle between rectangles, filled rectangles and draw modes"},
+    {'act':103,'desc': "Editmode: Toggle character lock on/off"},
     {'act':72, 'desc': "Save current panel hover position as the start point for lines and rectangles"},
     {'act':73, 'desc': "Set current panel hover position as cursor location"},
     {'act':60, 'desc': "Copy panel"},

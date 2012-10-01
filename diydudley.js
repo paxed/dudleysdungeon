@@ -2008,6 +2008,8 @@ function show_editmode()
     txt += button('rect', 'return buttonfunc_act(55);', undefined, undefined, (editmode==5));
     txt += button('fillrect', 'return buttonfunc_act(56);', undefined, undefined, (editmode==6));
     txt += button('roomrect', 'return buttonfunc_act(57);', undefined, undefined, (editmode==7));
+    txt += " | ";
+    txt += togglebutton('charlock', 'return buttonfunc_act(103);', undefined, undefined, panels[0].panel.charlock, 'charlock_btn');
   tmp.innerHTML = txt;
 }
 
@@ -2174,6 +2176,16 @@ function update_box_char_popup()
 {
     if (!isvisible_widget(3)) return;
     widget_set_contents(3, get_box_char_popup_contents());
+}
+
+function toggle_charlock()
+{
+    var lock = (panels[0].panel.charlock ? 0 : 1);
+    for (var i = 0; i < n_panels; i++) {
+	panels[i].panel.charlock = lock;
+    }
+    editpaneldata.charlock = lock;
+    set_togglebutton_state('charlock_btn', lock);
 }
 
 function buttonfunc_act(act, confirmstr)
@@ -2375,6 +2387,7 @@ function buttonfunc_act(act, confirmstr)
       pen_has_changed();
       break;
   case 102: write_panel_text_to_panel(1); panel_redraw(); break;
+  case 103: toggle_charlock(); break;
   }
   if (act < 40) {
     editpaneldata.check_undopoint();
@@ -2383,16 +2396,33 @@ function buttonfunc_act(act, confirmstr)
   return false;
 }
 
-function set_undobtn_state()
+function set_button_state(id, state)
 {
-    var tmp = document.getElementById('undo_btn');
+    var tmp = document.getElementById(id);
     if (tmp) {
-	if (editpaneldata.has_undo()) {
+	if (state) {
 	    tmp.className = "button";
 	} else {
 	    tmp.className = "button_disabled";
 	}
     }
+}
+
+function set_togglebutton_state(id, state)
+{
+    var tmp = document.getElementById(id);
+    if (tmp) {
+	if (state) {
+	    tmp.className = "togglebutton_on";
+	} else {
+	    tmp.className = "togglebutton_off";
+	}
+    }
+}
+
+function set_undobtn_state()
+{
+    set_button_state('undo_btn', editpaneldata.has_undo());
 }
 
 function show_buttons()
@@ -2454,7 +2484,7 @@ function show_buttons()
     txt += button('del', 'return buttonfunc_act(62);');
 
   txt += " | ";
-  txt += "<a class='button' onclick='return buttonfunc_act(63);' href='#' id='undo_btn'>undo</a>";
+    txt += button('undo', 'return buttonfunc_act(63);', undefined, undefined, undefined, 'undo_btn');
 
   txt += " | ";
   txt += button('map template', 'return buttonfunc_act(80);');
