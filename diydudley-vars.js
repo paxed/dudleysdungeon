@@ -1258,6 +1258,8 @@ var buttonfunc_act_desc = new Array(
     {'act':28, 'desc': 'Toggle reverse attribute at panel hover position on or off'},
     {'act':29, 'desc': 'Toggle underline attribute at panel hover position on or off'},
     {'act':30, 'desc': 'Toggle italic attribute at panel hover position on or off'},
+    {'act':31, 'desc': 'Toggle color brightness at panel hover position on or off'},
+    {'act':32, 'desc': 'Set color at panel hover position to current pen color'},
     {'act':50, 'desc': "Editmode: Draw"},
     {'act':51, 'desc': "Editmode: Color picker"},
     {'act':53, 'desc': "Editmode: Flood fill"},

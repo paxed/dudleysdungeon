@@ -142,6 +142,21 @@ function pen_clone_nornd(pen)
     return {'chr':pen.chr, 'fg':pen_getcolor(pen.fg), 'bold':pen.bold, 'rev':pen.rev, 'ul':pen.ul, 'ita':pen.ita};
 }
 
+function pen_toggle_color_brightness(pen)
+{
+    if (pen.fg == undefined) {
+	pen.fg = 'gray';
+    } else pen.fg = pen_getcolor(pen.fg);
+
+    for (var i = 0; i < colors.length; i++)
+	if (colors[i] == pen.fg) {
+	    pen.fg = colors[(i + 8) % 16];
+	    return pen;
+	}
+    return pen;
+}
+
+
 function pen_equal(pen1, pen2)
 {
     return ((pen1.chr == pen2.chr) && (pen1.fg == pen2.fg) && (pen1.bold == pen2.bold) && (pen1.rev == pen2.rev) && (pen1.ul == pen2.ul) && (pen1.ita == pen2.ita));
@@ -2228,6 +2243,20 @@ function buttonfunc_act(act, confirmstr)
       if (hovering_on_editpanel) {
 	  var dat = editpaneldata.get_data(current_pos_x, current_pos_y);
 	  if (dat.ita == 1) { dat.ita = undefined; } else { dat.ita = 1; }
+	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
+      }
+      break;
+  case 31:
+      if (hovering_on_editpanel) {
+	  var dat = editpaneldata.get_data(current_pos_x, current_pos_y);
+	  pen_toggle_color_brightness(dat);
+	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
+      }
+      break;
+  case 32:
+      if (hovering_on_editpanel) {
+	  var dat = editpaneldata.get_data(current_pos_x, current_pos_y);
+	  dat.fg = pen_getcolor(pen.fg);
 	  editpaneldata.set_data(current_pos_x, current_pos_y, dat);
       }
       break;
