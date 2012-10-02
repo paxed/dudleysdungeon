@@ -1,4 +1,7 @@
 
+-room drawing mode with the extended chars
+-remove Panel.cursor
+
 -maybe change the strip preview so it also allow a "floating" window,
  a la the pen selection etc "popups".
 -tooltip mode for buttons

@@ -712,7 +712,7 @@ function Panel(wid, hei)
 	}
 	this.wallify();
 	break;
-      case 10: /* scroll shop */
+      case 10: /* fake scroll shop */
 	  this.fill(empty);
 	  this.draw_random_room(1, {'chr':'?', 'fg':'white'});
 	  return;

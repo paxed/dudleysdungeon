@@ -542,8 +542,6 @@ function random_monster_sym()
   return {'chr':chr, 'fg':fg};
 }
 
-var nethack_shop_types = new Array('?', '+', '=', '%', '(', '!', '/', '[', ')', 'general');
-
 function get_random_shop_sym(shoptype)
 {
     var rnd = Math.random();
@@ -601,18 +599,15 @@ function get_random_shop_sym(shoptype)
 function generate_random_shop(shoptype)
 {
     var x, y;
-    editpaneldata.save_undopoint();
-    editpaneldata.draw_random(10); /* makes a scroll shop */
+    editpaneldata.draw_random(10); /* HACK: makes a fake scroll shop */
 
-    if (typeof shoptype == "number") shoptype = nethack_shop_types[shoptype];
+    if (typeof(shoptype) == "number") shoptype = nethack_shop_types[shoptype].chr;
 
     for (x = 0; x < editpaneldata.WID; x++)
 	for (y = 0; y < editpaneldata.HEI; y++) {
 	    var dat = editpaneldata.get_data(x,y);
 	    if (dat.chr == '?' && dat.fg == 'white') editpaneldata.set_data(x,y, get_random_shop_sym(shoptype));
 	}
-    editpaneldata.check_undopoint();
-    panel_redraw();
 }
 
 
@@ -2193,7 +2188,7 @@ function buttonfunc_act(act, confirmstr)
   if (typeof(confirmstr)=='string') {
       if (!confirm(confirmstr)) return false;
   }
-  if (act < 40) {
+  if (buttonfunclist[act].undo) {
     editpaneldata.save_undopoint();
   }
   switch (act) {
@@ -2386,10 +2381,10 @@ function buttonfunc_act(act, confirmstr)
       if (pen.ita == 1) { pen.ita = undefined; } else { pen.ita = 1; }
       pen_has_changed();
       break;
-  case 102: write_panel_text_to_panel(1); panel_redraw(); break;
+  case 102: write_panel_text_to_panel(1); break;
   case 103: toggle_charlock(); break;
   }
-  if (act < 40) {
+  if (buttonfunclist[act].undo) {
     editpaneldata.check_undopoint();
     panel_redraw();
   }
@@ -2442,7 +2437,7 @@ function show_buttons()
     popup += button('maze','return buttonfunc_act(12);',1)+"<br>";
   popup += "Shops: ";
     for (i = 0; i < nethack_shop_types.length; i++)
-	popup += button("&nbsp;"+htmlentities(nethack_shop_types[i])+"&nbsp;", "generate_random_shop("+i+");", 1)+' ';
+	popup += button("&nbsp;"+htmlentities(nethack_shop_types[i].chr)+"&nbsp;", "return buttonfunc_act("+nethack_shop_types[i].act+");", 1)+' ';
 
   txt += "panel: <span class='button withtooltip'>generate<span class='tooltip'>"+popup+"</span></span>";
 
@@ -3264,17 +3259,6 @@ function show_editpanel_textarea()
 function popup_help()
 {
     var helpwin = window.open('diydudley-help.html', null, 'width=500, height=600, resizeable=yes,scrollbars=yes');
-}
-
-function get_buttonfunc_act_desc(act)
-{
-    var i;
-    for (i = 0; i < buttonfunc_act_desc.length; i++) {
-	if (buttonfunc_act_desc[i].act == act) {
-	    return buttonfunc_act_desc[i].desc;
-	}
-    }
-    return "Unknown action?";
 }
 
 function keybindings_clear()
