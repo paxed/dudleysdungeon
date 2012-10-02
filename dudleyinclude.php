@@ -1039,6 +1039,18 @@ function user_voting_histogram($userid)
 }
 
 
+function total_strips()
+{
+    $sql = "select count(*) as nstrips from strip where approved=true and striptime < 'NOW'";
+    $res = db_exec($sql);
+    $numrows = db_numrows($res);
+    if ($numrows > 0) {
+	$dat = db_get_rowdata($res, 0);
+	return $dat['nstrips'];
+    }
+    return NULL;
+}
+
 function avg_rating($stripid)
 {
     $sql = "select avg(value) as avgvote,count(*) as nvotes from vote where stripid='".$stripid."'";

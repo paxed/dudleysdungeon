@@ -23,6 +23,8 @@ print $dudmenu;
 print '<h2>Statistics</h2>';
 print '<p>';
 
+print 'Number of comic strips: <b>'.total_strips().'</b>';
+print '<p>';
 
 if (isset($_GET['t']) && preg_match('/[0-9]+/', trim($_GET['t']))) {
     $showtable = trim($_GET['t']);
