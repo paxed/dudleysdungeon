@@ -1,4 +1,9 @@
 
+-make Rodney announce new strips.
+
+-hide the code by default; it's not useful for normal users.
+ (only show it if user clicks on the "code edit")
+-turn checkboxes into togglebuttons.
 -room drawing mode with the extended chars
 -remove Panel.cursor
 

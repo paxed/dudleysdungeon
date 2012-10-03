@@ -1160,6 +1160,8 @@ function parse_oldstyle_comic(data)
     var tmp2;
     var x,y;
 
+    if ((lines.length < 3)) return 0;
+    if (!(lines[1].match(/^[0-9]+x[0-9]+$/))) return 0;
     stripdata.author = lines[0];
     tmp = lines[1].split('x');
     STRIP_WID = parseInt(tmp[0]);
@@ -1185,6 +1187,7 @@ function parse_oldstyle_comic(data)
 	z++;
     }
     stripdata.footnote = lines[z];
+    return 1;
 }
 
 function parse_code(code_data)
@@ -1214,11 +1217,12 @@ function parse_code(code_data)
   delete panels;
 
   if (!data.match(/ENDMAP/)) {
-      parse_oldstyle_comic(data);
-      strip_editpanel(-1);
-      panel_redraw();
-      output_strip_data_edit();
-      return;
+      if (parse_oldstyle_comic(data)) {
+	  strip_editpanel(-1);
+	  panel_redraw();
+	  output_strip_data_edit();
+	  return;
+      }
   }
 
   for (i = 0; i < lines.length; i++) {
