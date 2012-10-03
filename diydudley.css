@@ -304,12 +304,15 @@ td.conttl {
 
 td.contpic {
  border:1px solid black;
+ background-color:white;
 }
 
 table.comic {
   background-color:white;
   padding:0.25em;
   border-width:0.25em;
+  margin-right:auto;
+  margin-left:auto;
 }
 
 td.comic {

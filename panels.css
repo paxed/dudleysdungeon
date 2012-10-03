@@ -84,6 +84,8 @@ table.comic {
   padding:0.25em;
   border-width:0.25em;
   border-color:transparent;
+  margin-right:auto;
+  margin-left:auto;
 }
 
 td.comic {
