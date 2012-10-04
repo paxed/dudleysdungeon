@@ -1881,6 +1881,77 @@ function get_panel_text()
   }
 }
 
+var write_panel_text_to_panel_pens = new Array();
+
+function walkDOM(nod, func)
+{
+    func(nod);
+    var nod = nod.firstChild;
+
+    while (nod) {
+	var spen = write_panel_text_to_panel_pens.pop();
+	write_panel_text_to_panel_pens.push(pen_clone(spen));
+	write_panel_text_to_panel_pens.push(pen_clone(spen));
+	walkDOM(nod, func);
+	write_panel_text_to_panel_pens.pop();
+	nod = nod.nextSibling;
+    }
+}
+
+function write_panel_text_to_panel_subfunc(nod)
+{
+    var spen;
+    switch (nod.nodeType) {
+    case 1:
+	{
+	    var classstr = nod.getAttribute('class');
+	    if (classstr) {
+		var classes = classstr.split(' ');
+		if (write_panel_text_to_panel_pens.length) {
+		    spen = write_panel_text_to_panel_pens.pop();
+		} else {
+		    spen = {'fg':'gray'};
+		}
+		for (var k = 0; k < classes.length; k++) {
+		    var kc = classes[k];
+		    if (kc == 'f_bold') spen.bold = 1;
+		    else if (kc == 'f_ul') spen.ul = 1;
+		    else if (kc == 'f_ita') spen.ita = 1;
+		    else if (kc.match(/^b_/)) {
+			var bc = kc.substr(2);
+			for (var j = 0; j < colors.length; j++) {
+			    if (colors[j] == bc) {
+				spen.bg = colors[j];
+			    }
+			}
+		    } else if (kc.match(/^f_/)) {
+			var bc = kc.substr(2);
+			for (var j = 0; j < colors.length; j++) {
+			    if (colors[j] == bc) {
+				spen.fg = colors[j];
+			    }
+			}
+		    }
+		}
+		write_panel_text_to_panel_pens.push(spen);
+	    } else {
+		spen = {'fg':'gray'};
+		write_panel_text_to_panel_pens.push(spen);
+	    }
+	    if (nod.nodeName == 'DIV' || nod.nodeName == 'P' || nod.nodeName == 'BR') {
+		do { panel_write_character(' ', pen_clone({'fg':'gray'})); } while (cursor_x > 0);
+	    }
+	}
+	break;
+    case 3:
+	spen = write_panel_text_to_panel_pens.pop();
+	panel_write_string(nod.nodeValue, spen);
+	write_panel_text_to_panel_pens.push(spen);
+	break;
+    default: break;
+    }
+}
+
 
 function write_panel_text_to_panel(clr2eol)
 {
@@ -1893,43 +1964,13 @@ function write_panel_text_to_panel(clr2eol)
     cursor_x = 0;
     cursor_y = 0;
 
-    var div = document.createElement('div');
-    div.innerHTML = rawtext;
+    var spn = document.createElement('span');
+    spn.innerHTML = rawtext;
 
-    for (var i = 0; i < div.childNodes.length; i++) {
-	var spen = pen_clone({'fg':'gray'});
+    write_panel_text_to_panel_pens = new Array();
+    write_panel_text_to_panel_pens.push({'fg':'gray'});
 
-	var nod = div.childNodes[i];
-	var ih = nod.textContent;
-	if (nod.nodeValue) {
-	    panel_write_string(nod.nodeValue, spen);
-	} else if (ih) {
-	    var classstr = nod.getAttribute('class');
-	    var classes = classstr.split(' ');
-	    for (var k = 0; k < classes.length; k++) {
-		var kc = classes[k];
-		if (kc == 'f_bold') spen.bold = 1;
-		else if (kc == 'f_ul') spen.ul = 1;
-		else if (kc == 'f_ita') spen.ita = 1;
-		else if (kc.match(/^b_/)) {
-		    var bc = kc.substr(2);
-		    for (var j = 0; j < colors.length; j++) {
-			if (colors[j] == bc) {
-			    spen.bg = colors[j];
-			}
-		    }
-		} else if (kc.match(/^f_/)) {
-		    var bc = kc.substr(2);
-		    for (var j = 0; j < colors.length; j++) {
-			if (colors[j] == bc) {
-			    spen.fg = colors[j];
-			}
-		    }
-		}
-	    }
-	    panel_write_string(ih, spen);
-	}
-    }
+    walkDOM(spn, write_panel_text_to_panel_subfunc);
 
     if (clr2eol) {
 	do { panel_write_character(' ', pen_clone({'fg':'gray'})); } while (cursor_x > 0);
