@@ -1,4 +1,40 @@
 
+function parse_text_tags(txt)
+{
+    var matches = txt.split(/\\nocode\\/);
+    if (matches.length == 3) {
+	return parse_text_tags(matches[0]) + matches[1] + parse_text_tags(matches[2]);
+    }
+
+    do {
+	var p_t_t_d = 0;
+	txt = txt.replace(/\\i{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<i>'+grp+'</i>'; });
+	txt = txt.replace(/\\u{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<u>'+grp+'</u>'; });
+	txt = txt.replace(/\\b{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<b>'+grp+'</b>'; });
+	txt = txt.replace(/\\tt{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<tt>'+grp+'</tt>'; });
+	txt = txt.replace(/\\sup{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<sup>'+grp+'</sup>'; });
+	txt = txt.replace(/\\sub{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<sub>'+grp+'</sub>'; });
+	txt = txt.replace(/\\small{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<small>'+grp+'</small>'; });
+	txt = txt.replace(/\\sc{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<span class="smallcaps">'+grp+'</span>'; });
+	txt = txt.replace(/\\left{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<div class="left_text">'+grp+'</div>'; });
+	txt = txt.replace(/\\right{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<div class="right_text">'+grp+'</div>'; });
+	txt = txt.replace(/\\dead{([^}]+)}/, function (str, grp) { p_t_t_d = 1; return '<span class="f_gray">'+grp+'</span>'; });
+	txt = txt.replace(/\\br/, function (str) { p_t_t_d = 1; return '<br>'; });
+	txt = txt.replace(/\\mdash/, function (str) { p_t_t_d = 1; return '&mdash;'; });
+	txt = txt.replace(/\\gt/, function (str) { p_t_t_d = 1; return '&gt;'; });
+	txt = txt.replace(/\\lt/, function (str) { p_t_t_d = 1; return '&lt;'; });
+	txt = txt.replace(/\\amp/, function (str) { p_t_t_d = 1; return '&amp;'; });
+	txt = txt.replace(/\\ent\((entity=)?"([^"]+)"\)/, function (str, grp2, grp3) { p_t_t_d = 1; return '&' + grp3 + ';'; });
+	txt = txt.replace(/\\comic\("?([^"]+)"?\){([^}]+)}/, function (str, grp2, grp3) { p_t_t_d = 1; return '<a href="index.php?f=' + grp2 + '">' + grp3 + '</a>'; });
+	txt = txt.replace(/\\link\("?([^"]+)"?\) *{([^}]+)}/, function (str, grp2, grp3) { p_t_t_d = 1; return '<a href="http://' + grp2 + '">' + grp3 + '</a>'; });
+	txt = txt.replace(/\\mail\("?([^"]+)"?\) *{([^}]+)}/, function (str, grp2, grp3) { p_t_t_d = 1; return '<a href="mailto:' + grp2 + '">' + grp3 + '</a>'; });
+	txt = txt.replace(/\\mail\("?([^"]+)"?\)/, function (str, grp2) { p_t_t_d = 1; return '<a href="mailto:' + grp2 + '">' + grp2 + '</a>'; });
+	txt = txt.replace(/\\color\("?([^"]+)"?\) *{([^}]+)}/, function (str, grp2, grp3) { p_t_t_d = 1; return '<span style="color:' + grp2 + '">' + grp3 + '</span>'; });
+    } while (p_t_t_d);
+
+    return txt;
+}
+
 function popup_save_position(elem, x, y)
 {
     var vis = ((elem.style.display != "none" && elem.style.visibility != "hidden") ? 1 : 0);
@@ -2906,7 +2942,8 @@ function strip_preview_panels()
 	}
 	txt += '</pre>';
 	if (panels[i].text) {
-	  var txtlines = panels[i].text.split(/\n/);
+	    var txtlines = parse_text_tags(panels[i].text);
+		txtlines = txtlines.split(/\n/);
 	  txt += '<div class="txt">';
 	  txt += '<span class="controls">';
 	    txt += button('[X]', wo+'rm_panel_text('+i+');return false;');
@@ -2932,7 +2969,7 @@ function strip_preview_panels()
 
   txt += '<tr>';
   txt += '<td class="footnote" colspan="3">';
-  if (stripdata.footnote) { txt += stripdata.footnote; }
+  if (stripdata.footnote) { txt += parse_text_tags(stripdata.footnote); }
   txt += '</td>';
   txt += '</tr>';
 
