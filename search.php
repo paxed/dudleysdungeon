@@ -10,6 +10,8 @@ $searchstr = '';
 $show_results = 0;
 $ignorecase = 0;
 
+$errorstr = '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $searchstr = trim($_POST['searchstr']);
@@ -17,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (strlen($searchstr) < 2) $errorstr .= '<p>Search string too short.';
 
-    if (!isset($errorstr)) {
+    if (!isset($errorstr) || (strlen($errorstr) < 1)) {
 
 	if ($ignorecase) {
 	    $str = db_escape_string('%'.strtolower($searchstr).'%');
@@ -63,7 +65,7 @@ print '<h1>Search Dudley strips</h1>'."\n";
 
 print '<form method="POST" action="' . $_SERVER['PHP_SELF'] . '" enctype="multipart/form-data">'."\n";
 
-if (isset($errorstr)) print '<div class="errorstr">'.$errorstr.'</div>';
+if (isset($errorstr) && strlen($errorstr)) print '<div class="errorstr">'.$errorstr.'</div>';
 
 
 if ($show_results) {
