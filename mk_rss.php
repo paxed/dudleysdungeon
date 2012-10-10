@@ -50,9 +50,10 @@ if ($numrows > 0) {
 	xpn('<item>',2);
 	xpn('<title>'.$title.'</title>',3);
 	xpn('<link>'.$dudley_root_url.'?f='.date("Y.m.d",$strip['epoch']).'</link>',3);
+	xpn('<pubDate>'.date("r", $strip['epoch']).'</pubDate>',3);
 
 	xpn('<description>'.$txt.'</description>', 3);
-	xpn('<guid>'.$dudley_root_url.'?'.$strip_data['stripid'].'</guid>', 3);
+	xpn('<guid isPermaLink="true">'.$dudley_root_url.'?'.$strip_data['stripid'].'</guid>', 3);
 
 	xpn('</item>',2);
 
