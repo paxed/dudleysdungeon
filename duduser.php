@@ -11,7 +11,7 @@ $odd = 0;
 parse_str($_SERVER['QUERY_STRING'], $querystr);
 $querystr = remove_null_keys($querystr);
 
-$logged_userid = $_SESSION['userid'];
+$logged_userid = (isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL);
 
 $qact = $_SERVER['QUERY_STRING'];
 if (strpos($qact, '&')) $qact = substr($qact, 0, strpos($qact, '&'));
