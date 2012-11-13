@@ -23,10 +23,11 @@ if ($usr_is_logged_in) {
 parse_str($_SERVER['QUERY_STRING'], $querystr);
 $querystr = remove_null_keys($querystr);
 
-if (isset($_SERVER['HTTP_REFERER'])) {
-    $go_back_url = $_SERVER['HTTP_REFERER'];
-} else {
-    $go_back_url = $dudley_root_url;
+if (isset($_SERVER['HTTP_REFERER']) && !preg_match('/diydudley\.php/', $_SERVER['HTTP_REFERER'])) {
+    $_SESSION['go_back_url'] = $_SERVER['HTTP_REFERER'];
+}
+if (!isset($_SESSION['go_back_url'])) {
+    $_SESSION['go_back_url'] = $dudley_root_url;
 }
 
 if (isset($querystr['edit']) && preg_match('/^[0-9]+$/', $querystr['edit'])) {
@@ -195,7 +196,7 @@ print 'var USR_dudley_root_url="'.$dudley_root_url."\";\n";
 <span class="button" onclick="buttonfunc_act(91);">Pen&nbsp;Selection&nbsp;Chars</span><br>
 <span class="button" onclick="buttonfunc_act(99);">Game&nbsp;Symbol&nbsp;Chars</span><br>
 </span></span>
-<h1><a href="<?php echo $go_back_url; ?>">Dudley</a> D-I-Y</h1>
+<h1><a href="<?php echo $_SESSION['go_back_url']; ?>">Dudley</a> D-I-Y</h1>
 
 <div id="poststatusdiv"></div>
 
