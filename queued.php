@@ -152,7 +152,7 @@ if ($mode == 'view') {
 		print '<input type="Submit" value="add news" name="action">';
 	    }
 	    print '<br>';
-	    print '<input type="Submit" value="delete strip" name="action">';
+	    print '<input type="Submit" value="delete strip" onclick="return confirm(\'Delete this strip?\')" name="action">';
 
 	    print '</form>';
 
