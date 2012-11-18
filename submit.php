@@ -24,11 +24,11 @@ print ', then submit the datafile here or in the editor itself, and once the adm
 print ' it will appear on the Dudley\'s Dungeon comic strip.'."\n";
 
 
-$user_id = $_SESSION['userid']; //logged_in_userid();
+$user_id = (isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL); //logged_in_userid();
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!isset($user_id)) {
+    if ($user_id === NULL) {
 	print '<p>Sorry, you need to be <a href="login.php">logged in</a> before you can submit strips.'."\n";
     } else {
 
