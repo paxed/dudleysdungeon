@@ -136,7 +136,7 @@ function get_dudmenu()
     global $dudley_root_url;
     $str = '<div class="menu">';
     $str .= '<ul>';
-    $loggedin = (isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL);
+    $loggedin = ((isset($_SESSION['userid']) && isset($_SESSION['username'])) ? $_SESSION['userid'] : NULL);
     $str .= '<li>'.mk_url($dudley_root_url.'?today','Home');
     if (!isset($loggedin)) {
 	$str .= '<li>'.mk_url('login.php','Login');
