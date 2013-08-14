@@ -43,7 +43,7 @@ function popup_save_position(elem, x, y)
 
 function popup_isvisible(id)
 {
-    var elem = document.getElementById(id + "_widget");
+    var elem = $(id + "_widget");
     if (!elem) return false;
     if (elem.style.display == "none" || elem.style.visibility == "hidden") return false;
     return true;
@@ -51,7 +51,7 @@ function popup_isvisible(id)
 
 function popup_create(id, title, contents, hidden)
 {
-    var elem = document.getElementById(id + "_widget");
+    var elem = $(id + "_widget");
     if (!elem) {
 	var txt = "";
 
@@ -107,7 +107,7 @@ function popup_create(id, title, contents, hidden)
 
 function popup_show(id, toggle)
 {
-    var elem = document.getElementById(id + "_widget");
+    var elem = $(id + "_widget");
     if (!elem) return;
     if (toggle != undefined) {
 	elem.style.display = (toggle == 0) ? "block" : "none";
@@ -120,7 +120,7 @@ function popup_show(id, toggle)
 
 function popup_hide(id)
 {
-    var elem = document.getElementById(id + "_widget");
+    var elem = $(id + "_widget");
     if (!elem) return;
     elem.style.display = "none";
     popup_save_position(elem, parseInt(elem.style.left), parseInt(elem.style.top));
@@ -128,7 +128,7 @@ function popup_hide(id)
 
 function popup_set_contents(id, contents)
 {
-    var elem = document.getElementById(id + "_widget_contents");
+    var elem = $(id + "_widget_contents");
     if (!elem) return;
     elem.innerHTML = contents;
 }
@@ -563,7 +563,7 @@ function random_nethack_monster_sym()
     var s = game_symbols_orig[i];
   } while (s.sort != 1);
 
-  var tmp = document.getElementById("nethacksymselboxid");
+  var tmp = $("nethacksymselboxid");
   if (tmp) {
     tmp.selectedIndex = game_symbols_orig[i].nhsymselectbox_idx;
   }
@@ -659,24 +659,6 @@ function panel_redraw()
   set_undobtn_state();
 }
 
-function get_documentOffsetTop(e) {
-    var i = 0;
-    if (e.offsetParent) {
-	do { i += e.offsetTop; } while (e = e.offsetParent);
-    }
-    return i;
-}
-
-function get_documentOffsetLeft(e) {
-    var i = 0;
-    if (e.offsetParent) {
-	do { i += e.offsetLeft; } while (e = e.offsetParent);
-    }
-    return i;
-}
-
-function $(e) { return document.getElementById(e); }
-
 function ruler_display(typ)
 {
     var t = (typ) ? 'block' : 'none';
@@ -740,13 +722,13 @@ function panel_mouse_hover(x,y, onoff)
 
   function mousehover_mark_on(x1,y1)
     {
-      tmp = document.getElementById("editpanelpos"+x1+"x"+y1);
+      tmp = $("editpanelpos"+x1+"x"+y1);
       if (tmp) tmp.style.background = "red";
     }
 
   function mousehover_mark_off(x1,y1)
     {
-      tmp = document.getElementById("editpanelpos"+x1+"x"+y1);
+      tmp = $("editpanelpos"+x1+"x"+y1);
       if (tmp) tmp.style.background = "black";
     }
 
@@ -755,18 +737,18 @@ function panel_mouse_hover(x,y, onoff)
   case 0:  /* pen drawing */
   case 1:  /* color picker */
   case 2: /* writer mode */
-    tmp = document.getElementById("editpanelpos"+x+"x"+y);
+    tmp = $("editpanelpos"+x+"x"+y);
     if (tmp) {
       tmp.style.background = (onoff) ? "red" : "black";
     }
     break;
   case 3: /* floodfill */
     if (onoff) {
-      tmp = document.getElementById("editpanelpos"+x+"x"+y);
+      tmp = $("editpanelpos"+x+"x"+y);
       if (tmp && tmp.style.background == "red") break;
       editpaneldata.draw_floodfill(x,y, mousehover_mark_on);
     } else {
-      tmp = document.getElementById("editpanelpos"+x+"x"+y);
+      tmp = $("editpanelpos"+x+"x"+y);
       if (tmp && tmp.style.background == "black") break;
       editpaneldata.draw_floodfill(x,y, mousehover_mark_off);
     }
@@ -1091,7 +1073,7 @@ function panel_getcode(html)
 
 function hide_POST_status()
 {
-  var tmp = document.getElementById("poststatusdiv");
+  var tmp = $("poststatusdiv");
   if (tmp == undefined) return;
   tmp.style.visibility = "hidden";
   tmp.style.display = "none";
@@ -1108,7 +1090,7 @@ function add_POST_error(txt)
 
 function show_POST_status()
 {
-  var tmp = document.getElementById("poststatusdiv");
+  var tmp = $("poststatusdiv");
   if (tmp == undefined) return;
     var btn = "<br>" + button('OK', 'hide_POST_status(); return false;');
 
@@ -1134,7 +1116,7 @@ function show_POST_status()
 
 function panel_downloadcode()
 {
-  var tmp = document.getElementById("hidden_div");
+  var tmp = $("hidden_div");
   var txt = "";
   txt += "<form method='post' action='diydudley_download.php' name='code_download_form' id='code_download_form'>";
   txt += "<textarea name='strip_code_download_textarea'>";
@@ -1145,7 +1127,7 @@ function panel_downloadcode()
 
   tmp.innerHTML = txt;
 
-  var tmp2 = document.getElementById("code_download_form");
+  var tmp2 = $("code_download_form");
 
   tmp2.submit();
 
@@ -1154,7 +1136,7 @@ function panel_downloadcode()
 
 function panel_submitcode()
 {
-  var tmp = document.getElementById("hidden_div");
+  var tmp = $("hidden_div");
   var txt = "";
   txt += "<form method='post' action='diydudley.php' name='code_submit_form' id='code_submit_form'>";
 
@@ -1166,8 +1148,8 @@ function panel_submitcode()
   }
 
   if (USR_login == 0) {
-    var usrnam = document.getElementById("user_name").value;
-    var usrpass = document.getElementById("user_passwd").value;
+    var usrnam = $("user_name").value;
+    var usrpass = $("user_passwd").value;
     txt += "<input type='hidden' value='" + usrnam + "' name='username'>";
     txt += "<input type='hidden' value='" + usrpass + "' name='password'>";
   }
@@ -1180,7 +1162,7 @@ function panel_submitcode()
 
   tmp.innerHTML = txt;
 
-  var tmp2 = document.getElementById("code_submit_form");
+  var tmp2 = $("code_submit_form");
 
   tmp2.submit();
 
@@ -1190,7 +1172,7 @@ function panel_submitcode()
 
 function panel_download_save()
 {
-  var tmp = document.getElementById("download_save");
+  var tmp = $("download_save");
   var txt = "";
   if (!tmp) return;
 
@@ -1224,8 +1206,8 @@ function panel_download_save()
 
 function panel_showcode()
 {
-  var tmp = document.getElementById("strip_code_div");
-  var code_edit = document.getElementById("code_edit_cbox");
+  var tmp = $("strip_code_div");
+  var code_edit = $("code_edit_cbox");
   var txt = "";
   var btn = "";
 
@@ -1302,7 +1284,7 @@ function parse_oldstyle_comic(data)
 
 function parse_code(code_data)
 {
-  var code_textarea = document.getElementById("strip_code_textarea");
+  var code_textarea = $("strip_code_textarea");
   var tmp;
   var inmap = 0;
   var i;
@@ -1708,7 +1690,7 @@ function pen_save()
 
 function color_selection()
 {
-  var tmp = document.getElementById("colorselection");
+  var tmp = $("colorselection");
   var txt = "";
   var i;
   var chr = "#";
@@ -1754,7 +1736,7 @@ function penset_span_noclick(pen)
 
 function char_selection()
 {
-  var tmp = document.getElementById("charselection");
+  var tmp = $("charselection");
   var txt = "";
   var i;
   var tmpen = pen_clone(pen);
@@ -1784,7 +1766,7 @@ function pen_set_by_text(text)
 
 function nethacksym_selectbox()
 {
-  var tmp = document.getElementById("nethacksymselbox");
+  var tmp = $("nethacksymselbox");
   var txt = "";
   var i;
   var sortlvl = -1;
@@ -1834,7 +1816,7 @@ function nethacksym_selectbox()
 
 function nethacksym_searchstr()
 {
-  var tmp = document.getElementById("nethacksymsearchbox");
+  var tmp = $("nethacksymsearchbox");
   var str = tmp.value;
 
   nethacksym_selection(str);
@@ -1858,7 +1840,7 @@ function get_nethacksym_selection_contents()
 
 function nethacksym_selection(searchstr)
 {
-  var tmp = document.getElementById("gamesymselection_pens");
+  var tmp = $("gamesymselection_pens");
   var txt = "";
   var i;
   var linelen = 0;
@@ -1903,7 +1885,7 @@ function old_pen_assign_key(i, key)
 
 function old_pen_set_key(i)
 {
-  var tmp = document.getElementById("old_pen_set_key_"+i);
+  var tmp = $("old_pen_set_key_"+i);
   var key = tmp.value.substr(0,1);
   old_pen_assign_key(i, key);
   show_saved_pens();
@@ -1945,7 +1927,7 @@ function get_saved_pens_popup(i)
 
 function show_saved_pens()
 {
-  var tmp = document.getElementById("saved_pens");
+  var tmp = $("saved_pens");
   var i;
   var txt;
   var ldir, rdir;
@@ -1965,7 +1947,7 @@ function show_saved_pens()
 function rm_panel_text(pnl)
 {
     strip_editpanel(pnl);
-    var tmp = document.getElementById("editpanel_text");
+    var tmp = $("editpanel_text");
     panels[editpanel_strippanel].text = '';
     tmp.value = '';
     panel_redraw();
@@ -1975,7 +1957,7 @@ function rm_panel_text(pnl)
 
 function set_panel_text()
 {
-  var tmp = document.getElementById("editpanel_text");
+  var tmp = $("editpanel_text");
   panels[editpanel_strippanel].text = tmp.value;
   strip_preview_panels();
   panel_showcode();
@@ -1983,7 +1965,7 @@ function set_panel_text()
 
 function get_panel_text()
 {
-  var tmp = document.getElementById("editpanel_text");
+  var tmp = $("editpanel_text");
   if (panels[editpanel_strippanel].text != undefined) {
     tmp.value = panels[editpanel_strippanel].text;
   } else {
@@ -2065,7 +2047,7 @@ function write_panel_text_to_panel_subfunc(nod)
 
 function write_panel_text_to_panel(clr2eol)
 {
-    var tmp = document.getElementById("editpanel_text");
+    var tmp = $("editpanel_text");
     if (!tmp) return;
     var rawtext = tmp.value;
     var oldx = cursor_x;
@@ -2092,9 +2074,9 @@ function write_panel_text_to_panel(clr2eol)
 
 function show_edit_panel_text()
 {
-  var e = document.getElementById("editpanel_text");
+  var e = $("editpanel_text");
   if (!e) {
-    var tmp = document.getElementById("editpanel_text_div");
+    var tmp = $("editpanel_text_div");
     var txt = "";
     txt += '<br>';
     txt += '<textarea id="editpanel_text" '+getkeyb_handler_string()+' cols="80" rows="4" onchange="set_panel_text();"></textarea>';
@@ -2109,7 +2091,7 @@ function show_edit_panel_text()
 
 function show_edit_panel()
 {
-  var tmp = document.getElementById("editdiv");
+  var tmp = $("editdiv");
   var txt = "";
   txt += panel_getdiv();
 
@@ -2123,7 +2105,7 @@ function show_edit_panel()
 
 function show_current_pen()
 {
-  var tmp = document.getElementById("current_pen");
+  var tmp = $("current_pen");
   var txt = "Current pen: ";
   txt += "<span class='pen_glyph " + datspanclass(pen, 1) + "'>" + pen_htmlchr(pen) + "</span>";
 
@@ -2147,7 +2129,7 @@ function change_editmode(i)
 
 function show_editmode()
 {
-  var tmp = document.getElementById("editmode_span");
+  var tmp = $("editmode_span");
   var txt = "";
   txt += '<b>' + editmode_str[editmode] + '</b> ';
 
@@ -2172,7 +2154,7 @@ function update_toolbar()
 
 function show_panel_number()
 {
-  var tmp = document.getElementById("panel_number");
+  var tmp = $("panel_number");
   var txt = "";
   txt += editpanel_strippanel.toString();
   tmp.innerHTML = txt;
@@ -2186,7 +2168,7 @@ function record_mouse_cursor_pos(e)
 
 function pen_selection_popup_checkbox_check(typ)
 {
-    var e = document.getElementById("pen_selection_popup_checkbox_"+typ);
+    var e = $("pen_selection_popup_checkbox_"+typ);
     if (!e) return;
     if (e.checked) {
 	pen[typ] = 1;
@@ -2548,7 +2530,7 @@ function buttonfunc_act(act, confirmstr)
 
 function set_button_state(id, state)
 {
-    var tmp = document.getElementById(id);
+    var tmp = $(id);
     if (tmp) {
 	if (state) {
 	    tmp.className = "button";
@@ -2560,7 +2542,7 @@ function set_button_state(id, state)
 
 function set_togglebutton_state(id, state)
 {
-    var tmp = document.getElementById(id);
+    var tmp = $(id);
     if (tmp) {
 	if (state) {
 	    tmp.className = "togglebutton_on";
@@ -2578,7 +2560,7 @@ function set_undobtn_state()
 function show_buttons()
 {
     var i;
-  var tmp = document.getElementById("buttondiv");
+  var tmp = $("buttondiv");
   var txt ="Actions:<br>";
 
   var popup = "";
@@ -2643,7 +2625,7 @@ function show_buttons()
 
   tmp.innerHTML = txt;
 
-  tmp = document.getElementById("panel_selection_buttons");
+  tmp = $("panel_selection_buttons");
   txt = "";
     txt += button('&lt;-prev', 'return buttonfunc_act(64);');
     txt += button('next-&gt;', 'return buttonfunc_act(65);');
@@ -2661,8 +2643,8 @@ function game_symbols_update()
 {
     var gamesyms = 0;
 
-    var nhsym_cbox = document.getElementById("nhsym_cbox");
-    var angsym_cbox = document.getElementById("angsym_cbox");
+    var nhsym_cbox = $("nhsym_cbox");
+    var angsym_cbox = $("angsym_cbox");
 
     if ((nhsym_cbox != undefined) && nhsym_cbox.checked) gamesyms = (gamesyms | 1);
     if ((angsym_cbox != undefined) && angsym_cbox.checked) gamesyms = (gamesyms | 2);
@@ -2923,13 +2905,13 @@ function strip_deletepanel()
 
 function strip_preview_panels()
 {
-  var elem = document.getElementById("preview_strip");
+  var elem = $("preview_strip");
   var x,y, dx,dy, i;
 
   var txt = "";
   var wo = '';
 
-  var popup = document.getElementById("preview_popup_cbox");
+  var popup = $("preview_popup_cbox");
 
 /*
   if (preview_window && (preview_window.closed() == false) && popup && (popup.checked != true)) {
@@ -3053,7 +3035,7 @@ function strip_preview_panels()
 
   if (preview_checkbox.checked == true) {
     elem.innerHTML = txt;
-    var tmp = document.getElementById("comicpanel"+editpanel_strippanel);
+    var tmp = $("comicpanel"+editpanel_strippanel);
     tmp.style.borderColor = '#bfb';
   }
 
@@ -3094,15 +3076,15 @@ function set_visibility(tmp, toggle)
 
 function toggle_preview(x, y)
 {
-  var tmp = document.getElementById(x);
-  var section = document.getElementById(y);
+  var tmp = $(x);
+  var section = $(y);
 
   set_visibility(section, tmp.checked);
 }
 
 function set_strip_author()
 {
-  var tmp = document.getElementById("strip_author_text");
+  var tmp = $("strip_author_text");
   stripdata.author = tmp.value;
   strip_preview_panels();
   panel_showcode();
@@ -3110,7 +3092,7 @@ function set_strip_author()
 
 function set_strip_footnote(txt)
 {
-  var tmp = document.getElementById("strip_footnote_text");
+  var tmp = $("strip_footnote_text");
   if (typeof(txt) != 'undefined') {
       stripdata.footnote = new String(txt);
       tmp.value = txt;
@@ -3123,9 +3105,9 @@ function set_strip_footnote(txt)
 
 function accept_new_panels_size()
 {
-  var nw = parseInt(document.getElementById("change_level_wid").value);
-  var nh = parseInt(document.getElementById("change_level_hei").value);
-  var do_all = document.getElementById("resize_all_panels").checked;
+  var nw = parseInt($("change_level_wid").value);
+  var nh = parseInt($("change_level_hei").value);
+  var do_all = $("resize_all_panels").checked;
 
   if (nw == undefined || nh == undefined) return;
 
@@ -3143,8 +3125,8 @@ function accept_new_panels_size()
   }
 
   if ((nw < 5) || (nh < 5)) {
-    document.getElementById("change_level_wid").value = editpaneldata.WID;
-    document.getElementById("change_level_hei").value = editpaneldata.HEI;
+    $("change_level_wid").value = editpaneldata.WID;
+    $("change_level_hei").value = editpaneldata.HEI;
     change_panels_size();
     output_strip_data_edit();
     return;
@@ -3156,8 +3138,8 @@ function accept_new_panels_size()
     if (ans) {
       /* nothing */
     } else {
-      document.getElementById("change_level_wid").value = editpaneldata.WID;
-      document.getElementById("change_level_hei").value = editpaneldata.HEI;
+      $("change_level_wid").value = editpaneldata.WID;
+      $("change_level_hei").value = editpaneldata.HEI;
       change_panels_size();
       output_strip_data_edit();
       return;
@@ -3169,8 +3151,8 @@ function accept_new_panels_size()
     PANEL_WID = nw;
     PANEL_HEI = nh;
 
-    document.getElementById("change_level_wid").value = nw;
-    document.getElementById("change_level_hei").value = nh;
+    $("change_level_wid").value = nw;
+    $("change_level_hei").value = nh;
 
     for (i = 0; i < n_panels; i++) {
       panels[i].panel.save_undopoint();
@@ -3207,7 +3189,7 @@ function accept_new_panels_size()
 
 function change_panels_size()
 {
-  var tmp = document.getElementById("change_panels_size");
+  var tmp = $("change_panels_size");
   tmp.innerHTML =
     '(<input '+getkeyb_handler_string()+' type="text" maxlength="4" size="4" name="change_level_wid" id="change_level_wid" value="' + editpaneldata.WID + '">, ' +
     '<input '+getkeyb_handler_string()+' type="text" maxlength="4" size="4" name="change_level_hei" id="change_level_hei" value="' + editpaneldata.HEI + '">)' +
@@ -3218,7 +3200,7 @@ function change_panels_size()
 
 function accept_new_force_strip_width()
 {
-  var nw = parseInt(document.getElementById("change_force_strip_wid").value);
+  var nw = parseInt($("change_force_strip_wid").value);
 
   if ((nw != FORCE_STRIP_WID) && (nw >= 0) && (nw <= n_panels)) {
 
@@ -3243,7 +3225,7 @@ function accept_new_force_strip_width()
 
 function change_force_strip_width()
 {
-  var tmp = document.getElementById("change_force_strip_width");
+  var tmp = $("change_force_strip_width");
   tmp.innerHTML =
     '<input '+getkeyb_handler_string()+' type="text" maxlength="4" size="4" name="change_force_strip_wid" id="change_force_strip_wid" value="' + FORCE_STRIP_WID + '">' +
 	button('OK', 'accept_new_force_strip_width();return false;') +
@@ -3252,7 +3234,7 @@ function change_force_strip_width()
 
 function output_strip_data_edit()
 {
-  var tmp = document.getElementById("strip_data_edit");
+  var tmp = $("strip_data_edit");
   var txt = "";
 
   var foot = stripdata.footnote;
@@ -3349,7 +3331,7 @@ function handle_keyb(e)
 
 function set_checkbox_on(cbox)
 {
-  var elem = document.getElementById(cbox);
+  var elem = $(cbox);
   if (elem != undefined) {
     elem.checked = true;
   }
@@ -3357,7 +3339,7 @@ function set_checkbox_on(cbox)
 
 function update_editpanel_textarea(dir)
 {
-  var tmp = document.getElementById("editpanel_textarea");
+  var tmp = $("editpanel_textarea");
   if (tmp == undefined) return;
   if (dir == 1) { /* textarea -> editpanel */
     var str = tmp.value;
@@ -3388,7 +3370,7 @@ function update_editpanel_textarea(dir)
     editpaneldata.check_undopoint();
     panel_redraw();
   } else { /* editpanel -> textarea */
-      var elem = document.getElementById("editpanel_container");
+      var elem = $("editpanel_container");
       if (elem) {
 	  tmp.style.width = (elem.offsetWidth+2)+'px';
 	  tmp.style.height = elem.offsetHeight+'px';
@@ -3407,7 +3389,7 @@ function update_editpanel_textarea(dir)
 
 function show_editpanel_textarea()
 {
-  var tmp = document.getElementById("editpanel_textarea_div");
+  var tmp = $("editpanel_textarea_div");
   var txt = "<textarea onchange='update_editpanel_textarea(1);' "+getkeyb_handler_string()+" id='editpanel_textarea' rows='"+editpaneldata.HEI+"' cols='"+editpaneldata.WID+"'></textarea>";
   tmp.innerHTML = txt;
 }
@@ -3792,8 +3774,8 @@ function maptemplate_window()
 
 function pageload_init()
 {
-  code_checkbox = document.getElementById("code_cbox");
-  preview_checkbox = document.getElementById("preview_cbox");
+  code_checkbox = $("code_cbox");
+  preview_checkbox = $("preview_cbox");
 
   old_pen_parsecookiestr(readCookie("saved_pens"));
   pens_load();

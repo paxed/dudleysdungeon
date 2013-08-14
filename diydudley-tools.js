@@ -1,4 +1,22 @@
 
+function $(e) { return document.getElementById(e); }
+
+function get_documentOffsetTop(e) {
+    var i = 0;
+    if (e.offsetParent) {
+	do { i += e.offsetTop; } while (e = e.offsetParent);
+    }
+    return i;
+}
+
+function get_documentOffsetLeft(e) {
+    var i = 0;
+    if (e.offsetParent) {
+	do { i += e.offsetLeft; } while (e = e.offsetParent);
+    }
+    return i;
+}
+
 /* from http://james.padolsey.com/javascript/wordwrap-for-javascript/ */
 function wordwrap(str, width, brk, cut) {
     brk = brk || '\n';
@@ -76,7 +94,7 @@ function eraseStorageData(name) {
 
 function insertAtCursor(elem, addval)
 {
-    tmp = document.getElementById(elem);
+    tmp = $(elem);
     if (tmp == undefined) return;
     //IE support
     if (document.selection) {
