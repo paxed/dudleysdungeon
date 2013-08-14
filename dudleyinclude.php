@@ -6,6 +6,8 @@ ini_set('display_errors','On');
 include_once "utils.php";
 require_once "config.php";
 
+date_default_timezone_set((isset($DUDLEY_tz) ? $DUDLEY_tz : 'UTC'));
+
 $dudley_comic_title = "Dudley's <span style='font-size:small'>(New, Improved)</span> Dungeon";
 
 $dudley_root_url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/';
