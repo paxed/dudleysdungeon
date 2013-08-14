@@ -659,6 +659,71 @@ function panel_redraw()
   set_undobtn_state();
 }
 
+function get_documentOffsetTop(e) {
+    var i = 0;
+    if (e.offsetParent) {
+	do { i += e.offsetTop; } while (e = e.offsetParent);
+    }
+    return i;
+}
+
+function get_documentOffsetLeft(e) {
+    var i = 0;
+    if (e.offsetParent) {
+	do { i += e.offsetLeft; } while (e = e.offsetParent);
+    }
+    return i;
+}
+
+function $(e) { return document.getElementById(e); }
+
+function ruler_display(typ)
+{
+    var t = (typ) ? 'block' : 'none';
+    $('mapcoords_n').style.display = t;
+    $('mapcoords_s').style.display = t;
+    $('mapcoords_w').style.display = t;
+    $('mapcoords_e').style.display = t;
+    $('mapruler_h').style.display = t;
+    $('mapruler_v').style.display = t;
+}
+
+function show_ruler(x,y, maxx, maxy, pose, mape)
+{
+    var px = get_documentOffsetLeft($(pose));
+    var py = get_documentOffsetTop($(pose));
+
+    var mox = get_documentOffsetLeft($(mape));
+    var moy = get_documentOffsetTop($(mape));
+
+    ruler_display(1);
+
+    $('mapcoords_n').innerHTML = ''+y;
+    $('mapcoords_s').innerHTML = ''+(maxy-1 - y);
+    $('mapcoords_w').innerHTML = ''+x;
+    $('mapcoords_e').innerHTML = ''+(maxx-1 - x);
+
+    $('mapcoords_n').style.top = (moy - $('mapcoords_n').offsetHeight)+'px';
+    $('mapcoords_n').style.left = px+'px';
+
+    $('mapcoords_s').style.top = (moy + $(mape).offsetHeight)+'px';
+    $('mapcoords_s').style.left = px+'px';
+
+    $('mapcoords_w').style.top = py+'px';
+    $('mapcoords_w').style.left = (mox - $('mapcoords_w').offsetWidth)+'px';
+
+    $('mapcoords_e').style.top = py+'px';
+    $('mapcoords_e').style.left = (mox + $(mape).offsetWidth)+'px';
+
+    $('mapruler_h').style.top = py+'px';
+    $('mapruler_h').style.left = mox+'px';
+    $('mapruler_h').style.width = $(mape).offsetWidth+'px';
+
+    $('mapruler_v').style.top = moy+'px';
+    $('mapruler_v').style.left = px+'px';
+    $('mapruler_v').style.height = $(mape).offsetHeight+'px';
+}
+
 function panel_mouse_hover(x,y, onoff)
 {
   var tmp;
@@ -667,8 +732,10 @@ function panel_mouse_hover(x,y, onoff)
     current_pos_x = x;
     current_pos_y = y;
     hovering_on_editpanel = 1;
+    show_ruler(x,y, editpaneldata.WID, editpaneldata.HEI, 'editpanelpos'+x+'x'+y, 'editpanel_container');
   } else {
     hovering_on_editpanel = 0;
+    ruler_display(0);
   }
 
   function mousehover_mark_on(x1,y1)
@@ -810,6 +877,13 @@ function panel_getdiv()
       p_cursor_x = editpaneldata.cursor.x;
       p_cursor_y = editpaneldata.cursor.y;
   }
+
+    txt += '<div id="mapcoords_n"></div>';
+    txt += '<div id="mapcoords_s"></div>';
+    txt += '<div id="mapcoords_w"></div>';
+    txt += '<div id="mapcoords_e"></div>';
+    txt += '<div id="mapruler_h"></div>';
+    txt += '<div id="mapruler_v"></div>';
 
   txt += "<div class='panelborder' id='editpanel_container'>";
   txt += "<pre class='panel'>";

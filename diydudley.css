@@ -459,3 +459,32 @@ td.footnote {
 .comic .right_text {
     text-align:right;
 }
+
+#mapcoords_s,
+#mapcoords_n,
+#mapcoords_e,
+#mapcoords_w {
+    top: 1em;
+    left: 1em;
+   position: absolute;
+   display: none;
+   height: 1em;
+   border: 1px solid black;
+   background-color: lightgray;
+   z-index:100;
+   padding: 3px;
+}
+
+#mapruler_h,
+#mapruler_v {
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: none;
+  height: 0;
+  width: 0;
+  background-color: transparent;
+  z-index: 0;
+}
+#mapruler_v { border-left: 1px dotted #a00000; }
+#mapruler_h { border-top:  1px dotted #a00000; }
